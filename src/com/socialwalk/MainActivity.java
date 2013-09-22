@@ -1,39 +1,49 @@
 package com.socialwalk;
 
 
+
+import java.util.Vector;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.NetworkImageView;
+import com.socialwalk.MyXmlParser.AroundersItem;
+import com.socialwalk.request.ImageCacheManager;
+import com.socialwalk.request.ServerRequestManager;
+
 public class MainActivity extends Activity
+implements Response.Listener<String>, Response.ErrorListener
 {	
+	private ServerRequestManager m_server = null;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        
+        m_server = new ServerRequestManager();
+        m_server.AutoLogin(this);
+        
         // create utility class
         Utils.CreateDefaultTool(this);
         
-        // autologin proc
-//        ServerRequestManager.defaultManager.AutoLogin(this);
-        
         // slide 서비스를 등록
         if (!LockService.IsRegisted)
-        {
-	        // start lock service
 			startService(new Intent(this, LockService.class));
-        }
 
 		// show intro activity
 		Intent i = new Intent(this, IntroActivity.class);
@@ -75,6 +85,17 @@ public class MainActivity extends Activity
 			}
 		});
         
+        ImageButton btnSettings = (ImageButton)findViewById(R.id.btnSettings);
+        btnSettings.setOnClickListener(new OnClickListener()
+        {			
+			@Override
+			public void onClick(View v)
+			{
+				Intent i = new Intent(getBaseContext(), SettingsActivity.class);
+				startActivity(i);
+			}
+		});
+        
         // test button
         Button btnTest = (Button)findViewById(R.id.btnTest);
         btnTest.setOnClickListener(new OnClickListener()
@@ -84,9 +105,6 @@ public class MainActivity extends Activity
 			{
 				Intent i = new Intent(getBaseContext(), GroupSelectionActivity.class);
 				startActivityForResult(i, Globals.INTENT_REQ_GROUP_SELECT);
-				
-		        Intent lockIntent = new Intent(getBaseContext(), SlideActivity.class);
-		        startActivity(lockIntent);
 			}
 		});
     }
@@ -190,6 +208,7 @@ public class MainActivity extends Activity
         }
         
         // 위치기반 광고의 위치정보는 네트워크를 이용한 위치 정보를 활용한다.
+        m_server.AroundersItems(this, this, 37.5666091, 126.978371);
         
         // login
         if (!ServerRequestManager.IsLogin)
@@ -198,6 +217,33 @@ public class MainActivity extends Activity
             startActivityForResult(loginIntent, Globals.INTENT_REQ_LOGIN);
         }
 
+	}
+
+
+	@Override
+	public void onErrorResponse(VolleyError error)
+	{
+	}
+
+
+	@Override
+	public void onResponse(String response)
+	{
+		Vector<AroundersItem> items = new MyXmlParser(response).GetArounders();
+		if (null == items) return;
+		if (0 == items.size()) return;
+		
+		AroundersItem item = items.get(0);
+		
+		NetworkImageView adIcon = (NetworkImageView)findViewById(R.id.adIcon);
+		TextView adCompany = (TextView)findViewById(R.id.adCompany);
+		TextView adPromotion = (TextView)findViewById(R.id.adPromotion);
+		TextView adDistance = (TextView)findViewById(R.id.adDistance);
+		
+		adIcon.setImageUrl(item.IconURL, ImageCacheManager.getInstance().getImageLoader());
+		adCompany.setText(item.Company);
+		adPromotion.setText(item.Promotion);
+		adDistance.setText(Integer.toString(item.Distance) + "m");
 	}
 	
     

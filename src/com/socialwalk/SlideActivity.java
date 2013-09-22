@@ -27,8 +27,12 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.NetworkImageView;
 import com.socialwalk.MyXmlParser.SlideAdData;
+import com.socialwalk.request.ImageCacheManager;
+import com.socialwalk.request.ServerRequestManager;
 
 public class SlideActivity extends Activity implements Response.Listener<String>, Response.ErrorListener
 {
@@ -55,8 +59,8 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 	ImageView imgCenter, imgAd, imgHome, imgStart, imgStop;
 	RelativeLayout sliderLayout;
 	
-	private ServerRequestManager m_reqManager = null;
-	private ImageView m_adImage;
+	private ServerRequestManager m_server = null;
+	private NetworkImageView m_adImage;
 
 	@Override
 	public void onAttachedToWindow()
@@ -78,9 +82,9 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		
 		setContentView(R.layout.activity_slide);
 		
-		m_reqManager = new ServerRequestManager(this);
+		m_server = new ServerRequestManager();
 		
-		m_adImage = (ImageView)findViewById(R.id.imgAd);
+		m_adImage = (NetworkImageView)findViewById(R.id.imgAd);
 		
 		sliderLayout = (RelativeLayout)findViewById(R.id.sliderLayout);
 		imgCenter = (ImageView)findViewById(R.id.imgSlideCenter);
@@ -201,13 +205,13 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		Utils.CreateDefaultTool(this);
 		
 		// auto-login
-		m_reqManager.AutoLogin(this);
+		m_server.AutoLogin(this);
 
 	}
 	
 	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
+	protected void onDestroy()
+	{
 		super.onDestroy();
 	}
 
@@ -434,8 +438,7 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		
 		if ((CURRENT_AD_INDEX+1) > LockService.SlideAdList.size())
 		{
-			m_reqManager.NeoClickItem(this, this);
-//			new DownloadAdInfoTask().execute(Globals.URL_NEO_AD);
+			m_server.NeoClickItem(this, this);
 		}
 		else
 		{
@@ -453,20 +456,8 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		CurrentAdData = adData;
 		
 		// clear
-		imgAd.setImageBitmap(null);
-		 
-		// start load
-		Response.Listener<Bitmap> listener = new Response.Listener<Bitmap>()
-		{
-			@Override
-			public void onResponse(Bitmap result)
-			{
-				m_adImage.setImageBitmap(result);
-			}
-		};
-		
-		ImageRequest req = new ImageRequest(adData.ThumbnailUrl, listener, 0, 0, Config.ARGB_8888, null);
-		m_reqManager.GetRequestQueue().add(req);
+		m_adImage.setImageUrl(null, null);
+		m_adImage.setImageUrl(adData.ThumbnailUrl, ImageCacheManager.getInstance().getImageLoader());
 	}
 	
 	

@@ -2,6 +2,7 @@ package com.socialwalk;
 
 
 import com.socialwalk.R;
+import com.socialwalk.request.ServerRequestManager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,7 +19,7 @@ public class CreateGroupActivity extends Activity
 {
 	private boolean isUniqueName = false, isChecked = false;
 	private EditText groupName;
-	private ServerRequestManager m_reqManager;
+	private ServerRequestManager m_server = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -26,7 +27,7 @@ public class CreateGroupActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_create_group);
 		
-		m_reqManager = new ServerRequestManager(this);
+		m_server = new ServerRequestManager();
 		
 		groupName = (EditText)findViewById(R.id.groupName);
 		Button btnCheck = (Button)findViewById(R.id.btnCheck);
@@ -45,13 +46,13 @@ public class CreateGroupActivity extends Activity
 				}
 				
 				String name = groupName.getText().toString();
-				if (true == m_reqManager.IsExistGroupName(name))
+				if (true == m_server.IsExistGroupName(name))
 				{
 					new AlertDialog.Builder(getBaseContext()).setTitle(R.string.TITLE_INFORMATION).setMessage(R.string.MSG_DUPLICATE_GROUP_NAME).setNeutralButton(R.string.CLOSE, null).show();
 					return;
 				}
 				
-				if (true == m_reqManager.CreateGroup(name))
+				if (true == m_server.CreateGroup(name))
 				{
 					Intent i = new Intent();
 					i.putExtra(Globals.EXTRA_KEY_GROUP_NAME, name);

@@ -1,6 +1,9 @@
 package com.socialwalk;
 
 
+
+import com.socialwalk.request.ServerRequestManager;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +15,7 @@ import android.widget.Button;
 public class GroupDetailActivity extends Activity
 {
 	private Button btnJoin;
-	private ServerRequestManager m_reqManager = null;
+	private ServerRequestManager m_server = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -20,7 +23,7 @@ public class GroupDetailActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_detail);
 		
-		m_reqManager = new ServerRequestManager(this);
+		m_server = new ServerRequestManager();
 		
 		btnJoin = (Button)findViewById(R.id.btnJoin);
 		btnJoin.setOnClickListener(new OnClickListener()
@@ -29,7 +32,7 @@ public class GroupDetailActivity extends Activity
 			public void onClick(View v)
 			{
 				int selGroupId = 12345;
-				if (true == m_reqManager.GroupJoin("root", selGroupId))
+				if (true == m_server.GroupJoin("root", selGroupId))
 				{
 					Intent i = new Intent();
 					i.putExtra(Globals.EXTRA_KEY_GROUP_ID, selGroupId);

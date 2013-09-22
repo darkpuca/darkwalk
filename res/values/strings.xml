@@ -5,7 +5,6 @@
     <string name="ACTION_MORE">더보기</string>
     <string name="ACTION_SETTINGS">설정</string>
     <string name="ACTION_DELETE_ALL">전체 삭제</string>
-    
     <string name="APP_NAME">소셜워크</string>
     <string name="TITLE_SLIDE">소셜 슬라이드</string>
     <string name="TITLE_WEB_PAGE">Web Link</string>
@@ -21,9 +20,9 @@
     <string name="TITLE_WALK_ROUTE">이동경로</string>
     <string name="TITLE_WALK_HISTORY">소셜워크 히스토리</string>
     <string name="TITLE_RANKING">랭킹</string>
-    
     <string name="CLOSE">닫기</string>
     <string name="LOGIN">로그인</string>
+    <string name="LOGOUT">로그아웃</string>
     <string name="USER_ID">사용자 ID</string>
     <string name="PASSWORD">비밀번호</string>
     <string name="SIGN_UP">회원가입</string>
@@ -59,11 +58,10 @@
     <string name="DELETE">삭제</string>
     <string name="BY_GROUP">그룹별</string>
     <string name="TOTAL">전체</string>
-    
+    <string name="EDIT_PROFILE">프로필 수정</string>
     <string name="FORMAT_DISTANCE">%.2f km</string>
     <string name="FORMAT_SPEED">%.1f km/h</string>
     <string name="FORMAT_TIME">HH:mm:ss</string>
-    
     <string name="MSG_EMPTY_USERID">사용자 ID를 입력해 주십시오.</string>
     <string name="MSG_EMPTY_PASSWORD">비밀번호를 입력해 주십시오.</string>
     <string name="MSG_EMPTY_GROUP_NAME">그룹 이름을 입력해 주십시오.</string>
@@ -76,9 +74,13 @@
     <string name="MSG_EXIT_CONFIRM">소셜워크 앱을 종료하시겠습니까?</string>
     <string name="MSG_STOP_WALKING_CONFIRM">걷기를 종료하시겠습니까?</string>
     <string name="MSG_CLEAR_HISTORY_CONFIRM">모든 히스토리를 삭제하시겠습니까?</string>
+    <string name="MSG_LOGOUT_CONFIRM">로그아웃 하시겠습니까?</string>
 
     <color name="WALK_INFO_PANEL_BG">#80000000</color>
     <color name="SLIDE_WALK_STATE">#80000000</color>
 
+    <string name="title_activity_settings">Settings</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_profiles">ProfilesActivity</string>
 
 </resources>

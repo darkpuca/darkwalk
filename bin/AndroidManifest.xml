@@ -16,8 +16,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name="com.socialwalk.MainApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/APP_NAME"
@@ -98,7 +100,7 @@
             android:name="com.socialwalk.RankingActivity"
             android:label="@string/TITLE_RANKING" >
         </activity>
-        
+
         <service android:name="com.socialwalk.LockService" >
         </service>
         <service android:name="com.socialwalk.WalkService" >
@@ -114,6 +116,14 @@
         <receiver android:name="com.socialwalk.WalkLocationReceiver" >
         </receiver>
 
+        <activity
+            android:name="com.socialwalk.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.ProfilesActivity"
+            android:label="@string/title_activity_profiles" >
+        </activity>
     </application>
 
 </manifest>

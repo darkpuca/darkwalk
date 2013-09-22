@@ -7,9 +7,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.os.Environment;
 import android.widget.Toast;
 
 public class Utils
@@ -116,5 +119,15 @@ public class Utils
 			return history;
 		}
 		return null;
+	}
+	
+	public static void SaveLoginParams(Context context, boolean isAuto, String userId, String password)
+	{
+		SharedPreferences loginPrefs = context.getSharedPreferences(Globals.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = loginPrefs.edit();
+		editor.putBoolean(Globals.PREF_KEY_AUTOLOGIN, isAuto);
+		editor.putString(Globals.PREF_KEY_USER_ID, userId);
+		editor.putString(Globals.PREF_KEY_PASSWORD, password);
+		editor.commit();
 	}
 }

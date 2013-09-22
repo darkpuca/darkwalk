@@ -111,14 +111,73 @@
                 android:text="XXX 하트 (x,xxx 하트)" />
         </RelativeLayout>
         
-        <ImageView
-            android:id="@+id/imgReady"
-            android:src="@drawable/ic_launcher"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="8dp" />
+        <RelativeLayout
+            android:id="@+id/layoutReady"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:layout_below="@+id/redHeartLayout" >
+            
+			<ImageView
+	            android:id="@+id/imgReady"
+	            android:src="@drawable/ic_launcher"
+	            android:layout_width="200dp"
+	            android:layout_height="200dp"
+	            android:layout_centerHorizontal="true"
+	            android:layout_alignParentBottom="true"
+	            android:layout_marginBottom="8dp" />
+	            
+	        <RelativeLayout
+	            android:id="@+id/layoutArounders"
+	            android:layout_width="160dp"
+	            android:layout_height="60dp"
+	            android:layout_alignParentBottom="true"
+	            android:layout_alignParentRight="true"
+	            android:layout_marginBottom="200dp"
+	            android:layout_marginRight="16dp"
+	            android:background="#888888" >
+	            
+	            <com.android.volley.toolbox.NetworkImageView
+	                android:id="@+id/adIcon"
+	                android:layout_width="36dp"
+	                android:layout_height="36dp"
+	                android:layout_alignParentTop="true"
+	                android:layout_alignParentLeft="true" />
+	            
+	            <TextView
+	                android:id="@+id/adCompany"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_alignParentTop="true"
+	                android:layout_toRightOf="@+id/adIcon"
+	                android:textStyle="bold"
+	                android:textSize="15sp" 
+	                android:text="COMPANY" />
+	            
+	            <TextView
+	                android:id="@+id/adPromotion"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_toRightOf="@+id/adIcon"
+	                android:layout_below="@+id/adCompany"
+	                android:textSize="13sp"
+	                android:text="PROMOTION" />
+	            
+				<TextView
+	                android:id="@+id/adDistance"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_alignParentBottom="true"
+	                android:layout_alignParentRight="true"
+	                android:gravity="right"
+	                android:textSize="12sp"
+	                android:text="xxx m" />
+	            
+            
+        	</RelativeLayout>
+        </RelativeLayout>
+        
+        
         
     </RelativeLayout>
     

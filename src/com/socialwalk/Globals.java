@@ -9,6 +9,7 @@ public class Globals
 	public static final String URL_HOME_DOMAIN = "http://218.145.31.240";
 	public static final String URL_HOME = URL_HOME_DOMAIN + "";
 	public static final String URL_LOGIN = URL_HOME_DOMAIN + "/api/login";
+	public static final String URL_LOGOUT = URL_HOME_DOMAIN + "/api/logout";
 	public static final String URL_SIGN_UP = URL_HOME_DOMAIN + "/mobile/join_step1.php";
 	public static final String URL_FORGET_PASSWORD = URL_HOME_DOMAIN + "/mobile/findpw.php";
 	public static final String URL_NOTICES = URL_HOME_DOMAIN + "/mobile/notice.php";
