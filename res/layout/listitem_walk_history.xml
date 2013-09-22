@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:minHeight="60dp" >
+    
+    <TextView
+        android:id="@+id/hearts"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:textSize="14sp"
+		android:gravity="right"
+        android:text="xxx하트" />
+    
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="60sp"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/hearts"
+        android:layout_centerVertical="true"
+        android:textSize="14sp"
+        android:gravity="right"
+        android:text="xx.x km" />
+    
+    <TextView
+        android:id="@+id/logDate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/distance"
+        android:layout_centerVertical="true"
+        android:textSize="20sp"
+        android:text="xx년 xx월 xx일 xx:xx:xx" />
+
+</RelativeLayout>

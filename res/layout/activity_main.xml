@@ -1,0 +1,143 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+    
+    <LinearLayout
+        android:id="@+id/tabsLayout"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
+        <ImageButton
+            android:id="@+id/btnHeart"
+            android:src="@drawable/ic_launcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageButton
+            android:id="@+id/btnGroup"
+            android:src="@drawable/ic_launcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageButton
+            android:id="@+id/btnHistory"
+            android:src="@drawable/ic_launcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />        
+        <ImageButton
+            android:id="@+id/btnSettings"
+            android:src="@drawable/ic_launcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tabsLayout"
+        android:layout_above="@+id/btnWalkStart"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" >
+        <LinearLayout
+            android:id="@+id/nameLayout"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" >
+            <TextView
+                android:id="@+id/groupName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textSize="12sp"
+				android:text="GROUP_NAME" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="USER_NAME" />
+        </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/greenHeartLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nameLayout" >
+            <ImageView
+                android:id="@+id/imgGreen"
+                android:src="@drawable/ic_launcher"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true" />
+            <TextView
+                android:id="@+id/greenHeart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imgGreen"
+                android:layout_centerVertical="true"
+                android:textSize="13sp"
+                android:text="XXX 하트" />
+            <Button
+                android:id="@+id/btnSupport"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/SUPPORT"
+                android:textSize="13sp" />            
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/redHeartLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/greenHeartLayout" >
+            <ImageView
+                android:id="@+id/imgRed"
+                android:src="@drawable/ic_launcher"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true" />
+            <TextView
+                android:id="@+id/redHeart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imgRed"
+                android:layout_centerVertical="true"
+                android:textSize="13sp"
+                android:text="XXX 하트 (x,xxx 하트)" />
+        </RelativeLayout>
+        
+        <ImageView
+            android:id="@+id/imgReady"
+            android:src="@drawable/ic_launcher"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp" />
+        
+    </RelativeLayout>
+    
+    <Button
+        android:id="@+id/btnWalkStart"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:text="@string/START" />
+
+    <Button
+        android:id="@+id/btnTest"
+        android:text="test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" />
+
+</RelativeLayout>

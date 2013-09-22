@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.socialwalk"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="10" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/APP_NAME"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.socialwalk.MainActivity"
+            android:label="@string/APP_NAME"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.socialwalk.SlideActivity"
+            android:clearTaskOnLaunch="true"
+            android:label="@string/TITLE_SLIDE"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.WebPageActivity"
+            android:label="@string/TITLE_WEB_PAGE"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.LoginActivity"
+            android:label="@string/TITLE_LOGIN"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.GroupSelectionActivity"
+            android:label="@string/TITLE_GROUP_SELECTION"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.CreateGroupActivity"
+            android:label="@string/TITLE_CREATE_GROUP"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.GroupDetailActivity"
+            android:label="@string/TITLE_GROUP_DETAIL"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.IntroActivity"
+            android:label="@string/TITLE_INTRO"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.WalkingActivity"
+            android:label="@string/TITLE_WALK"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.WalkResultActivity"
+            android:label="@string/TITLE_WALK_RESULT"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.WalkDetailActivity"
+            android:label="@string/TITLE_WALK_DETAIL"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.WalkRouteActivity"
+            android:label="@string/TITLE_WALK_ROUTE"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.WalkHistoryActivity"
+            android:label="@string/TITLE_WALK_HISTORY" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.RankingActivity"
+            android:label="@string/TITLE_RANKING" >
+        </activity>
+        
+        <service android:name="com.socialwalk.LockService" >
+        </service>
+        <service android:name="com.socialwalk.WalkService" >
+        </service>
+
+        <receiver
+            android:name="com.socialwalk.LockReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.socialwalk.WalkLocationReceiver" >
+        </receiver>
+
+    </application>
+
+</manifest>
