@@ -2,6 +2,7 @@ package com.socialwalk;
 
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import org.xmlpull.v1.XmlSerializer;
 
@@ -45,7 +46,38 @@ public class MyXmlWriter
 			return "";
 		}
 	}
+
+	public static String ChangePassword(String oldPassword, String newPassword)
+	{
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		
+		try
+		{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", true);
+			
+			serializer.startTag("", "users");
+			serializer.startTag("", "old_password");
+			serializer.text(oldPassword);
+			serializer.endTag("", "old_password");
+			serializer.startTag("", "new_password");
+			serializer.text(newPassword);
+			serializer.endTag("", "new_password");
+			serializer.endTag("", "users");
+			
+			serializer.endDocument();
+			
+			return writer.toString();
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.getLocalizedMessage());
+			return "";
+		}
+	}
 	
+
 	public static String GetWalkingDataXML(WalkHistory log)
 	{
 		XmlSerializer serializer = Xml.newSerializer();
@@ -53,7 +85,7 @@ public class MyXmlWriter
 		
 		try
 		{
-			SimpleDateFormat dateFormatter = new SimpleDateFormat(Globals.XML_DATE_FORMAT);
+			SimpleDateFormat dateFormatter = new SimpleDateFormat(Globals.XML_DATE_FORMAT, Locale.US);
 			
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", true);

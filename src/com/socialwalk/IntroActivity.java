@@ -42,7 +42,7 @@ public class IntroActivity extends Activity
 			public void onClick(View v)
 			{
 				Intent i = new Intent(getBaseContext(), WebPageActivity.class);
-				i.putExtra(Globals.EXTRA_KEY_URL, Globals.URL_HOME);
+				i.putExtra(Globals.EXTRA_KEY_URL, Globals.URL_SERVER_DOMAIN);
 				startActivity(i);
 				
 				finish();

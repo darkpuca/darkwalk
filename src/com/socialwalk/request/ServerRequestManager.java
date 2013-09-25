@@ -21,11 +21,13 @@ import com.socialwalk.MyXmlWriter;
 public class ServerRequestManager implements Response.Listener<String>, Response.ErrorListener
 {
 	public static boolean IsLogin = false;
-	
-//	private static final String TAG = "SW-NET";
+	private static AccountData LoginAccount = null;
+	private static final String TAG = "SW-NET";
 
 	public ServerRequestManager()
 	{
+		if (null == LoginAccount)
+			LoginAccount = new AccountData();
 	}
 
 	public void Login(Response.Listener<String> listener, Response.ErrorListener errorListener, String userId, String password)
@@ -33,15 +35,16 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
 		if (null == reqQueue) return;
 
-		final String body = MyXmlWriter.Login(userId, password);
-		String url = Globals.URL_LOGIN;
+		final String xmlBody = MyXmlWriter.Login(userId, password);
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/login";
 		
-		StringRequest req = new StringRequest(Method.POST, url, listener, errorListener)
+//		StringRequest req = new StringRequest(Method.POST, url, listener, errorListener)
+		SocialWalkRequest req = new SocialWalkRequest(Method.POST, urlString, listener, errorListener)
 		{
 			@Override
 			public byte[] getBody() throws AuthFailureError
 			{
-				return body.getBytes();
+				return xmlBody.getBytes();
 			}			
 		};
 		reqQueue.add(req);
@@ -54,7 +57,8 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
 		if (null == reqQueue) return;
 
-		StringRequest req = new StringRequest(Method.GET, Globals.URL_LOGOUT, listener, errorListener);
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/logout";
+		StringRequest req = new StringRequest(Method.GET, urlString, listener, errorListener);
 		reqQueue.add(req);
 	}
 
@@ -74,6 +78,39 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 			this.Login(this, this, uid, pwd);
 		}
 	}
+	
+	public void AccountData(Response.Listener<String> listener, Response.ErrorListener errorListener)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		
+		String urlString = Globals.URL_SERVER_DOMAIN + "/users/" + LoginAccount.getUserSequence();
+
+		StringRequest req = new StringRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);
+	}
+	
+	public void ChangePassword(Response.Listener<String> listener, Response.ErrorListener errorListener, String newPassword)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		
+		final String xmlBody = MyXmlWriter.ChangePassword(LoginAccount.getUserPassword(), newPassword);
+
+		String urlString = Globals.URL_SERVER_DOMAIN + "/users/" + LoginAccount.getUserSequence() + "/user_pw";
+		
+		StringRequest req = new StringRequest(Method.PUT, urlString, listener, errorListener)
+		{
+			@Override
+			public byte[] getBody() throws AuthFailureError
+			{
+				return xmlBody.getBytes();
+			}			
+		};
+		
+		reqQueue.add(req);
+	}
+	
 	
 	public boolean GroupJoin(String user_id, int group_id)
 	{
@@ -152,5 +189,9 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		
 	}
 	
+
 	
+
+	
+
 }

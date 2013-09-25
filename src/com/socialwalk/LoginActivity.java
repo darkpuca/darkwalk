@@ -121,6 +121,11 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 		
 		MyXmlParser parser = new MyXmlParser(response);
 		SWResponse swResponse = parser.GetResponse();
+		if (null == swResponse)
+		{
+			Log.e(TAG, "response string error");
+			return;
+		}
 		
 		if (0 == swResponse.Code)
 		{

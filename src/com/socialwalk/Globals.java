@@ -6,18 +6,15 @@ public class Globals
 {
 	public static final String[] sampleStrings = { "sample string1", "sample string2", "sample string3", "sample string4", "sample string5", "sample string6", "sample string7", "sample string8", "sample string9" };
 
-	public static final String URL_HOME_DOMAIN = "http://218.145.31.240";
-	public static final String URL_HOME = URL_HOME_DOMAIN + "";
-	public static final String URL_LOGIN = URL_HOME_DOMAIN + "/api/login";
-	public static final String URL_LOGOUT = URL_HOME_DOMAIN + "/api/logout";
-	public static final String URL_SIGN_UP = URL_HOME_DOMAIN + "/mobile/join_step1.php";
-	public static final String URL_FORGET_PASSWORD = URL_HOME_DOMAIN + "/mobile/findpw.php";
-	public static final String URL_NOTICES = URL_HOME_DOMAIN + "/mobile/notice.php";
-	public static final String URL_HELP = URL_HOME_DOMAIN + "/mobile/qna.php";
-	public static final String URL_ABOUT = URL_HOME_DOMAIN + "/mobile/socialwalk.php";
-	public static final String URL_SPONSOR = URL_HOME_DOMAIN + "/mobile/sponsor.php";
-	public static final String URL_VOLUNTEERS = URL_HOME_DOMAIN + "/mobile/socialwalk.group.php";
-	public static final String URL_CONTECT_US = URL_HOME_DOMAIN + "/mobile/contact.php";
+	public static final String URL_SERVER_DOMAIN = "http://218.145.31.240";
+	public static final String URL_SIGN_UP = URL_SERVER_DOMAIN + "/mobile/join_step1.php";
+	public static final String URL_FORGET_PASSWORD = URL_SERVER_DOMAIN + "/mobile/findpw.php";
+	public static final String URL_NOTICES = URL_SERVER_DOMAIN + "/mobile/notice.php";
+	public static final String URL_HELP = URL_SERVER_DOMAIN + "/mobile/qna.php";
+	public static final String URL_ABOUT = URL_SERVER_DOMAIN + "/mobile/socialwalk.php";
+	public static final String URL_SPONSOR = URL_SERVER_DOMAIN + "/mobile/sponsor.php";
+	public static final String URL_VOLUNTEERS = URL_SERVER_DOMAIN + "/mobile/socialwalk.group.php";
+	public static final String URL_CONTECT_US = URL_SERVER_DOMAIN + "/mobile/contact.php";
 	
 	
 	public static final String URL_NEO_AD_DOMAIN = "http://web.howapi.co.kr";
@@ -27,8 +24,6 @@ public class Globals
 	public static final String AROUNDERS_REQ_URL = "http://ad.arounders.co.kr/adRequest.skp";
 	public static final String AROUNDERS_API_KEY_TEST = "QNN6";
 	public static final String AROUNDERS_APP_KEY = "123";
-	
-
 
 	public static final String EXTRA_KEY_URL = "url";
 	public static final String EXTRA_KEY_GROUP_NAME = "group_name";

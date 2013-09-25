@@ -6,14 +6,20 @@ import java.util.Vector;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +34,8 @@ public class MainActivity extends Activity
 implements Response.Listener<String>, Response.ErrorListener
 {	
 	private ServerRequestManager m_server = null;
+	private LocationManager m_locationManager;
+	private LocationListener m_locationListener;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,6 +45,12 @@ implements Response.Listener<String>, Response.ErrorListener
         
         m_server = new ServerRequestManager();
         m_server.AutoLogin(this);
+        
+        m_locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        m_locationListener = new MyLocationListener();
+        
+        RelativeLayout layoutArounders = (RelativeLayout)findViewById(R.id.layoutArounders);
+        layoutArounders.setVisibility(View.GONE);
         
         // create utility class
         Utils.CreateDefaultTool(this);
@@ -149,6 +163,9 @@ implements Response.Listener<String>, Response.ErrorListener
 	protected void onDestroy()
 	{
 		ServerRequestManager.IsLogin = false;
+		
+//		m_locationManager.removeUpdates(m_locationListener);
+		
 		super.onDestroy();
 	}
 
@@ -162,6 +179,10 @@ implements Response.Listener<String>, Response.ErrorListener
         	// 걷기 모드로 시작일 경우 걷기 상태 화면으로 바로 이동
         	Intent i = new Intent(this, WalkingActivity.class);
         	startActivity(i);
+        }
+        else
+        {
+//        	m_locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 100, m_locationListener);
         }
 		
 		super.onResume();
@@ -207,16 +228,15 @@ implements Response.Listener<String>, Response.ErrorListener
 			return;
         }
         
-        // 위치기반 광고의 위치정보는 네트워크를 이용한 위치 정보를 활용한다.
-        m_server.AroundersItems(this, this, 37.5666091, 126.978371);
-        
         // login
         if (!ServerRequestManager.IsLogin)
         {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivityForResult(loginIntent, Globals.INTENT_REQ_LOGIN);
         }
-
+        
+        // arounders update
+        m_server.AroundersItems(MainActivity.this, MainActivity.this, 37.5666091, 126.978371);
 	}
 
 
@@ -233,6 +253,9 @@ implements Response.Listener<String>, Response.ErrorListener
 		if (null == items) return;
 		if (0 == items.size()) return;
 		
+		RelativeLayout layoutArounders = (RelativeLayout)findViewById(R.id.layoutArounders);
+		layoutArounders.setVisibility(View.VISIBLE);
+		
 		AroundersItem item = items.get(0);
 		
 		NetworkImageView adIcon = (NetworkImageView)findViewById(R.id.adIcon);
@@ -246,5 +269,39 @@ implements Response.Listener<String>, Response.ErrorListener
 		adDistance.setText(Integer.toString(item.Distance) + "m");
 	}
 	
+	
+	
+	private class MyLocationListener implements LocationListener
+	{
+		private ServerRequestManager m_server = new ServerRequestManager();
+
+		@Override
+		public void onLocationChanged(Location location)
+		{
+			if (null != location)
+			{
+		        // 위치기반 광고의 위치정보는 네트워크를 이용한 위치 정보를 활용한다.
+		        m_server.AroundersItems(MainActivity.this, MainActivity.this, location.getLatitude(), location.getLongitude());
+			}
+			
+		}
+
+		@Override
+		public void onProviderDisabled(String provider)
+		{
+		}
+
+		@Override
+		public void onProviderEnabled(String provider)
+		{
+		}
+
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
     
 }
