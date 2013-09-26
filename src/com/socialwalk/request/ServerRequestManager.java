@@ -38,7 +38,6 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		final String xmlBody = MyXmlWriter.Login(userId, password);
 		String urlString = Globals.URL_SERVER_DOMAIN + "/api/login";
 		
-//		StringRequest req = new StringRequest(Method.POST, url, listener, errorListener)
 		SocialWalkRequest req = new SocialWalkRequest(Method.POST, urlString, listener, errorListener)
 		{
 			@Override
@@ -58,7 +57,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		if (null == reqQueue) return;
 
 		String urlString = Globals.URL_SERVER_DOMAIN + "/api/logout";
-		StringRequest req = new StringRequest(Method.GET, urlString, listener, errorListener);
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
 		reqQueue.add(req);
 	}
 
@@ -86,7 +85,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		
 		String urlString = Globals.URL_SERVER_DOMAIN + "/users/" + LoginAccount.getUserSequence();
 
-		StringRequest req = new StringRequest(Method.GET, urlString, listener, errorListener);
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
 		reqQueue.add(req);
 	}
 	
@@ -99,7 +98,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 
 		String urlString = Globals.URL_SERVER_DOMAIN + "/users/" + LoginAccount.getUserSequence() + "/user_pw";
 		
-		StringRequest req = new StringRequest(Method.PUT, urlString, listener, errorListener)
+		SocialWalkRequest req = new SocialWalkRequest(Method.PUT, urlString, listener, errorListener)
 		{
 			@Override
 			public byte[] getBody() throws AuthFailureError

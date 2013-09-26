@@ -4,8 +4,6 @@
 .settings
 .checkstyle
 
-bin/*
-
 #IntelliJ IDEA
 .idea
 *.iml
@@ -19,4 +17,8 @@ pom.xml.*
 
 #OSX
 .DS_Store
+
+#Android
 *.class
+bin/*
+bin/*.*
