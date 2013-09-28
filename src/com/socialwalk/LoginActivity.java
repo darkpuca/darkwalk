@@ -20,6 +20,8 @@ import com.android.volley.VolleyError;
 import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.request.ServerRequestManager;
 
+
+
 public class LoginActivity extends Activity 
 implements View.OnClickListener, Response.Listener<String>, Response.ErrorListener
 {
@@ -90,6 +92,12 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 	@Override
 	public void onClick(View v)
 	{
+
+		
+		
+		
+		
+		
 		if (0 == txtUid.getText().length())
 		{
 			new AlertDialog.Builder(this).setTitle(R.string.TITLE_INFORMATION).setMessage(R.string.MSG_EMPTY_USERID).setNeutralButton(R.string.CLOSE, null).show();
@@ -130,6 +138,8 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 		if (0 == swResponse.Code)
 		{
 			ServerRequestManager.IsLogin = true;
+			ServerRequestManager.BuildLoginAccountFromSessionData();
+
 			Utils.SaveLoginParams(this, chkAuto.isChecked(), txtUid.getText().toString(), txtPwd.getText().toString());
 			setResult(RESULT_OK);
 			this.finish();

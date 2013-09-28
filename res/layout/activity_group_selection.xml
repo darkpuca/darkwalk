@@ -36,7 +36,7 @@
 
     </RelativeLayout>
     
-    <LinearLayout
+<!--     <LinearLayout
         android:id="@+id/selectionPanel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp" />        
-    </LinearLayout>
+    </LinearLayout> -->
     
     <RelativeLayout
         android:layout_width="match_parent"

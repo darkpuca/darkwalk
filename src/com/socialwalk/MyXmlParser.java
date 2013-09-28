@@ -16,6 +16,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import android.util.Log;
 
 import com.socialwalk.WalkHistory.WalkLogItem;
+import com.socialwalk.request.AccountData;
 
 public class MyXmlParser
 {
@@ -129,13 +130,13 @@ public class MyXmlParser
 					if (tagName.equalsIgnoreCase("walking"))
 						history = new WalkHistory();
 					else if (tagName.equalsIgnoreCase("startTime"))
-						history.StartTime = dateFromXmlString(parser.nextText());
+						history.StartTime = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_HISTORY);
 					else if (tagName.equalsIgnoreCase("endTime"))
-						history.EndTime = dateFromXmlString(parser.nextText());
+						history.EndTime = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_HISTORY);
 					else if (tagName.equalsIgnoreCase("location"))
 						logItem = history.new WalkLogItem();
 					else if (tagName.equalsIgnoreCase("date"))
-						logItem.LogTime = dateFromXmlString(parser.nextText());
+						logItem.LogTime = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_HISTORY);
 					else if (tagName.equalsIgnoreCase("isValid"))
 						logItem.IsValid = Boolean.parseBoolean(parser.nextText());
 					else if (tagName.equalsIgnoreCase("latitude"))
@@ -174,9 +175,11 @@ public class MyXmlParser
 		}
 	}
 
-	private Date dateFromXmlString(String xmlText)
+	private Date dateFromString(String xmlText, String strFormat)
 	{
-		SimpleDateFormat  format = new SimpleDateFormat(Globals.XML_DATE_FORMAT, Locale.US);  
+		if (null == xmlText || 0 == xmlText.length()) return null;
+		
+		SimpleDateFormat  format = new SimpleDateFormat(strFormat, Locale.US);  
 		try
 		{
 		    Date parseDate = format.parse(xmlText);
@@ -187,6 +190,81 @@ public class MyXmlParser
 		    e.printStackTrace();
 		    return null;
 		}
+	}
+	
+	public AccountData GetAccountData()
+	{
+		if (null == m_xml || 0 == m_xml.length()) return null;
+		
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(m_xml));
+			
+			AccountData acc = null;
+			
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT)
+			{
+				String tagName = null;
+				
+				switch (eventType)
+				{
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.END_DOCUMENT:						
+					break;
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("users"))
+						acc = new AccountData();
+					else if (tagName.equalsIgnoreCase("user_seq"))
+						acc.setUserSequence(parser.nextText());
+					else if (tagName.equalsIgnoreCase("user_id"))
+						acc.setUserId(parser.nextText());
+					else if (tagName.equalsIgnoreCase("user_pw"))
+						acc.setUserPassword(parser.nextText());
+					else if (tagName.equalsIgnoreCase("realname"))
+						acc.setName(parser.nextText());
+					else if (tagName.equalsIgnoreCase("user_type"))
+						acc.setUserType(Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("area_code"))
+						acc.setAreaCode(Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("basic_code"))
+						acc.setAreaSubCode(Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("gender"))
+						acc.setGender(Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("birth_date"))
+						acc.setBirthday(dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER));
+					else if (tagName.equalsIgnoreCase("weight"))
+						acc.setWeight(Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("recommender_seq"))
+						acc.setRecommendedId(parser.nextText());
+					else if (tagName.equalsIgnoreCase("community_id"))
+						acc.setCommunityId(Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("verified"))
+						acc.setVerified(1 == Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("reg_date"))
+						acc.setRegDate(dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER));
+					else if (tagName.equalsIgnoreCase("modify_date"))
+						acc.setModDate(dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER));
+					break;
+				case XmlPullParser.END_TAG:
+					break;
+				}					
+				eventType = parser.next();
+			}
+			
+			return acc;
+			
+		} 
+		catch (Exception e)
+		{
+			Log.d(TAG, e.getLocalizedMessage());
+			return null;
+		}
+
 	}
 	
 	public Vector<AroundersItem> GetArounders()

@@ -1,11 +1,13 @@
 package com.socialwalk.request;
 
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request.Method;
@@ -21,7 +23,7 @@ import com.socialwalk.MyXmlWriter;
 public class ServerRequestManager implements Response.Listener<String>, Response.ErrorListener
 {
 	public static boolean IsLogin = false;
-	private static AccountData LoginAccount = null;
+	public static AccountData LoginAccount = null;
 	private static final String TAG = "SW-NET";
 
 	public ServerRequestManager()
@@ -38,14 +40,8 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		final String xmlBody = MyXmlWriter.Login(userId, password);
 		String urlString = Globals.URL_SERVER_DOMAIN + "/api/login";
 		
-		SocialWalkRequest req = new SocialWalkRequest(Method.POST, urlString, listener, errorListener)
-		{
-			@Override
-			public byte[] getBody() throws AuthFailureError
-			{
-				return xmlBody.getBytes();
-			}			
-		};
+		SocialWalkRequest req = new SocialWalkRequest(Method.POST, urlString, listener, errorListener);
+		req.SetXMLBody(xmlBody);
 		reqQueue.add(req);
 		
 		IsLogin = true;
@@ -87,6 +83,32 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 
 		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
 		reqQueue.add(req);
+	}
+	
+	public void CommunitySearch(Response.Listener<String> listener, Response.ErrorListener errorListener, String keyword, int pageIndex)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		if (null == keyword || 0 == keyword.length()) return;
+		
+		int pageSize = 10;
+		String utfKeyword = null;
+		
+		try
+		{
+			utfKeyword = URLEncoder.encode(new String(keyword.getBytes("UTF-8")));
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.getLocalizedMessage());
+			return;
+		}
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community/search/" + 
+		LoginAccount.getUserSequence() + "/" + utfKeyword + "/page/" + pageIndex + "/" + pageSize;
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);		
 	}
 	
 	public void ChangePassword(Response.Listener<String> listener, Response.ErrorListener errorListener, String newPassword)
@@ -171,6 +193,17 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		queue.add(req);
 	}
 	
+	public static void BuildLoginAccountFromSessionData()
+	{
+		if (!IsLogin) return;
+		
+		String sessionData = SocialWalkRequest.GetSessionData();
+		if (null == sessionData) return;
+		
+		MyXmlParser parser = new MyXmlParser(sessionData);
+		LoginAccount = parser.GetAccountData();
+	}
+	
 	
 	@Override
 	public void onErrorResponse(VolleyError error)
@@ -184,8 +217,10 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 	{
 		SWResponse serverResponse = new MyXmlParser(response).GetResponse();
 		if (0 == serverResponse.Code)
+		{
 			IsLogin = true;
-		
+			BuildLoginAccountFromSessionData();
+		}		
 	}
 	
 

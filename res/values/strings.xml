@@ -20,6 +20,10 @@
     <string name="TITLE_WALK_ROUTE">이동경로</string>
     <string name="TITLE_WALK_HISTORY">소셜워크 히스토리</string>
     <string name="TITLE_RANKING">랭킹</string>
+    <string name="TITLE_SETTINGS">설정</string>
+    <string name="TITLE_PROFILES">프로필</string>
+    <string name="TITLE_SPONSOR">후원 프로젝트</string>
+    <string name="TITLE_COMMUNITY">그룹 커뮤니티</string>
     <string name="CLOSE">닫기</string>
     <string name="LOGIN">로그인</string>
     <string name="LOGOUT">로그아웃</string>
@@ -66,6 +70,7 @@
     <string name="MSG_EMPTY_PASSWORD">비밀번호를 입력해 주십시오.</string>
     <string name="MSG_EMPTY_GROUP_NAME">그룹 이름을 입력해 주십시오.</string>
     <string name="MSG_DUPLICATE_GROUP_NAME">동일한 그룹 이름이 있습니다. 다시 입력해 주십시오.</string>
+    <string name="MSG_EMPTY_KEYWORD">검색어를 입력해 주십시오.</string>
     <string name="MSG_NO_LOGIN_EXIT">소셜워크는 로그인이 필요한 서비스입니다. 앱을 종료합니다.</string>
     <string name="MSG_WALK_RESULT_1">이번 걸음으로 어려운 이웃을 위해</string>
     <string name="MSG_WALK_RESULT_2">%d 하트가 기부되었습니다.</string>
@@ -75,12 +80,9 @@
     <string name="MSG_STOP_WALKING_CONFIRM">걷기를 종료하시겠습니까?</string>
     <string name="MSG_CLEAR_HISTORY_CONFIRM">모든 히스토리를 삭제하시겠습니까?</string>
     <string name="MSG_LOGOUT_CONFIRM">로그아웃 하시겠습니까?</string>
+    <string name="MSG_COMMUNITY_SIGNUP_CONFIRM">커뮤니티에 가입하지 않았습니다.\n커뮤니티 검색 화면으로 이동하시겠습니까?</string>
 
     <color name="WALK_INFO_PANEL_BG">#80000000</color>
     <color name="SLIDE_WALK_STATE">#80000000</color>
-
-    <string name="title_activity_settings">Settings</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_profiles">ProfilesActivity</string>
 
 </resources>

@@ -39,7 +39,8 @@ public class Globals
 	public static final String PREF_KEY_USER_ID = "USER_ID";
 	public static final String PREF_KEY_PASSWORD = "PASSWORD";
 	
-	public static final String XML_DATE_FORMAT = "yyyyMMddHHmmss";
+	public static final String DATE_FORMAT_FOR_HISTORY = "yyyyMMddHHmmss";
+	public static final String DATE_FORMAT_FOR_SERVER = "yyyy-MM-dd HH:mm:ss";
 	
 	public static final int NOTI_WALKING = 2000;
 	

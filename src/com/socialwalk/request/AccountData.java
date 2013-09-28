@@ -7,16 +7,15 @@ public class AccountData
 	private String userId, userSequence, userPassword;
 	
 	private String name;
-	private String area;
-	private int areaCode;
-	private String organization;
-	private int organizationCode;
+	private int userType;
+	private int areaCode, areaSubCode;
+	private int organizationCode, organizationSubCode;
+	private String organizationKey;
 	private int gender;
 	private Date birthday;
 	private int weight;
+	private String recommendedId;
 	private int communityId;
-	private String community;
-	private int communityMasterSequence;
 	private boolean verified;
 	private int greenPoint;
 	private int redPoint, redPointTotal;
@@ -43,14 +42,6 @@ public class AccountData
 		this.name = name;
 	}
 
-	public String getArea() {
-		return area;
-	}
-
-	public void setArea(String area) {
-		this.area = area;
-	}
-
 	public int getAreaCode() {
 		return areaCode;
 	}
@@ -59,12 +50,12 @@ public class AccountData
 		this.areaCode = areaCode;
 	}
 
-	public String getOrganization() {
-		return organization;
+	public int getAreaSubCode() {
+		return areaSubCode;
 	}
 
-	public void setOrganization(String organization) {
-		this.organization = organization;
+	public void setAreaSubCode(int areaSubCode) {
+		this.areaSubCode = areaSubCode;
 	}
 
 	public int getOrganizationCode() {
@@ -105,22 +96,6 @@ public class AccountData
 
 	public void setCommunityId(int communityId) {
 		this.communityId = communityId;
-	}
-
-	public String getCommunity() {
-		return community;
-	}
-
-	public void setCommunity(String community) {
-		this.community = community;
-	}
-
-	public int getCommunityMasterSequence() {
-		return communityMasterSequence;
-	}
-
-	public void setCommunityMasterSequence(int communityMasterSequence) {
-		this.communityMasterSequence = communityMasterSequence;
 	}
 
 	public boolean isVerified() {
@@ -185,6 +160,38 @@ public class AccountData
 
 	public void setUserPassword(String userPassword) {
 		this.userPassword = userPassword;
+	}
+
+	public int getUserType() {
+		return userType;
+	}
+
+	public void setUserType(int userType) {
+		this.userType = userType;
+	}
+
+	public String getRecommendedId() {
+		return recommendedId;
+	}
+
+	public void setRecommendedId(String recommendedId) {
+		this.recommendedId = recommendedId;
+	}
+
+	public int getOrganizationSubCode() {
+		return organizationSubCode;
+	}
+
+	public void setOrganizationSubCode(int organizationSubCode) {
+		this.organizationSubCode = organizationSubCode;
+	}
+
+	public String getOrganizationKey() {
+		return organizationKey;
+	}
+
+	public void setOrganizationKey(String organizationKey) {
+		this.organizationKey = organizationKey;
 	}
 
 	

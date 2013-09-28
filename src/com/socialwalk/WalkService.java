@@ -169,7 +169,7 @@ public class WalkService extends Service
 //		Log.d(TAG, strXml);
 		
 		// save log file
-		SimpleDateFormat formatter = new SimpleDateFormat(Globals.XML_DATE_FORMAT);
+		SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATE_FORMAT_FOR_HISTORY);
 		String filename = formatter.format(WalkingData.StartTime) + ".log";
 		
 		try
@@ -185,7 +185,6 @@ public class WalkService extends Service
 			Log.d(TAG, e.getLocalizedMessage());
 			Toast.makeText(getApplicationContext(), "file save failed.", Toast.LENGTH_SHORT).show();
 		}
-		
 				
 		Toast.makeText(getBaseContext(), "social walking stopped.", Toast.LENGTH_SHORT).show();
 		

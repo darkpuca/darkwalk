@@ -1,26 +1,45 @@
 package com.socialwalk;
 
+import java.util.Vector;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class GroupSelectionActivity extends Activity implements OnItemClickListener
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.socialwalk.request.ServerRequestManager;
+
+public class GroupSelectionActivity extends Activity
+implements OnItemClickListener, Response.Listener<String>, Response.ErrorListener, OnClickListener
 {
 	private static final int INTENT_REQ_CREATE_GROUP = 10;
 	private static final int INTENT_REQ_GROUP_JOIN = 11;
 	
-	EditText keyword;
-	ListView resultList;
+	private EditText keyword;
+	private ListView resultList;
+	private Button btnCreate, btnSearch;
+	
+	private CommunityListAdapter m_adapter;
+	private Vector<CommunityListItem> m_searchItems = null;
+	private int pageIndex = 0;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -28,51 +47,20 @@ public class GroupSelectionActivity extends Activity implements OnItemClickListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_selection);
 		
+		m_searchItems = new Vector<CommunityListItem>();
+		m_adapter = new CommunityListAdapter(this, m_searchItems);
+		
 		resultList = (ListView)findViewById(R.id.resultList);
-		resultList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Globals.sampleStrings));
+		resultList.setAdapter(m_adapter);
 		resultList.setOnItemClickListener(this);
 		
 		keyword = (EditText)findViewById(R.id.searchKeyword);		
 		
-		Button btnSelect = (Button)findViewById(R.id.btnSelect);
-		Button btnCancel = (Button)findViewById(R.id.btnCancel);
-		Button btnCreate = (Button)findViewById(R.id.btnCreate);
+		btnCreate = (Button)findViewById(R.id.btnCreate);
+		btnCreate.setOnClickListener(this);
 		
-		btnSelect.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				Intent i = new Intent();
-				i.putExtra("sel_group", "SEL_GROUP");
-				setResult(RESULT_OK, i);
-				finish();
-			}
-		});
-		
-		btnCancel.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				setResult(RESULT_CANCELED);
-				finish();
-			}
-		});
-		
-		btnCreate.setOnClickListener(new OnClickListener()
-		{			
-			@Override
-			public void onClick(View v)
-			{
-				Intent i = new Intent(getBaseContext(), CreateGroupActivity.class);
-				
-				if (0 < keyword.getText().length())
-					i.putExtra(Globals.EXTRA_KEY_GROUP_NAME, keyword.getText().toString());
-				
-				startActivityForResult(i, INTENT_REQ_CREATE_GROUP);
-			}
-		});
+		btnSearch = (Button)findViewById(R.id.btnSearch);
+		btnSearch.setOnClickListener(this);
 	}
 
 	@Override
@@ -127,5 +115,119 @@ public class GroupSelectionActivity extends Activity implements OnItemClickListe
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	@Override
+	public void onClick(View v)
+	{
+		if (btnCreate.equals(v))
+		{
+			Intent i = new Intent(getBaseContext(), CreateGroupActivity.class);
+			if (0 < keyword.getText().length())
+				i.putExtra(Globals.EXTRA_KEY_GROUP_NAME, keyword.getText().toString());
+			
+			startActivityForResult(i, INTENT_REQ_CREATE_GROUP);
+		}
+		else if (btnSearch.equals(v))
+		{
+			if (0 == keyword.getText().length())
+			{
+				AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+				dlg.setCancelable(true);
+				dlg.setTitle(R.string.TITLE_INFORMATION);
+				dlg.setMessage(R.string.MSG_EMPTY_KEYWORD);
+				dlg.setNegativeButton(R.string.CLOSE, new DialogInterface.OnClickListener()
+				{					
+					@Override
+					public void onClick(DialogInterface dialog, int which) { dialog.dismiss(); }
+				});
+				dlg.show();
+			}
+			else
+			{
+				ServerRequestManager server = new ServerRequestManager();
+				pageIndex = 0;
+				server.CommunitySearch(this, this, keyword.getText().toString(), pageIndex);
+			}
+
+			
+		}
+	}
+
+	
+	public class CommunityListItem
+	{
+		public String Name, Description;
+		public int Id;
+	}
+	
+	private static class CommunityItemContainer
+	{
+		public TextView Name;
+		public TextView Description;
+	}
+	
+	public class CommunityListAdapter extends ArrayAdapter<CommunityListItem>
+	{
+		private Activity m_context = null;
+		private Vector<CommunityListItem> m_items = null;
+		
+		public CommunityListAdapter(Activity context, Vector<CommunityListItem> items)
+		{
+			super(context, R.layout.listitem_community_search, items);
+
+			this.m_context = context;
+			this.m_items = items;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent)
+		{
+			CommunityItemContainer container;
+			View rowView = convertView;
+			
+			if (null == rowView)
+			{
+				try {
+					LayoutInflater inflater = m_context.getLayoutInflater();
+					rowView = inflater.inflate(R.layout.listitem_community_search, null, true);					
+				} catch (Exception e) {
+					Log.d("SW", e.getLocalizedMessage());
+					return null;
+				}
+
+				container = new CommunityItemContainer();
+				container.Name = (TextView)rowView.findViewById(R.id.name);
+				container.Description = (TextView)rowView.findViewById(R.id.description);
+				
+				rowView.setTag(container);
+			}
+			else
+			{
+				container = (CommunityItemContainer)rowView.getTag();
+			}
+			
+			CommunityListItem item = m_items.get(position);
+			
+			container.Name.setText(item.Name);
+			container.Description.setText(item.Description);
+			
+			return rowView;
+		}
+	}
+	
+
+	@Override
+	public void onErrorResponse(VolleyError error)
+	{
+		
+	}
+
+	@Override
+	public void onResponse(String response)
+	{
+		MyXmlParser parser = new MyXmlParser(response);
+		
+	}
+
+	
 	
 }

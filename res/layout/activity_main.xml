@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" >
         <ImageButton
-            android:id="@+id/btnHeart"
+            android:id="@+id/btnSponsor"
             android:src="@drawable/ic_launcher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

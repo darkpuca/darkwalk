@@ -118,11 +118,19 @@
 
         <activity
             android:name="com.socialwalk.SettingsActivity"
-            android:label="@string/title_activity_settings" >
+            android:label="@string/TITLE_SETTINGS" >
         </activity>
         <activity
             android:name="com.socialwalk.ProfilesActivity"
-            android:label="@string/title_activity_profiles" >
+            android:label="@string/TITLE_PROFILES" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.SponsorMainActivity"
+            android:label="@string/TITLE_SPONSOR" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.CommunityActivity"
+            android:label="@string/TITLE_COMMUNITY" >
         </activity>
     </application>
 

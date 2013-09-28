@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -87,6 +86,60 @@ implements Response.Listener<String>, Response.ErrorListener
 			}
 		});
         
+        ImageButton btnSponsor = (ImageButton)findViewById(R.id.btnSponsor);
+        btnSponsor.setOnClickListener(new OnClickListener()
+        {			
+			@Override
+			public void onClick(View v)
+			{
+				Intent i = new Intent(getBaseContext(), SponsorMainActivity.class);
+				startActivity(i);
+			}
+		});
+        
+        ImageButton btnGroup = (ImageButton)findViewById(R.id.btnGroup);
+        btnGroup.setOnClickListener(new OnClickListener()
+        {			
+			@Override
+			public void onClick(View v)
+			{
+				if (null == ServerRequestManager.LoginAccount) return;
+				
+				int commId = ServerRequestManager.LoginAccount.getCommunityId();
+				// TODO: 테스트값
+				commId = 0;
+				if (0 == commId)
+				{
+					AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
+					dlg.setCancelable(true);
+					dlg.setTitle(R.string.TITLE_INFORMATION);
+					dlg.setMessage(R.string.MSG_COMMUNITY_SIGNUP_CONFIRM);
+					dlg.setNegativeButton(R.string.CANCEL, new DialogInterface.OnClickListener()
+					{						
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							dialog.dismiss();
+						}
+					});
+					dlg.setPositiveButton(R.string.CONTINUE, new DialogInterface.OnClickListener()
+					{	
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							Intent i = new Intent(getBaseContext(), GroupSelectionActivity.class);
+							startActivityForResult(i, Globals.INTENT_REQ_GROUP_SELECT);
+						}
+					});
+					dlg.show();
+				}
+				else
+				{
+					Intent i = new Intent(getBaseContext(), CommunityActivity.class);
+					startActivity(i);
+				}
+			}
+		});
         
         ImageButton btnHistory = (ImageButton)findViewById(R.id.btnHistory);
         btnHistory.setOnClickListener(new OnClickListener()
@@ -164,7 +217,8 @@ implements Response.Listener<String>, Response.ErrorListener
 	{
 		ServerRequestManager.IsLogin = false;
 		
-//		m_locationManager.removeUpdates(m_locationListener);
+    	if (null != m_locationManager && null != m_locationListener)
+    		m_locationManager.removeUpdates(m_locationListener);
 		
 		super.onDestroy();
 	}
@@ -182,10 +236,20 @@ implements Response.Listener<String>, Response.ErrorListener
         }
         else
         {
-//        	m_locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 100, m_locationListener);
+        	if (null != m_locationManager && null != m_locationListener)
+        		m_locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 100, m_locationListener);
         }
 		
 		super.onResume();
+	}
+
+	@Override
+	protected void onPause()
+	{
+    	if (null != m_locationManager && null != m_locationListener)
+    		m_locationManager.removeUpdates(m_locationListener);
+    	
+		super.onPause();
 	}
 
 
