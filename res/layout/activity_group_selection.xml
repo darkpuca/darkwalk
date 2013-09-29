@@ -35,36 +35,15 @@
         </EditText>
 
     </RelativeLayout>
-    
-<!--     <LinearLayout
-        android:id="@+id/selectionPanel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
-        <Button 
-            android:id="@+id/btnCancel"
-            android:text="@string/CANCEL"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"/>
-        <Button 
-            android:id="@+id/btnSelect"
-            android:text="@string/SELECT"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp" />        
-    </LinearLayout> -->
-    
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_below="@+id/keywordPanel"
-        android:layout_above="@+id/selectionPanel" >
+        android:layout_below="@+id/keywordPanel" >
 
         <Button
-	        android:id="@+id/btnCreate"
+	        android:id="@+id/btnCreateGroup"
 	        android:text="@string/CREATE_GROUP"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
@@ -76,10 +55,20 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
 	        android:layout_marginBottom="10dp"
-	        android:layout_above="@+id/btnCreate" />
-        
+	        android:layout_above="@+id/btnCreateGroup" />
         
     </RelativeLayout>
-    
+
+    <TextView
+        android:id="@+id/noResultMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/keywordPanel"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:text="@string/MSG_NO_SEARCH_RESULT" />
 
 </RelativeLayout>

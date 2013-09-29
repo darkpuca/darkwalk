@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:layout_margin="4dp" >
+
+    <TextView
+        android:id="@+id/subject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="SUBJECT" />
+    
+    <TextView
+        android:id="@+id/writerLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/subject"
+        android:text="@string/WRITER" />
+    <TextView
+        android:id="@+id/writer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/subject"
+        android:layout_toRightOf="@+id/writerLabel"
+        android:textStyle="bold"
+        android:text="WRITER" />
+    
+    <TextView
+        android:id="@+id/viewCount"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/subject"
+        android:layout_alignParentRight="true"
+        android:textStyle="bold"
+        android:text="XXX" />    
+    <TextView
+        android:id="@+id/viewCountLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/subject"
+        android:layout_toLeftOf="@+id/viewCount"
+        android:text="@string/VIEW_COUNT" />
+    
+    <TextView
+        android:id="@+id/replyCount"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="4dp"
+        android:layout_below="@+id/subject"
+        android:layout_toLeftOf="@+id/viewCountLabel"
+        android:textStyle="bold"
+        android:text="XXX" />
+    <TextView
+        android:id="@+id/replyCountLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/subject"
+        android:layout_toLeftOf="@+id/replyCount"
+        android:text="@string/REPLY_COUNT" />
+
+</RelativeLayout>

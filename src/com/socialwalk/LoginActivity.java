@@ -50,7 +50,7 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 		btnLogin = (Button)findViewById(R.id.btnLogin);
 
 		// sample value
-		txtUid.setText("kms7610@gmail.com");
+		txtUid.setText("kms7610@lycos.co.kr");
 		txtPwd.setText("jin090701");
 		chkAuto.setChecked(false);
 		
@@ -124,18 +124,14 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 	@Override
 	public void onResponse(String response)
 	{
-		Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
-		System.out.println(response);
+		if (0 == response.length()) return;
 		
 		MyXmlParser parser = new MyXmlParser(response);
-		SWResponse swResponse = parser.GetResponse();
-		if (null == swResponse)
-		{
-			Log.e(TAG, "response string error");
-			return;
-		}
 		
-		if (0 == swResponse.Code)
+		SWResponse swResponse = parser.GetResponse();
+		if (null == swResponse) return;
+		
+		if (Globals.ERROR_NONE == swResponse.Code)
 		{
 			ServerRequestManager.IsLogin = true;
 			ServerRequestManager.BuildLoginAccountFromSessionData();
@@ -143,10 +139,6 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 			Utils.SaveLoginParams(this, chkAuto.isChecked(), txtUid.getText().toString(), txtPwd.getText().toString());
 			setResult(RESULT_OK);
 			this.finish();
-		}
-		else
-		{
-			Toast.makeText(this, swResponse.Message, Toast.LENGTH_SHORT).show();
 		}
 	}
 }

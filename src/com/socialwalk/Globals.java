@@ -1,5 +1,7 @@
 package com.socialwalk;
 
+import java.util.Date;
+
 
 
 public class Globals
@@ -26,8 +28,10 @@ public class Globals
 	public static final String AROUNDERS_APP_KEY = "123";
 
 	public static final String EXTRA_KEY_URL = "url";
-	public static final String EXTRA_KEY_GROUP_NAME = "group_name";
-	public static final String EXTRA_KEY_GROUP_ID = "group_id";
+	public static final String EXTRA_KEY_COMMUNITY_ID = "group_id";
+	public static final String EXTRA_KEY_COMMUNITY_NAME = "group_name";
+	public static final String EXTRA_KEY_COMMUNITY_DESC = "group_desc";
+	
 	public static final String EXTRA_KEY_LOCATION = "location";
 	public static final String EXTRA_KEY_FILENAME = "filename";
 
@@ -47,12 +51,26 @@ public class Globals
 	public static final int INTENT_REQ_LOGIN = 10;
 	public static final int INTENT_REQ_GROUP_SELECT = 11;
 	public static final int INTENT_REQ_INTRO = 12;
+	public static final int INTENT_REQ_POSTING = 13;
 
 	public static final long INTRO_WAITING = 1000;
+	
+	public static final int ERROR_NONE					= 0;
+	public static final int ERROR_NO_RESULT				= 1;
+	public static final int ERROR_EXISTED_ACCOUNT		= 62;
+	public static final int ERROR_SECEDED_ACCOUNT		= 63;
+	public static final int ERROR_SESSION_DATA			= 93;
+	public static final int ERROR_SESSION_EXPIRED		= 94;
+	public static final int ERROR_PASSWORD_NOT_MATCH	= 96;
+	public static final int ERROR_SYNTAX				= 98;
+	public static final int ERROR_UNKNOWN				= 99;
 	
 	private Globals() {
 		// TODO Auto-generated constructor stub
 	}
+
+	
+	
 
 
 }

@@ -30,11 +30,13 @@ import com.socialwalk.request.ImageCacheManager;
 import com.socialwalk.request.ServerRequestManager;
 
 public class MainActivity extends Activity
-implements Response.Listener<String>, Response.ErrorListener
+implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 {	
 	private ServerRequestManager m_server = null;
 	private LocationManager m_locationManager;
 	private LocationListener m_locationListener;
+	private AroundersItem m_currentArounders = null;
+	private RelativeLayout m_aroundersLayout = null;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,8 +50,9 @@ implements Response.Listener<String>, Response.ErrorListener
         m_locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         m_locationListener = new MyLocationListener();
         
-        RelativeLayout layoutArounders = (RelativeLayout)findViewById(R.id.layoutArounders);
-        layoutArounders.setVisibility(View.GONE);
+        m_aroundersLayout = (RelativeLayout)findViewById(R.id.layoutArounders);
+        m_aroundersLayout.setVisibility(View.GONE);
+        m_aroundersLayout.setOnClickListener(this);
         
         // create utility class
         Utils.CreateDefaultTool(this);
@@ -106,9 +109,9 @@ implements Response.Listener<String>, Response.ErrorListener
 				if (null == ServerRequestManager.LoginAccount) return;
 				
 				int commId = ServerRequestManager.LoginAccount.getCommunityId();
-				// TODO: 테스트값
-				commId = 0;
-				if (0 == commId)
+//				// 테스트값
+//				commId = -1;
+				if (-1 == commId)
 				{
 					AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
 					dlg.setCancelable(true);
@@ -136,6 +139,7 @@ implements Response.Listener<String>, Response.ErrorListener
 				else
 				{
 					Intent i = new Intent(getBaseContext(), CommunityActivity.class);
+					i.putExtra(Globals.EXTRA_KEY_COMMUNITY_ID, commId);
 					startActivity(i);
 				}
 			}
@@ -160,18 +164,6 @@ implements Response.Listener<String>, Response.ErrorListener
 			{
 				Intent i = new Intent(getBaseContext(), SettingsActivity.class);
 				startActivity(i);
-			}
-		});
-        
-        // test button
-        Button btnTest = (Button)findViewById(R.id.btnTest);
-        btnTest.setOnClickListener(new OnClickListener()
-        {	
-			@Override
-			public void onClick(View v)
-			{
-				Intent i = new Intent(getBaseContext(), GroupSelectionActivity.class);
-				startActivityForResult(i, Globals.INTENT_REQ_GROUP_SELECT);
 			}
 		});
     }
@@ -272,7 +264,9 @@ implements Response.Listener<String>, Response.ErrorListener
 		{
 			if (RESULT_OK == resultCode)
 			{
-				Toast.makeText(this, data.getStringExtra("sel_group"), Toast.LENGTH_SHORT).show();
+				
+
+			
 			}
 		}
 		else if (Globals.INTENT_REQ_INTRO == requestCode)
@@ -313,6 +307,8 @@ implements Response.Listener<String>, Response.ErrorListener
 	@Override
 	public void onResponse(String response)
 	{
+		if (0 == response.length()) return;
+		
 		Vector<AroundersItem> items = new MyXmlParser(response).GetArounders();
 		if (null == items) return;
 		if (0 == items.size()) return;
@@ -320,17 +316,17 @@ implements Response.Listener<String>, Response.ErrorListener
 		RelativeLayout layoutArounders = (RelativeLayout)findViewById(R.id.layoutArounders);
 		layoutArounders.setVisibility(View.VISIBLE);
 		
-		AroundersItem item = items.get(0);
+		m_currentArounders = items.get(0);
 		
 		NetworkImageView adIcon = (NetworkImageView)findViewById(R.id.adIcon);
 		TextView adCompany = (TextView)findViewById(R.id.adCompany);
 		TextView adPromotion = (TextView)findViewById(R.id.adPromotion);
 		TextView adDistance = (TextView)findViewById(R.id.adDistance);
 		
-		adIcon.setImageUrl(item.IconURL, ImageCacheManager.getInstance().getImageLoader());
-		adCompany.setText(item.Company);
-		adPromotion.setText(item.Promotion);
-		adDistance.setText(Integer.toString(item.Distance) + "m");
+		adIcon.setImageUrl(m_currentArounders.IconURL, ImageCacheManager.getInstance().getImageLoader());
+		adCompany.setText(m_currentArounders.Company);
+		adPromotion.setText(m_currentArounders.Promotion);
+		adDistance.setText(Integer.toString(m_currentArounders.Distance) + "m");
 	}
 	
 	
@@ -361,11 +357,22 @@ implements Response.Listener<String>, Response.ErrorListener
 		}
 
 		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-			// TODO Auto-generated method stub
-			
+		public void onStatusChanged(String provider, int status, Bundle extras)
+		{
 		}
 		
 	}
-    
+
+	@Override
+	public void onClick(View v)
+	{
+		if (m_aroundersLayout.equals(v))
+		{
+			if (null == m_currentArounders) return;
+			
+			Intent i = new Intent(getBaseContext(), WebPageActivity.class);
+			i.putExtra(Globals.EXTRA_KEY_URL, m_currentArounders.TargetURL);
+			startActivity(i);
+		}
+	}
 }

@@ -98,7 +98,6 @@ public class MyXmlParser
 			Log.d(TAG, e.getLocalizedMessage());
 			return null;
 		}
-
 	}
 
 	public WalkHistory GetWalkHistory()
@@ -140,12 +139,7 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("isValid"))
 						logItem.IsValid = Boolean.parseBoolean(parser.nextText());
 					else if (tagName.equalsIgnoreCase("latitude"))
-					{
-						String text = parser.nextText();
-						double latitude = Double.parseDouble(text);
-						logItem.LogLocation.setLatitude(latitude);
-//						logItem.LogLocation.setLatitude(Double.parseDouble(parser.nextText()));
-					}
+						logItem.LogLocation.setLatitude(Double.parseDouble(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("longitude"))
 						logItem.LogLocation.setLongitude(Double.parseDouble(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("altitude"))
@@ -242,7 +236,13 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("recommender_seq"))
 						acc.setRecommendedId(parser.nextText());
 					else if (tagName.equalsIgnoreCase("community_id"))
-						acc.setCommunityId(Integer.parseInt(parser.nextText()));
+					{
+						String val = parser.nextText();
+						if (0 == val.length())
+							acc.setCommunityId(-1);
+						else
+							acc.setCommunityId(Integer.parseInt(val));
+					}
 					else if (tagName.equalsIgnoreCase("verified"))
 						acc.setVerified(1 == Integer.parseInt(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("reg_date"))
@@ -264,7 +264,78 @@ public class MyXmlParser
 			Log.d(TAG, e.getLocalizedMessage());
 			return null;
 		}
-
+	}
+	
+	public CommunityDetail GetCommunityDetail()
+	{
+		if (null == m_xml || 0 == m_xml.length()) return null;
+		
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(m_xml));
+			
+			CommunityDetail detail = null;
+			
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT)
+			{
+				String tagName = null;
+				
+				switch (eventType)
+				{
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.END_DOCUMENT:						
+					break;
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("community"))
+						detail = new CommunityDetail();
+					else if (tagName.equalsIgnoreCase("community_id"))
+						detail.Id = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("community_type"))
+						detail.Type = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("owner_id"))
+						detail.OwnerId = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("community_name"))
+						detail.Name = parser.nextText();
+					else if (tagName.equalsIgnoreCase("approve_type"))
+						detail.SignupType = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("community_desc"))
+						detail.Description = parser.nextText();
+					else if (tagName.equalsIgnoreCase("owner_first_name"))
+						detail.AreaName = parser.nextText();
+					else if (tagName.equalsIgnoreCase("owner_second_name"))
+						detail.AreaSubName = parser.nextText();
+					else if (tagName.equalsIgnoreCase("opening_seq"))
+						detail.MakerId = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("opening_name"))
+						detail.MakerName = parser.nextText();
+					else if (tagName.equalsIgnoreCase("operator_seq"))
+						detail.MasterId = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("operator_name"))
+						detail.MasterName = parser.nextText();
+					else if (tagName.equalsIgnoreCase("community_member_count"))
+						detail.MemberCount = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("reg_date"))
+						detail.RegDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("modify_date"))
+						detail.ModifyDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+					break;
+				case XmlPullParser.END_TAG:
+					break;
+				}					
+				eventType = parser.next();
+			}			
+			return detail;
+		} 
+		catch (Exception e)
+		{
+			Log.d(TAG, e.getLocalizedMessage());
+			return null;
+		}
 	}
 	
 	public Vector<AroundersItem> GetArounders()
@@ -341,10 +412,7 @@ public class MyXmlParser
 			Log.d(TAG, e.getLocalizedMessage());
 			return null;
 		}
-
-	}
-
-	
+	}	
 	
 	public SWResponse GetResponse()
 	{
@@ -385,7 +453,6 @@ public class MyXmlParser
 						int len = response.CodeBlock.length();
 						if (2 <= len)
 							response.Code = Integer.parseInt(response.CodeBlock.substring(len - 2, len));
-						
 					}
 						
 					break;
@@ -402,6 +469,49 @@ public class MyXmlParser
 		}
 	}
 
+	public int GetReturnId()
+	{
+		if (null == m_xml || 0 == m_xml.length()) return -1;
+		
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(m_xml));
+			
+			SWResponse response = null;
+			
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT)
+			{
+				String tagName = null;
+				
+				switch (eventType)
+				{
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.END_DOCUMENT:						
+					break;
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("community_id"))
+						return Integer.parseInt(parser.nextText());
+					break;
+				case XmlPullParser.END_TAG:
+					break;
+				}					
+				eventType = parser.next();
+			}
+			
+			return -1;			
+		} 
+		catch (Exception e)
+		{
+			Log.d(TAG, e.getLocalizedMessage());
+			return -1;
+		}
+
+	}
 	
 	
 
@@ -439,5 +549,19 @@ public class MyXmlParser
 		public int Distance;
 		public double Latitude;
 		public double Longitude;
+	}
+	
+	public class CommunityDetail
+	{
+		public int Id, Type, OwnerId, SignupType, VerifyCode;
+		public String AreaName, AreaSubName, Name, Description;
+		public int MakerId, MasterId, MemberCount;
+		public String MakerName, MasterName;
+		public Date RegDate, ModifyDate;
+		
+		public CommunityDetail()
+		{
+			
+		}
 	}
 }

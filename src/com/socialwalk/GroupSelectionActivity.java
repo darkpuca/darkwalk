@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.request.ServerRequestManager;
 
 public class GroupSelectionActivity extends Activity
@@ -35,6 +36,7 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 	private EditText keyword;
 	private ListView resultList;
 	private Button btnCreate, btnSearch;
+	private TextView noResultMessage;
 	
 	private CommunityListAdapter m_adapter;
 	private Vector<CommunityListItem> m_searchItems = null;
@@ -56,11 +58,13 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		
 		keyword = (EditText)findViewById(R.id.searchKeyword);		
 		
-		btnCreate = (Button)findViewById(R.id.btnCreate);
+		btnCreate = (Button)findViewById(R.id.btnCreateGroup);
 		btnCreate.setOnClickListener(this);
 		
 		btnSearch = (Button)findViewById(R.id.btnSearch);
 		btnSearch.setOnClickListener(this);
+		
+		noResultMessage = (TextView)findViewById(R.id.noResultMessage);
 	}
 
 	@Override
@@ -77,7 +81,7 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		
 		int groupId = 12345;
 		Intent i = new Intent(this, GroupDetailActivity.class);
-		i.putExtra(Globals.EXTRA_KEY_GROUP_ID, groupId);
+		i.putExtra(Globals.EXTRA_KEY_COMMUNITY_ID, groupId);
 		startActivityForResult(i, INTENT_REQ_GROUP_JOIN);
 	}
 
@@ -89,23 +93,26 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		{
 			if (RESULT_OK == resultCode)
 			{
-				String name = data.getStringExtra(Globals.EXTRA_KEY_GROUP_NAME);
-				Toast.makeText(this, "create group ok. name: " + name, Toast.LENGTH_SHORT).show();
+				int groupId = data.getIntExtra(Globals.EXTRA_KEY_COMMUNITY_ID, -1);
+				String name = data.getStringExtra(Globals.EXTRA_KEY_COMMUNITY_NAME);
+				String desc = data.getStringExtra(Globals.EXTRA_KEY_COMMUNITY_DESC);
 				
-				Intent i = new Intent();
-				i.putExtra(Globals.EXTRA_KEY_GROUP_NAME, name);
-				setResult(RESULT_OK, i);
+				Toast.makeText(getBaseContext(), "id:" + groupId + ", name:" + name + ", desc:" + desc, Toast.LENGTH_SHORT).show();
 				
-				finish();
+//				Intent i = new Intent();
+//				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_ID, groupId);
+//				setResult(RESULT_OK, i);
+//				
+//				finish();
 			}
 		}
 		else if (INTENT_REQ_GROUP_JOIN == requestCode)
 		{
 			if (RESULT_OK == resultCode)
 			{
-				String name = data.getStringExtra(Globals.EXTRA_KEY_GROUP_NAME);
+				String name = data.getStringExtra(Globals.EXTRA_KEY_COMMUNITY_NAME);
 				Intent i = new Intent();
-				i.putExtra(Globals.EXTRA_KEY_GROUP_NAME, name);
+				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, name);
 				setResult(RESULT_OK, i);
 
 				finish();
@@ -122,7 +129,7 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		{
 			Intent i = new Intent(getBaseContext(), CreateGroupActivity.class);
 			if (0 < keyword.getText().length())
-				i.putExtra(Globals.EXTRA_KEY_GROUP_NAME, keyword.getText().toString());
+				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, keyword.getText().toString());
 			
 			startActivityForResult(i, INTENT_REQ_CREATE_GROUP);
 		}
@@ -143,6 +150,8 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 			}
 			else
 			{
+				noResultMessage.setVisibility(View.GONE);
+				
 				ServerRequestManager server = new ServerRequestManager();
 				pageIndex = 0;
 				server.CommunitySearch(this, this, keyword.getText().toString(), pageIndex);
@@ -218,14 +227,25 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{
-		
+		Log.e("", error.getLocalizedMessage());
 	}
 
 	@Override
 	public void onResponse(String response)
 	{
-		MyXmlParser parser = new MyXmlParser(response);
+		if (0 == response.length())
+			Toast.makeText(getBaseContext(), R.string.MSG_NO_SEARCH_RESULT, Toast.LENGTH_SHORT).show();
 		
+		MyXmlParser parser = new MyXmlParser(response);
+		SWResponse result = parser.GetResponse();
+		if (Globals.ERROR_NONE == result.Code)
+		{
+			
+		}
+		else if (Globals.ERROR_NO_RESULT == result.Code)
+		{
+			noResultMessage.setVisibility(View.VISIBLE);			
+		}
 	}
 
 	

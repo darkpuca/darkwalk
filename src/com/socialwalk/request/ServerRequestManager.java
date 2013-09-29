@@ -24,7 +24,11 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 {
 	public static boolean IsLogin = false;
 	public static AccountData LoginAccount = null;
+	
 	private static final String TAG = "SW-NET";
+	private static final int REQUEST_AUTOLOGIN = 1;
+	
+	private int m_reqType = 0;
 
 	public ServerRequestManager()
 	{
@@ -70,6 +74,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 			String uid = loginPrefs.getString(Globals.PREF_KEY_USER_ID, "");
 			String pwd = loginPrefs.getString(Globals.PREF_KEY_PASSWORD, "");
 			
+			m_reqType = REQUEST_AUTOLOGIN;
 			this.Login(this, this, uid, pwd);
 		}
 	}
@@ -111,6 +116,44 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		reqQueue.add(req);		
 	}
 	
+	public void CommunityDetail(Response.Listener<String> listener, Response.ErrorListener errorListener, int communityId)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community/" + communityId;
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+	
+	public void CommunityPosts(Response.Listener<String> listener, Response.ErrorListener errorListener, int communityId, int pageIndex)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+
+		int pageSize = 10;
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community_info/" + communityId + "/page/" + pageIndex + "/" + pageSize;
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+	
+	public void CommunityPosting(Response.Listener<String> listener, Response.ErrorListener errorListener, int communityId, String contents)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community_info/" + communityId;
+		String xmlBody = MyXmlWriter.CommunityPosting(LoginAccount.getUserSequence(), communityId, contents);
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.POST, urlString, listener, errorListener);
+		req.SetXMLBody(xmlBody);
+		reqQueue.add(req);		
+	}
+	
+
+	
 	public void ChangePassword(Response.Listener<String> listener, Response.ErrorListener errorListener, String newPassword)
 	{
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
@@ -138,17 +181,30 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		return true;
 	}
 	
-	public boolean IsExistGroupName(String group_name)
+	public void IsExistGroupName(Response.Listener<String> listener, Response.ErrorListener errorListener, String groupName)
 	{
-		if (group_name.equals("group"))
-			return true;
+		RequestQueue queue = RequestManager.getRequestQueue();
+		if (null == queue) return;
 		
-		return false;
+		String url = Globals.URL_SERVER_DOMAIN + "/api/check/community/community_name/" + groupName;
+
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, url, listener, errorListener);
+		queue.add(req);
 	}
 	
-	public boolean CreateGroup(String group_name)
+	public void CreateGroup(Response.Listener<String> listener, Response.ErrorListener errorListener, String name, String desc)
 	{
-		return true;
+		RequestQueue queue = RequestManager.getRequestQueue();
+		if (null == queue) return;
+		if (null == LoginAccount) return;
+		
+		String url = Globals.URL_SERVER_DOMAIN + "/api/community";
+		String xmlBody = MyXmlWriter.CreateGroup(LoginAccount.getUserSequence(), name, desc);
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.POST, url, listener, errorListener);
+		req.SetXMLBody(xmlBody);
+		
+		queue.add(req);
 	}
 	
 	
@@ -208,15 +264,17 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{
-		// TODO Auto-generated method stub
-		
+		error.printStackTrace();
 	}
 
 	@Override
 	public void onResponse(String response)
 	{
-		SWResponse serverResponse = new MyXmlParser(response).GetResponse();
-		if (0 == serverResponse.Code)
+		if (0 == response.length()) return;
+		SWResponse result = new MyXmlParser(response).GetResponse();
+		if (null == result) return;
+		
+		if (Globals.ERROR_NONE == result.Code)
 		{
 			IsLogin = true;
 			BuildLoginAccountFromSessionData();

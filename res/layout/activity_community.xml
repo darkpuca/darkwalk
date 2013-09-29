@@ -2,15 +2,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".CommunityActivity" >
 
+    <RelativeLayout
+        android:id="@+id/layoutInfo"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_margin="8dp" >
+        
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="NAME" />
+        <TextView
+            android:id="@+id/masterName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:text="MASTER" />
+        <TextView
+            android:id="@+id/regDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name"
+            android:layout_alignParentRight="true"
+            android:text="XXXX-XX-XX" />
+        <Button
+            android:id="@+id/btnWrite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:text="WRITE" />
+        
+    </RelativeLayout>
+    
+    <ListView
+        android:id="@+id/postList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/layoutInfo" />
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/noResult"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/TITLE_COMMUNITY" />
+        android:gravity="center"
+        android:visibility="invisible"
+        android:layout_below="@+id/layoutInfo"
+        android:layout_marginTop="16dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="@string/MSG_NO_COMMUNITY_POST" />
+    
 
 </RelativeLayout>

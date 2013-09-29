@@ -22,3 +22,5 @@ pom.xml.*
 *.class
 bin/*
 bin/*.*
+
+TestInfo.txt

@@ -46,6 +46,75 @@ public class MyXmlWriter
 			return "";
 		}
 	}
+	
+	public static String CreateGroup(String userSequence, String name, String desc)
+	{
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		
+		try
+		{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", true);
+			
+			serializer.startTag("", "request");
+			serializer.startTag("", "community");
+			serializer.startTag("", "user_seq");
+			serializer.text(userSequence);
+			serializer.endTag("", "user_seq");
+			serializer.startTag("", "community_name");
+			serializer.text(name);
+			serializer.endTag("", "community_name");
+			serializer.startTag("", "community_desc");
+			serializer.text(desc);
+			serializer.endTag("", "community_desc");
+			serializer.endTag("", "community");
+			serializer.endTag("", "request");
+			
+			serializer.endDocument();
+			
+			return writer.toString();
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.getLocalizedMessage());
+			return "";
+		}
+	}
+	
+	public static String CommunityPosting(String userSequence, int communityId, String contents)
+	{
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		
+		try
+		{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", true);
+			
+			serializer.startTag("", "request");
+			serializer.startTag("", "community_info");
+			serializer.startTag("", "community_user_seq");
+			serializer.text(userSequence);
+			serializer.endTag("", "community_user_seq");
+			serializer.startTag("", "content");
+			serializer.text(contents);
+			serializer.endTag("", "content");
+			serializer.endTag("", "community_info");
+			serializer.endTag("", "request");
+			
+			serializer.endDocument();
+			
+			return writer.toString();
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.getLocalizedMessage());
+			return "";
+		}
+	}
+
+
 
 	public static String ChangePassword(String oldPassword, String newPassword)
 	{

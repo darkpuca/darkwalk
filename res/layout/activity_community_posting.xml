@@ -1,0 +1,48 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".CreateGroupActivity" >
+    
+	<!-- <EditText
+		android:id="@+id/subject"
+		android:inputType="text"
+		android:hint="@string/SUBJECT"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true" /> -->
+	<TextView
+	    android:id="@+id/title"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="4dp"
+	    android:textSize="18sp"
+	    android:textStyle="bold"
+	    android:text="@string/TITLE_COMMUNITY_POSTING" />
+        
+	<EditText
+	    android:id="@+id/contents"
+	    android:inputType="textMultiLine"
+	    android:layout_width="match_parent" 
+	    android:layout_height="match_parent"
+	    android:scrollbars="vertical"
+	    android:layout_below="@+id/title"
+	    android:layout_above="@+id/btnPost"
+	    android:layout_marginBottom="4dp" />
+      
+	<Button 
+		android:id="@+id/btnPost"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:textSize="16sp"
+		android:textStyle="bold"
+		android:text="@string/POSTING" />     
+    
+    
+
+</RelativeLayout>

@@ -40,6 +40,7 @@ public class SocialWalkRequest extends StringRequest
 	
 	void SetXMLBody(String xmlBody)
 	{
+		System.out.println(xmlBody);
 		this.m_xmlBody = xmlBody;
 	}
 		
@@ -89,15 +90,26 @@ public class SocialWalkRequest extends StringRequest
 	@Override
 	protected void deliverResponse(String response) 
 	{
-		Log.d(TAG, response);		
-		super.deliverResponse(response);
+		String encoded;
+		try
+		{
+			encoded = new String(response.getBytes("8859_1"));
+		} catch (Exception e) {
+			encoded = response;
+		}
+		
+		System.out.println(encoded);
+		super.deliverResponse(encoded);
 	}
 	
 	@Override
 	public byte[] getBody() throws AuthFailureError
 	{
 		if (null != m_xmlBody)
+		{
+			System.out.println(m_xmlBody);
 			return m_xmlBody.getBytes();
+		}
 		
 		return super.getBody();
 	}

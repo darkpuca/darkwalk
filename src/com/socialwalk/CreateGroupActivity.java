@@ -1,25 +1,29 @@
 package com.socialwalk;
 
 
-import com.socialwalk.R;
-import com.socialwalk.request.ServerRequestManager;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.MultiAutoCompleteTextView.CommaTokenizer;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.request.ServerRequestManager;
 
 public class CreateGroupActivity extends Activity
+implements Response.Listener<String>, Response.ErrorListener, View.OnClickListener
 {
-	private boolean isUniqueName = false, isChecked = false;
-	private EditText groupName;
+	private EditText groupName, groupDesc;
+	private Button btnCheck, btnCreate, btnCancel;
 	private ServerRequestManager m_server = null;
+	
+	private static int RequestTypeCheck = 1;
+	private static int RequestTypeCreate = 2;
+	private int RequestType = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -30,56 +34,106 @@ public class CreateGroupActivity extends Activity
 		m_server = new ServerRequestManager();
 		
 		groupName = (EditText)findViewById(R.id.groupName);
-		Button btnCheck = (Button)findViewById(R.id.btnCheck);
-		Button btnCancel = (Button)findViewById(R.id.btnCancel);
-		Button btnCreate = (Button)findViewById(R.id.btnCreate);
+		groupDesc = (EditText)findViewById(R.id.groupDesc);
+		btnCheck = (Button)findViewById(R.id.btnCheck);
+		btnCreate = (Button)findViewById(R.id.btnCreateGroup);
 		
-		btnCheck.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				if (0 == groupName.getText().length())
-				{
-					new AlertDialog.Builder(getBaseContext()).setTitle(R.string.TITLE_INFORMATION).setMessage(R.string.MSG_EMPTY_GROUP_NAME).setNeutralButton(R.string.CLOSE, null).show();
-					return;
-				}
-				
-				String name = groupName.getText().toString();
-				if (true == m_server.IsExistGroupName(name))
-				{
-					new AlertDialog.Builder(getBaseContext()).setTitle(R.string.TITLE_INFORMATION).setMessage(R.string.MSG_DUPLICATE_GROUP_NAME).setNeutralButton(R.string.CLOSE, null).show();
-					return;
-				}
-				
-				if (true == m_server.CreateGroup(name))
-				{
-					Intent i = new Intent();
-					i.putExtra(Globals.EXTRA_KEY_GROUP_NAME, name);
-					setResult(RESULT_OK, i);
-					finish();
-				}
-					
-			}
-		});
+		btnCheck.setOnClickListener(this);
+		btnCreate.setOnClickListener(this);
+		btnCreate.setEnabled(false);
 		
-		btnCancel.setOnClickListener(new OnClickListener()
+		if (getIntent().hasExtra(Globals.EXTRA_KEY_COMMUNITY_NAME))
 		{
-			@Override
-			public void onClick(View v)
-			{
-				setResult(RESULT_CANCELED);
-				finish();
-			}
-		});
-
+			String name = getIntent().getExtras().getString(Globals.EXTRA_KEY_COMMUNITY_NAME);
+			groupName.setText(name);
+			btnCheck.setFocusable(true);
+		}
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.create_group, menu);
-		return true;
+	public void onClick(View v)
+	{
+		if (btnCheck.equals(v))
+		{
+			if (0 == groupName.getText().length())
+			{
+				new AlertDialog.Builder(getBaseContext())
+				.setTitle(R.string.TITLE_INFORMATION)
+				.setMessage(R.string.MSG_EMPTY_GROUP_NAME)
+				.setNeutralButton(R.string.CLOSE, null)
+				.show();
+				
+				return;
+			}
+			
+			String name = groupName.getText().toString();
+			RequestType = RequestTypeCheck;
+			m_server.IsExistGroupName(this, this, name);
+		}
+		else if (btnCreate.equals(v))
+		{
+			String name = groupName.getText().toString();
+			String desc = groupDesc.getText().toString();
+			
+			RequestType = RequestTypeCreate;
+			m_server.CreateGroup(this, this, name, desc);
+		}
+		else if (btnCancel.equals(v))
+		{
+			setResult(RESULT_CANCELED);
+			finish();
+		}
 	}
+
+	@Override
+	public void onErrorResponse(VolleyError error)
+	{
+		error.printStackTrace();
+	}
+
+	@Override
+	public void onResponse(String response)
+	{
+		if (0 == response.length()) return;
+		
+		MyXmlParser parser = new MyXmlParser(response);
+		SWResponse result = parser.GetResponse();
+		if (null == result) return;
+
+		if (RequestTypeCheck == RequestType)
+		{			
+			if (Globals.ERROR_NO_RESULT == result.Code)
+			{
+				btnCreate.setEnabled(true);
+				groupDesc.setFocusable(true);
+			}
+			else
+			{
+				new AlertDialog.Builder(getBaseContext())
+				.setTitle(R.string.TITLE_INFORMATION)
+				.setMessage(R.string.MSG_DUPLICATE_GROUP_NAME)
+				.setNeutralButton(R.string.CLOSE, null)
+				.show();
+				
+				return;
+			}
+			
+		}
+		else if (RequestTypeCreate == RequestType)
+		{
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				int newId = parser.GetReturnId();
+				Intent i = new Intent();
+				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_ID, newId);
+				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, groupName.getText().toString());
+				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_DESC, groupDesc.getText().toString());
+				setResult(RESULT_OK, i);
+				finish();
+			}
+		}
+
+	}
+
 
 }

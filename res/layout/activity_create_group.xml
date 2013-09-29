@@ -17,7 +17,7 @@
 
         <Button
             android:id="@+id/btnCheck"
-            android:layout_width="80dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_alignParentRight="true"
@@ -29,49 +29,45 @@
             android:hint="@string/GROUP_NAME"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/btnCheck" />        
+            android:layout_toLeftOf="@+id/btnCheck" />        
     </RelativeLayout>
     
     <RelativeLayout
         android:id="@+id/descLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_height="match_parent"
         android:layout_below="@+id/nameLayout" >
+        
         <TextView
             android:id="@+id/groupDescLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_marginBottom="2dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
             android:text="@string/GROUP_DESCRIPTION" />
+        
         <EditText
             android:id="@+id/groupDesc"
             android:inputType="textMultiLine"
             android:layout_width="match_parent" 
-            android:layout_height="200dp"
-            android:layout_below="@+id/groupDescLabel" />
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:layout_below="@+id/groupDescLabel"
+            android:layout_above="@+id/btnCreateGroup"
+            android:layout_marginBottom="4dp" />
+        
+		<Button 
+			android:id="@+id/btnCreateGroup"
+			android:text="@string/CREATE_GROUP"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true" />        
         
     </RelativeLayout>
     
-	<LinearLayout
-        android:id="@+id/buttonLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
-        <Button 
-            android:id="@+id/btnCancel"
-            android:text="@string/CANCEL"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"/>
-        <Button 
-            android:id="@+id/btnCreate"
-            android:text="@string/CREATE_GROUP"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp" />        
-    </LinearLayout>
+    
     
 
 </RelativeLayout>

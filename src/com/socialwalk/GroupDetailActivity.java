@@ -35,7 +35,7 @@ public class GroupDetailActivity extends Activity
 				if (true == m_server.GroupJoin("root", selGroupId))
 				{
 					Intent i = new Intent();
-					i.putExtra(Globals.EXTRA_KEY_GROUP_ID, selGroupId);
+					i.putExtra(Globals.EXTRA_KEY_COMMUNITY_ID, selGroupId);
 					setResult(RESULT_OK, i);
 					finish();
 				}

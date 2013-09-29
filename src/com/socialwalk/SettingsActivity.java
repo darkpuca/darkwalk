@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.request.ServerRequestManager;
+import com.socialwalk.request.SocialWalkRequest;
 
 public class SettingsActivity extends Activity 
 implements OnClickListener, Response.Listener<String>, Response.ErrorListener 
@@ -118,6 +119,8 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 		if (0 == serverResponse.Code)
 		{
 			ServerRequestManager.IsLogin = false;
+			SocialWalkRequest.ClearSessionInformation();
+			
 			UpdateProfiles();
 		}
 	}

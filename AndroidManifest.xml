@@ -132,6 +132,10 @@
             android:name="com.socialwalk.CommunityActivity"
             android:label="@string/TITLE_COMMUNITY" >
         </activity>
+        <activity
+            android:name="com.socialwalk.CommunityPostingActivity"
+            android:label="@string/TITLE_COMMUNITY_POSTING" >
+        </activity>
     </application>
 
 </manifest>
