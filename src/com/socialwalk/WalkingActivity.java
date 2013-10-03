@@ -1,11 +1,13 @@
 package com.socialwalk;
 
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -15,12 +17,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nhn.android.maps.NMapActivity;
-import com.nhn.android.maps.NMapCompassManager;
 import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapLocationManager;
 import com.nhn.android.maps.NMapView;
@@ -59,10 +62,22 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_walk);
 		
-		Button btnStop = (Button)findViewById(R.id.btnWalkStop);
-		btnStop.setOnClickListener(this);
+		RelativeLayout layoutStop = (RelativeLayout)findViewById(R.id.layoutStop);
+		layoutStop.setOnClickListener(this);
 		
 		walkAni = (ImageView)findViewById(R.id.walkAniImage);
+		
+		walkAni.setBackgroundResource(R.drawable.charactor_walk_animation);
+		walkAni.post(new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+				AnimationDrawable charactorAnimation = (AnimationDrawable)walkAni.getBackground();
+				charactorAnimation.start();
+		    }
+		});
+		
 		walkMap = (NMapView)findViewById(R.id.walkMap);
 		
 		walkMap.setApiKey(NAVER_MAP_KEY);
@@ -92,9 +107,33 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 			walkAni.setVisibility(View.VISIBLE);
 		}
 		
-		Button btnMyLocation = (Button)findViewById(R.id.btnMyLocation);
+		ImageButton btnMyLocation = (ImageButton)findViewById(R.id.btnMyLocation);
 		btnMyLocation.setVisibility(walkMap.getVisibility());
 		
+		btnMyLocation.setOnClickListener(new OnClickListener()
+		{					
+			@Override
+			public void onClick(View v)
+			{
+				if (null != mapMyLocationOverlay)
+				{
+					if (!mapOverlayManager.hasOverlay(mapMyLocationOverlay))
+						mapOverlayManager.addOverlay(mapMyLocationOverlay);
+
+					boolean isMyLocationEnabled = mapLocationManager.enableMyLocation(true);
+					if (!isMyLocationEnabled)
+					{
+						Toast.makeText(WalkingActivity.this, "Please enable a My Location source in system settings", Toast.LENGTH_LONG).show();
+
+						Intent goToSettings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+						startActivity(goToSettings);
+
+						return;
+					}
+				}
+			}
+		});
+
 		
 		TextView userName = (TextView)findViewById(R.id.userName);
 		userName.setText("darkpuca");
@@ -116,34 +155,7 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 				{
 					walkMap.setVisibility(View.INVISIBLE);
 					walkAni.setVisibility(View.VISIBLE);
-				}
-				
-				Button btnMyLocation = (Button)findViewById(R.id.btnMyLocation);
-				btnMyLocation.setVisibility(walkMap.getVisibility());
-				
-				btnMyLocation.setOnClickListener(new OnClickListener()
-				{					
-					@Override
-					public void onClick(View v)
-					{
-						if (null != mapMyLocationOverlay)
-						{
-							if (!mapOverlayManager.hasOverlay(mapMyLocationOverlay))
-								mapOverlayManager.addOverlay(mapMyLocationOverlay);
-
-							boolean isMyLocationEnabled = mapLocationManager.enableMyLocation(true);
-							if (!isMyLocationEnabled)
-							{
-								Toast.makeText(WalkingActivity.this, "Please enable a My Location source in system settings", Toast.LENGTH_LONG).show();
-
-								Intent goToSettings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-								startActivity(goToSettings);
-
-								return;
-							}
-						}
-					}
-				});
+				}				
 			}
 		});
 		
@@ -173,7 +185,7 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 							WalkLogItem lastItem = currentWalk.GetLastValidItem();
 							if (null != lastItem)
 							{
-								String speed = String.format("%.2fm/s", lastItem.CurrentSpeed);
+								String speed = String.format(getResources().getString(R.string.FORMAT_SPEED), lastItem.CurrentSpeed);
 								TextView userName = (TextView)findViewById(R.id.userName);
 								userName.setText(speed);
 								
@@ -306,7 +318,7 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 	@Override
 	public void onClick(View v)
 	{
-		if (R.id.btnWalkStop == v.getId())
+		if (R.id.layoutStop == v.getId())
 		{
 			AlertDialog.Builder dlg = new AlertDialog.Builder(this);
 			dlg.setCancelable(true);
@@ -317,6 +329,9 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 				@Override
 				public void onClick(DialogInterface dialog, int which)
 				{
+					AnimationDrawable charactorAnimation = (AnimationDrawable)walkAni.getBackground();
+					charactorAnimation.stop();
+
 					// 서비스 중지
 					Intent svcIntent = new Intent(getApplicationContext(), WalkService.class);
 					stopService(svcIntent);
@@ -371,14 +386,14 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 		@Override
 		public void onLocationUpdateTimeout(NMapLocationManager locationManager)
 		{
-			Toast.makeText(WalkingActivity.this, "현재 위치를 확인할 수 없습니다.", Toast.LENGTH_LONG).show();
+			Toast.makeText(WalkingActivity.this, R.string.MSG_MY_LOCATION_FAIL, Toast.LENGTH_LONG).show();
 			stopMyLocation();
 		}
 
 		@Override
 		public void onLocationUnavailableArea(NMapLocationManager locationManager, NGeoPoint myLocation)
 		{
-			Toast.makeText(WalkingActivity.this, "Your current location is unavailable area.", Toast.LENGTH_LONG).show();
+			Toast.makeText(WalkingActivity.this, R.string.MSG_MY_LOCATION_FAIL, Toast.LENGTH_LONG).show();
 			stopMyLocation();
 		}
 

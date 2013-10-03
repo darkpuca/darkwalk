@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 public class IntroActivity extends Activity
 {
@@ -35,8 +36,8 @@ public class IntroActivity extends Activity
 		closeTimer = new Timer();
 		closeTimer.schedule(closeTask, Globals.INTRO_WAITING);
 		
-		Button btnAd = (Button)findViewById(R.id.btnAd);
-		btnAd.setOnClickListener(new OnClickListener()
+		RelativeLayout buttonLayout = (RelativeLayout)findViewById(R.id.layoutHeartButton);
+		buttonLayout.setOnClickListener(new OnClickListener()
 		{			
 			@Override
 			public void onClick(View v)

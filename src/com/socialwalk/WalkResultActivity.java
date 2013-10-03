@@ -50,29 +50,7 @@ public class WalkResultActivity extends Activity
 			walkTime.setText(lastWalk.TotalWalkingTimeString());
 			walkSpeed.setText(lastWalk.AverageSpeed());
 		}
-		
-		Button btnRoute = (Button)findViewById(R.id.btnRoute);
-		btnRoute.setOnClickListener(new OnClickListener()
-		{			
-			@Override
-			public void onClick(View v)
-			{
-				WalkHistory lastWalk = WalkHistoryManager.LastWalking();
-				if(null != lastWalk)
-				{
-					Intent i = new Intent(getBaseContext(), WalkRouteActivity.class);
-					i.putExtra(Globals.EXTRA_KEY_FILENAME, lastWalk.FileName);
-					startActivity(i);
-				}
-			}
-		});
-	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.walk_result, menu);
-		return true;
 	}
 
 }

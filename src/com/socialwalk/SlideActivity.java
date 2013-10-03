@@ -6,8 +6,7 @@ import java.util.Calendar;
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
@@ -19,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,8 +27,6 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.socialwalk.MyXmlParser.SlideAdData;
 import com.socialwalk.request.ImageCacheManager;
@@ -54,7 +52,7 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 	boolean isDragmode;
 	
 	LayoutParams layoutParams;
-	int m_windowWidth, m_windowHeight;
+	private int m_windowWidth, m_windowHeight;
 	int m_sliderWidth, m_sliderHeight;
 	ImageView imgCenter, imgAd, imgHome, imgStart, imgStop;
 	RelativeLayout sliderLayout;
@@ -75,7 +73,7 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+				
 //		int flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_FULLSCREEN;
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
 		getWindow().addFlags(flags);
@@ -93,13 +91,17 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		imgStart = (ImageView)findViewById(R.id.imgSlideStart);
 		imgStop = (ImageView)findViewById(R.id.imgSlideStop);
 		
-		BitmapDrawable bd=(BitmapDrawable) this.getResources().getDrawable(R.drawable.ic_launcher);
-		m_sliderWidth = bd.getBitmap().getHeight();
-		m_sliderHeight = bd.getBitmap().getWidth();
+		int centerSize = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, this.getResources().getDisplayMetrics());
+		m_sliderWidth = m_sliderHeight = centerSize;
+//		BitmapDrawable bd=(BitmapDrawable) this.getResources().getDrawable(R.drawable.ic_launcher);
+//		m_sliderWidth = bd.getBitmap().getHeight();
+//		m_sliderHeight = bd.getBitmap().getWidth();
 		
 		// slider 레이아웃 위치조정
 		m_windowWidth = getWindowManager().getDefaultDisplay().getWidth();
 		m_windowHeight = getWindowManager().getDefaultDisplay().getHeight();
+		
+
 		Log.d(TAG, "window w:" + m_windowWidth +", h:" + m_windowHeight);
 
 		MoveSliderToStartPosition();
@@ -217,9 +219,15 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 
 	private void MoveSliderToStartPosition()
 	{
-		int layoutH = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350, this.getResources().getDisplayMetrics());
+		Rect rectgle= new Rect();
+		Window window= getWindow();
+		window.getDecorView().getWindowVisibleDisplayFrame(rectgle);
+		int statusBarHeight = rectgle.top;
+
+		int layoutH = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 320, this.getResources().getDisplayMetrics());
+		int marginBottom = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, this.getResources().getDisplayMetrics());
 		int centerX = (m_windowWidth - m_sliderWidth) / 2;
-		int centerY = (m_windowHeight - layoutH) + (layoutH - m_sliderHeight) / 2;
+		int centerY = (m_windowHeight - layoutH - statusBarHeight - marginBottom) + (layoutH - m_sliderHeight) / 2;
 		
 		MarginLayoutParams centerMarginParams = new MarginLayoutParams(imgCenter.getLayoutParams());
 		centerMarginParams.setMargins(centerX, centerY, 0, 0);
@@ -509,6 +517,7 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 			UpdateControls(adData);
 		}
 	}
+
 }
 
 

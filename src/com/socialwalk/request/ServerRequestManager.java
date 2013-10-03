@@ -22,7 +22,7 @@ import com.socialwalk.MyXmlWriter;
 
 public class ServerRequestManager implements Response.Listener<String>, Response.ErrorListener
 {
-	public static boolean IsLogin = false;
+	public static boolean IsLogin = true;
 	public static AccountData LoginAccount = null;
 	
 	private static final String TAG = "SW-NET";

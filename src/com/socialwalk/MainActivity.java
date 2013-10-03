@@ -66,8 +66,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		startActivityForResult(i, Globals.INTENT_REQ_INTRO);
         
         // start button action
-        Button btnStart = (Button)findViewById(R.id.btnWalkStart);
-        btnStart.setOnClickListener(new OnClickListener()
+		RelativeLayout layoutStart = (RelativeLayout)findViewById(R.id.layoutStartButton);
+		layoutStart.setOnClickListener(new OnClickListener()
         {			
 			@Override
 			public void onClick(View v)
@@ -320,7 +320,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		
 		NetworkImageView adIcon = (NetworkImageView)findViewById(R.id.adIcon);
 		TextView adCompany = (TextView)findViewById(R.id.adCompany);
-		TextView adPromotion = (TextView)findViewById(R.id.adPromotion);
+		TextView adPromotion = (TextView)findViewById(R.id.adPromo);
 		TextView adDistance = (TextView)findViewById(R.id.adDistance);
 		
 		adIcon.setImageUrl(m_currentArounders.IconURL, ImageCacheManager.getInstance().getImageLoader());

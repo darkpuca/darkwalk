@@ -2,6 +2,8 @@
 
 import java.io.File;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Vector;
 
 import android.app.Activity;
@@ -22,8 +24,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,8 +65,8 @@ public class WalkHistoryActivity extends Activity
 		
 		registerForContextMenu(m_historyList);
 		
-		Button btnRanking = (Button)findViewById(R.id.btnRanking);
-		btnRanking.setOnClickListener(new OnClickListener()
+		RelativeLayout rankingLayout = (RelativeLayout)findViewById(R.id.rankButtonLayout);
+		rankingLayout.setOnClickListener(new OnClickListener()
 		{			
 			@Override
 			public void onClick(View v)
@@ -242,7 +244,8 @@ public class WalkHistoryActivity extends Activity
 			
 			WalkHistory history = m_histories.get(position);
 			
-			String dateString = DateFormat.getDateTimeInstance().format(history.StartTime);
+			DateFormat sdf = new SimpleDateFormat("yyyy. MM.dd HH:mm", Locale.US);
+			String dateString = sdf.format(history.StartTime);
 			viewContainer.logDate.setText(dateString);
 			viewContainer.hearts.setText("xxx ÇÏÆ®");
 			viewContainer.distance.setText(history.TotalDistanceString());

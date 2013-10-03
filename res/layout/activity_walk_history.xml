@@ -2,33 +2,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin"
+    android:background="@color/MAIN_BG"
     tools:context=".WalkHistoryActivity" >
 
-    <Button
-        android:id="@+id/btnRanking"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:text="@string/SHOW_RANKING" />
-    
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignBaseline="@+id/btnRanking"
-        android:textSize="20sp"
-        android:textStyle="bold"
-		android:text="@string/TITLE_WALK_HISTORY" />
+    <RelativeLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginBottom="@dimen/activity_vertical_margin" >
+
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_alignParentTop="true"
+	        android:textSize="22sp"
+	        android:textStyle="bold"
+	        android:textColor="@color/DARK_GRAY"
+			android:text="@string/TITLE_WALK_HISTORY" />
+
+	    <RelativeLayout
+	        android:id="@+id/rankButtonLayout"
+	        android:layout_width="120dp"
+	        android:layout_height="40dp"
+	        android:layout_alignParentTop="true"
+	        android:layout_alignParentRight="true"
+	        android:padding="6dp"
+	        android:background="@drawable/ranking_button_bg" >
+	        
+	        <ImageView
+	            android:id="@+id/rankIcon"
+	            android:layout_width="24dp"
+	            android:layout_height="24dp"
+	            android:layout_alignParentLeft="true"
+	            android:layout_centerVertical="true"
+	            android:layout_marginLeft="4dp"
+	            android:src="@drawable/ranking_icon" />
+	        
+	        <TextView
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_toRightOf="@+id/rankIcon"
+	            android:layout_centerVertical="true"
+	            android:gravity="center"
+	            android:textSize="14sp"
+	            android:textColor="@color/WHITE"
+		        android:textStyle="bold"
+		        android:text="@string/SHOW_RANKING" />
+	        
+	    </RelativeLayout>
+	    	    
+    </RelativeLayout>
     
     <ListView
         android:id="@+id/historyList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btnRanking" >
+        android:layout_below="@+id/titleLayout"
+        android:padding="8dp"
+        android:background="@drawable/innerframe_shape" >
         
     </ListView>
 

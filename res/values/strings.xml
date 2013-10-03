@@ -31,7 +31,7 @@
     <string name="USER_ID">사용자 ID</string>
     <string name="PASSWORD">비밀번호</string>
     <string name="SIGN_UP">회원가입</string>
-    <string name="FIND_PASSWORD">비밀번호 찾기</string>
+    <string name="FIND_PASSWORD"><u>비밀번호 찾기</u></string>
     <string name="AUTO_LOGIN">자동 로그인</string>
     <string name="SEARCH">찾기</string>
     <string name="CANCEL">취소</string>
@@ -69,9 +69,12 @@
     <string name="REPLY_COUNT">댓글수</string>
     <string name="SUBJECT">제목</string>
     <string name="POSTING">글등록</string>
+    <string name="USER_UPPER">USER</string>
+    <string name="GROUP_UPPER">GROUP</string>
     <string name="FORMAT_DISTANCE">%.2f km</string>
     <string name="FORMAT_SPEED">%.1f km/h</string>
     <string name="FORMAT_TIME">HH:mm:ss</string>
+	<string name="FORMAT_HEART">%d하트</string>
     <string name="MSG_EMPTY_USERID">사용자 ID를 입력해 주십시오.</string>
     <string name="MSG_EMPTY_PASSWORD">비밀번호를 입력해 주십시오.</string>
     <string name="MSG_EMPTY_GROUP_NAME">그룹 이름을 입력해 주십시오.</string>
@@ -81,7 +84,7 @@
     <string name="MSG_EMPTY_KEYWORD">검색어를 입력해 주십시오.</string>
     <string name="MSG_NO_LOGIN_EXIT">소셜워크는 로그인이 필요한 서비스입니다. 앱을 종료합니다.</string>
     <string name="MSG_WALK_RESULT_1">이번 걸음으로 어려운 이웃을 위해</string>
-    <string name="MSG_WALK_RESULT_2">%d 하트가 기부되었습니다.</string>
+    <string name="MSG_WALK_RESULT_2">가 기부되었습니다.</string>
     <string name="MSG_NETWORK_NOT_CONNECTED">네트워크 접근이 불가능합니다. 앱을 종료합니다.</string>
     <string name="MSG_GPS_SETTING_CONFIRM">GPS 위치 서비스에 접근할 수 없습니다. 걷기 기능을 이용하기 위해서 GPS를 설정해 주십시오.</string>
     <string name="MSG_EXIT_CONFIRM">소셜워크 앱을 종료하시겠습니까?</string>
@@ -92,9 +95,25 @@
     <string name="MSG_NO_SEARCH_RESULT">검색결과가 없습니다.</string>
     <string name="MSG_NO_COMMUNITY_POST">커뮤니티 글이 없습니다.</string>
     <string name="MSG_COMMUNITY_POSTING_SUCCESS">커뮤니티 글이 등록되었습니다.</string>
+    <string name="MSG_MY_LOCATION_FAIL">현재 위치를 확인할 수 없습니다.</string>
     
     <color name="WALK_INFO_PANEL_BG">#80000000</color>
     <color name="SLIDE_WALK_STATE">#80000000</color>
-
+    <color name="MAIN_BG">#fecc2f</color>
+    <color name="TRANSPARENT">#00000000</color>
+    <color name="BLACK">#000000</color>
+    <color name="WHITE">#FFFFFF</color>
+    <color name="DARK_GRAY">#464646</color>
+    <color name="GRAY">#898989</color>
+    <color name="LIGHT_GRAY">#d7d7d7</color>
+    <color name="LIGHT_GREEN">#55bc75</color>
+    <color name="RED">#ff0000</color>
+    <color name="YELLOW">#ffff00</color>
+    <color name="CYON">#00ffff</color>
+    <color name="MAGENTA">#ff00ff</color>
+    <color name="ORANGE">#f7941d</color>
+    <color name="GREEN">#00a651</color>
+    <color name="LIGHT_RED">#e86843</color>
+    
 
 </resources>

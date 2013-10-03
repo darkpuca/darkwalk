@@ -2,193 +2,359 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/MAIN_BG"
     tools:context=".MainActivity" >
     
     <LinearLayout
         android:id="@+id/tabsLayout"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" >
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:padding="6dp"
+        android:background="@drawable/main_start_bg" >
+
+        <ImageButton
+            android:id="@+id/btnMain"
+            android:src="@drawable/topbar_main"
+            android:scaleType="fitCenter"
+            android:background="@color/TRANSPARENT"
+            android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
+            android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
+            android:layout_width="@dimen/TOPBAR_ICON_SIZE"
+            android:layout_height="@dimen/TOPBAR_ICON_SIZE" />
+        
         <ImageButton
             android:id="@+id/btnSponsor"
-            android:src="@drawable/ic_launcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:src="@drawable/topbar_sponsor"
+            android:scaleType="fitCenter"
+            android:background="@color/TRANSPARENT"
+            android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
+            android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
+            android:layout_width="@dimen/TOPBAR_ICON_SIZE"
+            android:layout_height="@dimen/TOPBAR_ICON_SIZE" />
         <ImageButton
             android:id="@+id/btnGroup"
-            android:src="@drawable/ic_launcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:src="@drawable/topbar_heart"
+            android:scaleType="fitCenter"
+            android:background="@color/TRANSPARENT"
+            android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
+            android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
+            android:layout_width="@dimen/TOPBAR_ICON_SIZE"
+            android:layout_height="@dimen/TOPBAR_ICON_SIZE" />
         <ImageButton
             android:id="@+id/btnHistory"
-            android:src="@drawable/ic_launcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />        
+            android:src="@drawable/topbar_history"
+            android:scaleType="fitCenter"
+            android:background="@color/TRANSPARENT"
+            android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
+            android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
+            android:layout_width="@dimen/TOPBAR_ICON_SIZE"
+            android:layout_height="@dimen/TOPBAR_ICON_SIZE" />        
         <ImageButton
             android:id="@+id/btnSettings"
-            android:src="@drawable/ic_launcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        </LinearLayout>
+            android:src="@drawable/topbar_etc"
+            android:scaleType="fitCenter"
+            android:background="@color/TRANSPARENT"
+            android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
+            android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
+            android:layout_width="@dimen/TOPBAR_ICON_SIZE"
+            android:layout_height="@dimen/TOPBAR_ICON_SIZE" />
+	</LinearLayout>
+	
+	<RelativeLayout
+        android:id="@+id/nameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+		android:layout_below="@+id/tabsLayout"
+		android:paddingLeft="16dp" >
+		
+	    <RelativeLayout
+	        android:id="@+id/layoutUserName"
+	        android:layout_width="120dp"
+	        android:layout_height="match_parent"
+	        android:layout_alignParentLeft="true"
+	        android:layout_alignParentTop="true" >
+	        
+	        <ImageView
+				android:id="@+id/imgUserName"
+				android:layout_width="36dp"
+				android:layout_height="36dp"
+				android:src="@drawable/main_user_name"
+				android:layout_alignParentLeft="true"
+				android:layout_centerVertical="true" />
+
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignTop="@+id/imgUserName"
+	            android:layout_toRightOf="@+id/imgUserName"
+	            android:layout_marginLeft="6dp"
+	            android:textSize="14sp"
+	            android:textStyle="bold"
+	            android:textColor="@color/WHITE"
+	            android:text="@string/USER_UPPER" />
+	        	        	        	        
+			<TextView
+			    android:id="@+id/userName"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignBottom="@+id/imgUserName"
+				android:layout_toRightOf="@+id/imgUserName"
+				android:layout_marginLeft="6dp"
+				android:textSize="16sp"
+				android:textStyle="bold"
+				android:textColor="@color/BLACK"
+				android:text="가나다라" />
+	        
+		</RelativeLayout>
+	    
+	    <RelativeLayout
+	        android:id="@+id/layoutUserGroup"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_toRightOf="@+id/layoutUserName" >
+			
+	        <ImageView
+				android:id="@+id/imgUserGroup"
+				android:layout_width="36dp"
+				android:layout_height="36dp"
+				android:src="@drawable/main_user_group"
+				android:layout_alignParentLeft="true"
+				android:layout_centerVertical="true" />
+
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignTop="@+id/imgUserGroup"
+	            android:layout_toRightOf="@+id/imgUserGroup"
+	            android:layout_marginLeft="6dp"
+	            android:textSize="14sp"
+	            android:textStyle="bold"
+	            android:textColor="@color/WHITE"
+	            android:text="@string/GROUP_UPPER" />
+	        	        
+			<TextView
+				android:id="@+id/groupName"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignBottom="@+id/imgUserGroup"
+				android:layout_toRightOf="@+id/imgUserGroup"
+				android:layout_marginLeft="6dp"
+				android:textSize="16sp"
+				android:textStyle="bold"
+				android:textColor="@color/BLACK"
+				android:text="GROUP_NAME" />
+	        	        
+	    </RelativeLayout>
+         
+	</RelativeLayout>
     
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tabsLayout"
-        android:layout_above="@+id/btnWalkStart"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp" >
-        <LinearLayout
-            android:id="@+id/nameLayout"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true" >
-            <TextView
-                android:id="@+id/groupName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:textSize="12sp"
-				android:text="GROUP_NAME" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:text="USER_NAME" />
-        </LinearLayout>
+       	android:layout_below="@+id/nameLayout"
+       	android:layout_marginLeft="@dimen/activity_horizontal_margin"
+       	android:layout_marginRight="@dimen/activity_horizontal_margin"
+       	android:layout_marginBottom="@dimen/activity_vertical_margin"
+       	android:clipChildren="true"
+        android:background="@drawable/innerframe_shape" >
+        
         <RelativeLayout
             android:id="@+id/greenHeartLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/nameLayout" >
+            android:layout_height="56dp"
+           	android:layout_alignParentTop="true"
+           	android:paddingLeft="12dp"
+           	android:paddingRight="8dp"
+           	android:background="@drawable/main_green_bg" >
+           	
             <ImageView
                 android:id="@+id/imgGreen"
-                android:src="@drawable/ic_launcher"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerHorizontal="true"
+                android:src="@drawable/main_user_heart"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true" />
+            
             <TextView
                 android:id="@+id/greenHeart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/imgGreen"
                 android:layout_centerVertical="true"
-                android:textSize="13sp"
+                android:layout_marginLeft="16dp"
+                android:textSize="17sp"
+                android:textColor="@color/WHITE"
+                android:textStyle="bold"
                 android:text="XXX 하트" />
+            
             <Button
                 android:id="@+id/btnSupport"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_width="84dp"
+                android:layout_height="36dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:text="@string/SUPPORT"
-                android:textSize="13sp" />            
+                android:background="@drawable/main_sponsor_bg"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="@color/LIGHT_GREEN"
+                android:text="@string/SUPPORT" />            
         </RelativeLayout>
+        
+        
         <RelativeLayout
             android:id="@+id/redHeartLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/greenHeartLayout" >
+            android:layout_height="56dp"
+            android:layout_below="@+id/greenHeartLayout"
+            android:paddingLeft="12dp"
+            android:paddingRight="8dp"
+            android:background="@drawable/main_red_bg" >
+			
             <ImageView
                 android:id="@+id/imgRed"
-                android:src="@drawable/ic_launcher"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerHorizontal="true"
+                android:src="@drawable/main_user_heart"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true" />
+            
             <TextView
                 android:id="@+id/redHeart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/imgRed"
                 android:layout_centerVertical="true"
-                android:textSize="13sp"
-                android:text="XXX 하트 (x,xxx 하트)" />
+                android:layout_marginLeft="16dp"
+                android:textSize="17sp"
+                android:textColor="@color/WHITE"
+                android:textStyle="bold"
+                android:text="XXX 하트" />
+            
+            <TextView
+                android:id="@+id/redHeartTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/redHeart"
+                android:layout_centerVertical="true"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/WHITE"
+                android:text="(x,xxx 하트)" />
+            
         </RelativeLayout>
+        
+		<RelativeLayout
+			android:id="@+id/layoutArounders"
+			android:layout_width="240dp"
+			android:layout_height="80dp"
+			android:layout_alignParentLeft="true"
+			android:layout_above="@+id/layoutStartButton"			
+			android:layout_marginBottom="160dp"
+			android:layout_marginLeft="16dp"
+			android:padding="4dp"
+			android:background="@drawable/arounders_bg" >
+            
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/adIcon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/image_border" />
+            
+            <TextView
+                android:id="@+id/adCompany"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/adIcon"
+                android:layout_toLeftOf="@+id/layoutDistance"
+                android:layout_marginLeft="4dp"
+                android:textStyle="bold"
+                android:textSize="14sp" 
+                android:textColor="@color/BLACK"
+                android:text="COMPANY" />
+            
+            <TextView
+                android:id="@+id/adPromo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/adIcon"
+                android:layout_below="@+id/adCompany"
+                android:layout_marginLeft="4dp"
+                android:textSize="13sp"
+                android:textColor="@color/GRAY"
+                android:text="PROMOTION" />
+            
+            <RelativeLayout
+                android:id="@+id/layoutDistance"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true" >
+                
+				<ImageView
+				    android:src="@drawable/arounders_anno"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_alignTop="@+id/adDistance"
+				    android:layout_alignBottom="@+id/adDistance" />
+					            
+				<TextView
+	                android:id="@+id/adDistance"
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_alignParentTop="true"
+	                android:layout_alignParentRight="true"
+	                android:layout_marginRight="4dp"
+	                android:gravity="right"
+	                android:textSize="12sp"
+	                android:text="xxxm" />
+				
+            </RelativeLayout>
+           
+       	</RelativeLayout>
         
         <RelativeLayout
             android:id="@+id/layoutReady"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="2dp"
-            android:layout_below="@+id/redHeartLayout" >
+            android:layout_below="@+id/redHeartLayout"
+            android:layout_above="@+id/layoutStartButton" >
             
 			<ImageView
 	            android:id="@+id/imgReady"
-	            android:src="@drawable/ic_launcher"
-	            android:layout_width="200dp"
-	            android:layout_height="200dp"
+	            android:src="@drawable/character_ani3"
+	            android:layout_width="240dp"
+	            android:layout_height="240dp"
 	            android:layout_centerHorizontal="true"
-	            android:layout_alignParentBottom="true"
-	            android:layout_marginBottom="8dp" />
+	            android:layout_alignParentBottom="true" />
 	            
-	        <RelativeLayout
-	            android:id="@+id/layoutArounders"
-	            android:layout_width="160dp"
-	            android:layout_height="60dp"
-	            android:layout_alignParentBottom="true"
-	            android:layout_alignParentRight="true"
-	            android:layout_marginBottom="200dp"
-	            android:layout_marginRight="16dp"
-	            android:background="#888888" >
-	            
-	            <com.android.volley.toolbox.NetworkImageView
-	                android:id="@+id/adIcon"
-	                android:layout_width="36dp"
-	                android:layout_height="36dp"
-	                android:layout_alignParentTop="true"
-	                android:layout_alignParentLeft="true" />
-	            
-	            <TextView
-	                android:id="@+id/adCompany"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_alignParentTop="true"
-	                android:layout_toRightOf="@+id/adIcon"
-	                android:textStyle="bold"
-	                android:textSize="15sp" 
-	                android:text="COMPANY" />
-	            
-	            <TextView
-	                android:id="@+id/adPromotion"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_toRightOf="@+id/adIcon"
-	                android:layout_below="@+id/adCompany"
-	                android:textSize="13sp"
-	                android:text="PROMOTION" />
-	            
-				<TextView
-	                android:id="@+id/adDistance"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_alignParentBottom="true"
-	                android:layout_alignParentRight="true"
-	                android:gravity="right"
-	                android:textSize="12sp"
-	                android:text="xxx m" />
-	            
-            
-        	</RelativeLayout>
         </RelativeLayout>
         
-        
+	    <RelativeLayout
+	        android:id="@+id/layoutStartButton"
+	        android:layout_width="match_parent"
+	        android:layout_height="60dp"
+	        android:layout_alignParentBottom="true"
+	        android:layout_centerHorizontal="true"
+	        android:background="@drawable/main_start_bg" >
+
+	        <ImageView
+		        android:layout_width="match_parent"
+		        android:layout_height="30dp"
+		        android:layout_centerVertical="true"
+		        android:layout_centerHorizontal="true"
+		        android:src="@drawable/main_start"
+		        android:scaleType="fitCenter"
+		        android:background="@color/TRANSPARENT" />
+	        
+         </RelativeLayout>
         
     </RelativeLayout>
     
-    <Button
-        android:id="@+id/btnWalkStart"
-        android:layout_width="160dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:text="@string/START" />
 
 </RelativeLayout>

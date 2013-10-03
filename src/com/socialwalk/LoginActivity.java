@@ -6,20 +6,19 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.request.ServerRequestManager;
-
 
 
 public class LoginActivity extends Activity 
@@ -79,25 +78,17 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 			}
 		});
 		
+		SpannableString content = new SpannableString(getResources().getString(R.string.FIND_PASSWORD));
+		content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+		btnForgot.setText(content);
+		
 		btnLogin.setOnClickListener(this);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.login, menu);
-		return true;
-	}
 
 	@Override
 	public void onClick(View v)
 	{
-
-		
-		
-		
-		
-		
 		if (0 == txtUid.getText().length())
 		{
 			new AlertDialog.Builder(this).setTitle(R.string.TITLE_INFORMATION).setMessage(R.string.MSG_EMPTY_USERID).setNeutralButton(R.string.CLOSE, null).show();

@@ -21,7 +21,7 @@
     <application
         android:name="com.socialwalk.MainApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/app_logo"
         android:label="@string/APP_NAME"
         android:theme="@style/AppTheme" >
         <activity
@@ -74,21 +74,25 @@
         </activity>
         <activity
             android:name="com.socialwalk.WalkingActivity"
+            android:launchMode="singleTask"
             android:label="@string/TITLE_WALK"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.WalkResultActivity"
+            android:launchMode="singleTask"
             android:label="@string/TITLE_WALK_RESULT"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.WalkDetailActivity"
+            android:launchMode="singleTask"
             android:label="@string/TITLE_WALK_DETAIL"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.WalkRouteActivity"
+            android:launchMode="singleTask"
             android:label="@string/TITLE_WALK_ROUTE"
             android:theme="@style/AppTheme" >
         </activity>

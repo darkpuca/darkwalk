@@ -53,7 +53,7 @@ public class Globals
 	public static final int INTENT_REQ_INTRO = 12;
 	public static final int INTENT_REQ_POSTING = 13;
 
-	public static final long INTRO_WAITING = 1000;
+	public static final long INTRO_WAITING = 3000;
 	
 	public static final int ERROR_NONE					= 0;
 	public static final int ERROR_NO_RESULT				= 1;
