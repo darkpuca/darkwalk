@@ -1,6 +1,9 @@
-package com.socialwalk;
+package com.socialwalk.dataclass;
 
 import java.util.Vector;
+
+import com.socialwalk.request.ServerRequestManager;
+
 
 public class WalkHistoryManager
 {
@@ -13,7 +16,10 @@ public class WalkHistoryManager
 	
 	public static WalkHistory StartNewLog()
 	{
-		WalkHistory history = new WalkHistory();
+		if (null == ServerRequestManager.LoginAccount) return null;
+		
+		int weight = ServerRequestManager.LoginAccount.Weight;
+		WalkHistory history = new WalkHistory(weight);
 		Histories.add(history);
 		return history;
 	}

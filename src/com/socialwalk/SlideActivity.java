@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -34,6 +35,8 @@ import com.socialwalk.request.ServerRequestManager;
 
 public class SlideActivity extends Activity implements Response.Listener<String>, Response.ErrorListener
 {
+	public static boolean IsPhoneCalling = false;
+
 	private static final String TAG = "SW-SLIDE";
 	private static final int SLIDER_OUTOFBOUNDS = 0;
 	private static final int SLIDER_IN_AD = 1;
@@ -46,7 +49,6 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 	private static final int AD_LIMIT = 3;
 	private static int CURRENT_AD_INDEX = 0;
 	private static final long AD_POINT_INTERVAL = 60 * 60 * 1000;
-	private static boolean IsPhoneCalling = false;
 
 	KeyguardManager.KeyguardLock keyLock;
 	boolean isDragmode;
@@ -93,9 +95,6 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		
 		int centerSize = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, this.getResources().getDisplayMetrics());
 		m_sliderWidth = m_sliderHeight = centerSize;
-//		BitmapDrawable bd=(BitmapDrawable) this.getResources().getDrawable(R.drawable.ic_launcher);
-//		m_sliderWidth = bd.getBitmap().getHeight();
-//		m_sliderHeight = bd.getBitmap().getWidth();
 		
 		// slider 레이아웃 위치조정
 		m_windowWidth = getWindowManager().getDefaultDisplay().getWidth();
@@ -167,6 +166,7 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 						{
 							Log.d(TAG, "slider in HOME area.");
 							Intent i = new Intent(getBaseContext(), MainActivity.class);
+							i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							startActivity(i);
 							finish();
 							break;
@@ -353,7 +353,6 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 	@Override
 	protected void onResume()
 	{
-		MoveSliderToStartPosition();
 		DisableKeyguard();
 		
 		UpdateWalkingState();
@@ -365,6 +364,22 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 			UpdateSlideAd();
 		}
 		
+		if (true == IsPhoneCalling)
+		{
+			finish();
+			return;
+		}
+
+		Handler handler = new Handler();
+		handler.post(new Runnable()
+		{			
+			@Override
+			public void run()
+			{
+				MoveSliderToStartPosition();
+			}
+		});
+
 		super.onResume();
 	}
 	
@@ -478,18 +493,19 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 			
             switch(state){
                 case TelephonyManager.CALL_STATE_RINGING:
-                	Log.d(TAG, "phone called: " + incomingNumber);
                 	IsPhoneCalling = true;
+                	Log.d(TAG, "phone called: " + incomingNumber);
                 	moveTaskToBack(true);
                 	break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
                     System.out.println("call Activity off hook");
-                	finish();
-                	IsPhoneCalling = false;
+                    moveTaskToBack(true);
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:
                 	if (IsPhoneCalling)
                 	{
+                    	IsPhoneCalling = false;
+
                     	Log.d(TAG, "call state idle.");
                     	Intent i = new Intent(getApplicationContext(), SlideActivity.class);
             			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -508,6 +524,8 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 	@Override
 	public void onResponse(String response)
 	{
+		System.out.println(response);
+		
 		MyXmlParser parser = new MyXmlParser(response);
 		SlideAdData adData = parser.GetAdData();
 		

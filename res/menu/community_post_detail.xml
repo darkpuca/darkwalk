@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_post_delete"
+        android:orderInCategory="100"
+        android:title="@string/ACTION_POST_DELETE"/>
+
+</menu>

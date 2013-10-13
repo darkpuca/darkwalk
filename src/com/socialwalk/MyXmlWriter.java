@@ -9,7 +9,8 @@ import org.xmlpull.v1.XmlSerializer;
 import android.util.Log;
 import android.util.Xml;
 
-import com.socialwalk.WalkHistory.WalkLogItem;
+import com.socialwalk.dataclass.WalkHistory;
+import com.socialwalk.dataclass.WalkHistory.WalkLogItem;
 
 public class MyXmlWriter
 {
@@ -114,7 +115,39 @@ public class MyXmlWriter
 		}
 	}
 
+	public static String ReplyPosting(String userSequence, int postSequence, String contents)
+	{
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		
+		try
+		{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", true);
+			
+			serializer.startTag("", "request");
+			serializer.startTag("", "reply_info");
+			serializer.startTag("", "reply_user_seq");
+			serializer.text(userSequence);
+			serializer.endTag("", "reply_user_seq");
+			serializer.startTag("", "reply_data");
+			serializer.text(contents);
+			serializer.endTag("", "reply_data");
+			serializer.endTag("", "reply_info");
+			serializer.endTag("", "request");
+			
+			serializer.endDocument();
+			
+			return writer.toString();
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.getLocalizedMessage());
+			return "";
+		}
+	}
 
+	
 
 	public static String ChangePassword(String oldPassword, String newPassword)
 	{
@@ -146,6 +179,35 @@ public class MyXmlWriter
 		}
 	}
 	
+	public static String AccumulateHeart(String userSequence)
+	{
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		
+		try
+		{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", true);
+			
+			serializer.startTag("", "request");
+			serializer.startTag("", "ad_info");
+			serializer.startTag("", "user_seq");
+			serializer.text(userSequence);
+			serializer.endTag("", "user_seq");
+			serializer.endTag("", "ad_info");
+			serializer.endTag("", "request");
+			
+			serializer.endDocument();
+			
+			return writer.toString();
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.getLocalizedMessage());
+			return "";
+		}
+
+	}
 
 	public static String GetWalkingDataXML(WalkHistory log)
 	{
@@ -168,6 +230,14 @@ public class MyXmlWriter
 			serializer.startTag("", "endTime");
 			serializer.text(dateFormatter.format(log.EndTime));
 			serializer.endTag("", "endTime");
+			
+			serializer.startTag("", "weight");
+			serializer.text(Integer.toString(log.getWeight()));
+			serializer.endTag("", "weight");
+
+			serializer.startTag("", "heartRatio");
+			serializer.text(Integer.toString(log.getHeartRatio()));
+			serializer.endTag("", "heartRatio");
 
 			serializer.startTag("", "locations");
 			for (WalkLogItem item : log.LogItems)
@@ -216,7 +286,7 @@ public class MyXmlWriter
 		}
 		catch (Exception e)
 		{
-			
+			System.out.println(e.getLocalizedMessage());
 		}
 		
 		return "";

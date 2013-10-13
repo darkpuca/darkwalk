@@ -13,14 +13,13 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -61,10 +60,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
         if (!LockService.IsRegisted)
 			startService(new Intent(this, LockService.class));
 
-		// show intro activity
-		Intent i = new Intent(this, IntroActivity.class);
-		startActivityForResult(i, Globals.INTENT_REQ_INTRO);
-        
         // start button action
 		RelativeLayout layoutStart = (RelativeLayout)findViewById(R.id.layoutStartButton);
 		layoutStart.setOnClickListener(new OnClickListener()
@@ -95,7 +90,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			@Override
 			public void onClick(View v)
 			{
-				Intent i = new Intent(getBaseContext(), SponsorMainActivity.class);
+				Intent i = new Intent(getBaseContext(), BeneficiariesActivity.class);
 				startActivity(i);
 			}
 		});
@@ -108,10 +103,9 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			{
 				if (null == ServerRequestManager.LoginAccount) return;
 				
-				int commId = ServerRequestManager.LoginAccount.getCommunityId();
-//				// 테스트값
-//				commId = -1;
-				if (-1 == commId)
+				int commSeq = ServerRequestManager.LoginAccount.CommunitySeq;
+//				commId = 0;	// test value
+				if (0 == commSeq)
 				{
 					AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
 					dlg.setCancelable(true);
@@ -130,7 +124,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 						@Override
 						public void onClick(DialogInterface dialog, int which)
 						{
-							Intent i = new Intent(getBaseContext(), GroupSelectionActivity.class);
+							Intent i = new Intent(getBaseContext(), CommunitySelectionActivity.class);
 							startActivityForResult(i, Globals.INTENT_REQ_GROUP_SELECT);
 						}
 					});
@@ -139,7 +133,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 				else
 				{
 					Intent i = new Intent(getBaseContext(), CommunityActivity.class);
-					i.putExtra(Globals.EXTRA_KEY_COMMUNITY_ID, commId);
+					i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, commSeq);
 					startActivity(i);
 				}
 			}
@@ -166,6 +160,24 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 				startActivity(i);
 			}
 		});
+        
+        
+		// show intro activity
+		Intent i = new Intent(this, IntroActivity.class);
+//		startActivityForResult(i, Globals.INTENT_REQ_INTRO);
+		startActivity(i);
+
+		// delayed run start up proc
+		Handler handler = new Handler();
+		handler.postDelayed(new Runnable()
+		{			
+			@Override
+			public void run()
+			{
+				StartupProc();
+			}
+		}, Globals.INTRO_WAITING);
+
     }
 
 
@@ -252,8 +264,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		{ 
 			if (RESULT_OK == resultCode)
 			{
-				Toast.makeText(this, "login result ok", Toast.LENGTH_SHORT).show();
-				
+				UpdateUserInformation();
 			}
 			else
 			{
@@ -271,13 +282,14 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		}
 		else if (Globals.INTENT_REQ_INTRO == requestCode)
 		{
-			StartupProc();
+			if (RESULT_OK == resultCode)
+				StartupProc();
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
-	private void StartupProc()
+	private final void StartupProc()
 	{
         // check network connection
         if (!Utils.defaultTool.IsNetworkAvailable())
@@ -289,12 +301,16 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
         // login
         if (!ServerRequestManager.IsLogin)
         {
-            Intent loginIntent = new Intent(this, LoginActivity.class);
-            startActivityForResult(loginIntent, Globals.INTENT_REQ_LOGIN);
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivityForResult(i, Globals.INTENT_REQ_LOGIN);
+        }
+        else
+        {
+        	UpdateUserInformation();
         }
         
         // arounders update
-        m_server.AroundersItems(MainActivity.this, MainActivity.this, 37.5666091, 126.978371);
+//        m_server.AroundersItems(MainActivity.this, MainActivity.this, 37.5666091, 126.978371);
 	}
 
 
@@ -308,6 +324,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 	public void onResponse(String response)
 	{
 		if (0 == response.length()) return;
+		
+		System.out.println(response);
 		
 		Vector<AroundersItem> items = new MyXmlParser(response).GetArounders();
 		if (null == items) return;
@@ -373,6 +391,40 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			Intent i = new Intent(getBaseContext(), WebPageActivity.class);
 			i.putExtra(Globals.EXTRA_KEY_URL, m_currentArounders.TargetURL);
 			startActivity(i);
+		}
+	}
+	
+	private void UpdateUserInformation()
+	{
+		if (false == ServerRequestManager.IsLogin) return;
+		if (null == ServerRequestManager.LoginAccount) return;
+		
+		try
+		{
+			TextView userName = (TextView)findViewById(R.id.userName);
+			TextView groupName = (TextView)findViewById(R.id.groupName);
+			userName.setText(ServerRequestManager.LoginAccount.Name);
+			groupName.setText(ServerRequestManager.LoginAccount.OrganizationKey);
+
+			if (null != ServerRequestManager.LoginAccount.Hearts)
+			{
+				TextView greenHearts = (TextView)findViewById(R.id.greenHeart);
+				TextView redHearts = (TextView)findViewById(R.id.redHeart);
+				TextView totalRedHearts = (TextView)findViewById(R.id.redHeartTotal);
+				
+				
+				String strGreenHearts = ServerRequestManager.LoginAccount.Hearts.getGreenPoint() + getResources().getString(R.string.HEART);
+				String strRedHearts = ServerRequestManager.LoginAccount.Hearts.getRedPoint() + getResources().getString(R.string.HEART);
+				String strTotalRedHearts = "(" + ServerRequestManager.LoginAccount.Hearts.getRedPointTotal() + getResources().getString(R.string.HEART) + ")";
+				
+				greenHearts.setText(strGreenHearts);
+				redHearts.setText(strRedHearts);
+				totalRedHearts.setText(strTotalRedHearts);			
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getLocalizedMessage());
 		}
 	}
 }

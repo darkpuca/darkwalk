@@ -12,6 +12,8 @@ public class LockReceiver extends BroadcastReceiver
 	@Override
 	public void onReceive(Context context, Intent intent)
 	{
+		if (true == SlideActivity.IsPhoneCalling) return;
+
 		if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
 		{
 			wasScreenOn = false;

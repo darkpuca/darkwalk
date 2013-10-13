@@ -2,6 +2,8 @@ package com.socialwalk;
 
 import java.io.File;
 
+import com.socialwalk.dataclass.WalkHistory;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -47,7 +49,7 @@ public class Utils
 		wifiNetInfo = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 		mobileNetInfo = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 		
-		Toast.makeText(m_baseActivity, "wifi: " + wifiNetInfo.isConnected() + " mobile: " + mobileNetInfo.isConnected(), Toast.LENGTH_SHORT).show();
+//		Toast.makeText(m_baseActivity, "wifi: " + wifiNetInfo.isConnected() + " mobile: " + mobileNetInfo.isConnected(), Toast.LENGTH_SHORT).show();
 		
 		if (false == wifiNetInfo.isAvailable() && false == mobileNetInfo.isAvailable())
 			return false;

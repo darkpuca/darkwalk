@@ -29,8 +29,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		
 		m_server = new ServerRequestManager();
 
-		if (getIntent().hasExtra(Globals.EXTRA_KEY_COMMUNITY_ID))
-			m_communityId = getIntent().getExtras().getInt(Globals.EXTRA_KEY_COMMUNITY_ID);
+		if (getIntent().hasExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE))
+			m_communityId = getIntent().getExtras().getInt(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE);
 
 		Button btnPost = (Button)findViewById(R.id.btnPost);
 		btnPost.setOnClickListener(this);
@@ -48,7 +48,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		{
 			new AlertDialog.Builder(getBaseContext())
 			.setTitle(R.string.TITLE_INFORMATION)
-			.setMessage(R.string.MSG_EMPTY_SUBJECT)
+			.setMessage(R.string.MSG_EMPTY_CONTENTS)
 			.setNeutralButton(R.string.CLOSE, null)
 			.show();
 		}

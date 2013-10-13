@@ -1,0 +1,109 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BeneficiariesActivity" >
+
+    <RelativeLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="8dp"
+        android:background="@color/MAIN_BG" >
+        <TextView
+            android:id="@+id/titleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="24sp"
+            android:textColor="@color/WHITE"
+            android:textStyle="bold"
+            android:text="@string/TITLE_SPONSOR" />        
+        <ImageButton
+            android:id="@+id/btnSponsor"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/sponsor_icon"
+            android:background="@drawable/darkgray_rounded_bg" />
+        
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_toRightOf="@+id/titleLabel"
+            android:layout_toLeftOf="@+id/btnSponsor"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp" >
+            <RelativeLayout
+                android:id="@+id/typeAllLayout"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent"
+                android:padding="6dp"
+                android:background="@drawable/darkgray_left_bg" >
+                <ImageView
+                    android:id="@+id/typeAllIcon"
+                    android:src="@drawable/benefit_type_all"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/typeAllIcon"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="4dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/LIGHT_GRAY"
+                    android:text="@string/NATIONAL" />                
+            </RelativeLayout>
+            
+            <RelativeLayout
+                android:id="@+id/typeLocalLayout"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent"
+                android:padding="6dp"
+                android:background="@drawable/white_right_bg" >
+                <ImageView
+                    android:id="@+id/typeLocalIcon"
+                    android:src="@drawable/benefit_type_local"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/typeLocalIcon"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="4dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/DARK_GRAY"
+                    android:text="@string/LOCAL" />                
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+    
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_below="@+id/titleLayout"
+	    android:padding="@dimen/activity_horizontal_margin"
+	    android:background="@color/LIGHT_GRAY" >
+	    <ListView
+	        android:id="@+id/itemList"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:background="@drawable/innerframe_shape" />
+	</RelativeLayout>    
+
+</RelativeLayout>

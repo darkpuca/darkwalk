@@ -14,7 +14,7 @@ import com.android.volley.VolleyError;
 import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.request.ServerRequestManager;
 
-public class CreateGroupActivity extends Activity
+public class CreateCommunityActivity extends Activity
 implements Response.Listener<String>, Response.ErrorListener, View.OnClickListener
 {
 	private EditText groupName, groupDesc;
@@ -29,7 +29,7 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_create_group);
+		setContentView(R.layout.activity_create_community);
 		
 		m_server = new ServerRequestManager();
 		
@@ -104,6 +104,12 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 		{			
 			if (Globals.ERROR_NO_RESULT == result.Code)
 			{
+				new AlertDialog.Builder(getBaseContext())
+				.setTitle(R.string.TITLE_INFORMATION)
+				.setMessage(R.string.MSG_NAME_AVAILABLE)
+				.setNeutralButton(R.string.CLOSE, null)
+				.show();
+				
 				btnCreate.setEnabled(true);
 				groupDesc.setFocusable(true);
 			}
@@ -123,9 +129,9 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 		{
 			if (Globals.ERROR_NONE == result.Code)
 			{
-				int newId = parser.GetReturnId();
+				int newSeq = parser.GetReturnId();
 				Intent i = new Intent();
-				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_ID, newId);
+				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, newSeq);
 				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, groupName.getText().toString());
 				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_DESC, groupDesc.getText().toString());
 				setResult(RESULT_OK, i);

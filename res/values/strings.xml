@@ -5,6 +5,7 @@
     <string name="ACTION_MORE">더보기</string>
     <string name="ACTION_SETTINGS">설정</string>
     <string name="ACTION_DELETE_ALL">전체 삭제</string>
+    <string name="ACTION_POST_DELETE">글삭제</string>
     <string name="APP_NAME">소셜워크</string>
     <string name="TITLE_SLIDE">소셜 슬라이드</string>
     <string name="TITLE_WEB_PAGE">Web Link</string>
@@ -22,9 +23,11 @@
     <string name="TITLE_RANKING">랭킹</string>
     <string name="TITLE_SETTINGS">설정</string>
     <string name="TITLE_PROFILES">프로필</string>
-    <string name="TITLE_SPONSOR">후원 프로젝트</string>
+    <string name="TITLE_SPONSOR">후원 목록</string>
     <string name="TITLE_COMMUNITY">그룹 커뮤니티</string>
     <string name="TITLE_COMMUNITY_POSTING">커뮤니티 글쓰기</string>
+    <string name="TITLE_COMMUNITY_POST_DETAIL">커뮤니티 글상세</string>
+    <string name="TITLE_REPLY_POSTING">커뮤니티 댓글쓰기</string>
     <string name="CLOSE">닫기</string>
     <string name="LOGIN">로그인</string>
     <string name="LOGOUT">로그아웃</string>
@@ -68,13 +71,23 @@
     <string name="VIEW_COUNT">조회수</string>
     <string name="REPLY_COUNT">댓글수</string>
     <string name="SUBJECT">제목</string>
-    <string name="POSTING">글등록</string>
+    <string name="POSTING">글쓰기</string>
+    <string name="REPLY_POSTING">댓글쓰기</string>
     <string name="USER_UPPER">USER</string>
     <string name="GROUP_UPPER">GROUP</string>
+    <string name="LOADING">로딩중</string>
+    <string name="NATIONAL">전체</string>
+    <string name="LOCAL">지역</string>
+    <string name="WRITE">글쓰기</string>
+    <string name="WRITE_REPLY">댓글쓰기</string>
+    <string name="WALK_START">걷기시작</string>
+    <string name="WALK_STOP">걷기종료</string>
+    <string name="HEART">하트</string>
     <string name="FORMAT_DISTANCE">%.2f km</string>
     <string name="FORMAT_SPEED">%.1f km/h</string>
     <string name="FORMAT_TIME">HH:mm:ss</string>
-	<string name="FORMAT_HEART">%d하트</string>
+    <string name="FORMAT_HEART">%d하트</string>
+    <string name="FORMAT_CALORIES">###,### 칼로리</string>
     <string name="MSG_EMPTY_USERID">사용자 ID를 입력해 주십시오.</string>
     <string name="MSG_EMPTY_PASSWORD">비밀번호를 입력해 주십시오.</string>
     <string name="MSG_EMPTY_GROUP_NAME">그룹 이름을 입력해 주십시오.</string>
@@ -96,6 +109,12 @@
     <string name="MSG_NO_COMMUNITY_POST">커뮤니티 글이 없습니다.</string>
     <string name="MSG_COMMUNITY_POSTING_SUCCESS">커뮤니티 글이 등록되었습니다.</string>
     <string name="MSG_MY_LOCATION_FAIL">현재 위치를 확인할 수 없습니다.</string>
+    <string name="MSG_PAGE_LOADING">페이지를 읽고 있습니다.</string>
+    <string name="MSG_LOADING">데이타를 처리중입니다.</string>
+    <string name="MSG_NAME_AVAILABLE">사용 가능한 이름입니다.</string>
+    <string name="MSG_ACCOUNT_NOT_EXIST">존재하지 않는 회원입니다. 회원가입을 해주십시요.</string>
+    <string name="MSG_INVALID_POST">잘못된 커뮤니티 글정보입니다.</string>
+    <string name="MSG_POST_DELETE_CONFIRM">커뮤니티 글을 삭제하시겠습니까?</string>
     
     <color name="WALK_INFO_PANEL_BG">#80000000</color>
     <color name="SLIDE_WALK_STATE">#80000000</color>
@@ -114,6 +133,7 @@
     <color name="ORANGE">#f7941d</color>
     <color name="GREEN">#00a651</color>
     <color name="LIGHT_RED">#e86843</color>
-    
+
+    <string name="action_settings">Settings</string>
 
 </resources>

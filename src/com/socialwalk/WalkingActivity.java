@@ -34,7 +34,9 @@ import com.nhn.android.maps.nmapmodel.NMapError;
 import com.nhn.android.mapviewer.overlay.NMapMyLocationOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPathDataOverlay;
-import com.socialwalk.WalkHistory.WalkLogItem;
+import com.socialwalk.dataclass.WalkHistory;
+import com.socialwalk.dataclass.WalkHistoryManager;
+import com.socialwalk.dataclass.WalkHistory.WalkLogItem;
 
 public class WalkingActivity extends NMapActivity 
 implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeListener, View.OnClickListener
@@ -123,7 +125,7 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 					boolean isMyLocationEnabled = mapLocationManager.enableMyLocation(true);
 					if (!isMyLocationEnabled)
 					{
-						Toast.makeText(WalkingActivity.this, "Please enable a My Location source in system settings", Toast.LENGTH_LONG).show();
+//						Toast.makeText(WalkingActivity.this, "Please enable a My Location source in system settings", Toast.LENGTH_LONG).show();
 
 						Intent goToSettings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 						startActivity(goToSettings);
@@ -181,19 +183,22 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 							walkDistance.setText(currentWalk.TotalDistanceString());
 							walkSpeed.setText(currentWalk.AverageSpeedFromNow());
 							walkTime.setText(currentWalk.TotalWalkingTimeStringFromNow());
+
+//							TextView groupName = (TextView)findViewById(R.id.groupName);
+//							groupName.setText(currentWalk.WalkingCaloriesStringFromNow());
 							
-							WalkLogItem lastItem = currentWalk.GetLastValidItem();
-							if (null != lastItem)
-							{
-								String speed = String.format(getResources().getString(R.string.FORMAT_SPEED), lastItem.CurrentSpeed);
-								TextView userName = (TextView)findViewById(R.id.userName);
-								userName.setText(speed);
-								
-								if (IsMapMode)
-								{
-									mapController.setMapCenter(lastItem.LogLocation.getLongitude(), lastItem.LogLocation.getLatitude());
-								}
-							}
+//							WalkLogItem lastItem = currentWalk.GetLastValidItem();
+//							if (null != lastItem)
+//							{
+//								String speed = String.format(getResources().getString(R.string.FORMAT_SPEED), lastItem.CurrentSpeed);
+//								TextView userName = (TextView)findViewById(R.id.userName);
+//								userName.setText(speed);
+//								
+//								if (IsMapMode)
+//								{
+//									mapController.setMapCenter(lastItem.LogLocation.getLongitude(), lastItem.LogLocation.getLatitude());
+//								}
+//							}
 						}
 					}
 				});
@@ -386,7 +391,7 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 		@Override
 		public void onLocationUpdateTimeout(NMapLocationManager locationManager)
 		{
-			Toast.makeText(WalkingActivity.this, R.string.MSG_MY_LOCATION_FAIL, Toast.LENGTH_LONG).show();
+//			Toast.makeText(WalkingActivity.this, R.string.MSG_MY_LOCATION_FAIL, Toast.LENGTH_LONG).show();
 			stopMyLocation();
 		}
 

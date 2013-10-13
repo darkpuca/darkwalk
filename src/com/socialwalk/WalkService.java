@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import com.socialwalk.dataclass.WalkHistory;
+import com.socialwalk.dataclass.WalkHistoryManager;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -52,23 +56,16 @@ public class WalkService extends Service
 	{
 		super.onCreate();
 		
-		Log.d(TAG, "service created.");
-		
 		m_notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		m_locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
-		
 	}
 
 	@Override
 	public void onDestroy()
 	{
 		if (IsStarted)
-		{
 			StopWalking();
-		}
 
-		Log.d(TAG, "service destroyed.");
-		
 		super.onDestroy();
 	}
 
@@ -76,12 +73,9 @@ public class WalkService extends Service
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
 		if (!IsStarted)
-		{
-			// 걷기 작업 시작
-			StartWalking();
-		}
+			StartWalking();			// 걷기 작업 시작
 		
-		return START_STICKY;
+		return START_STICKY_COMPATIBILITY;
 	}
 
 	@Override
@@ -95,7 +89,6 @@ public class WalkService extends Service
 	{
 		IsStarted = true;
 		Log.d(TAG, "walking started.");
-		Toast.makeText(getBaseContext(), "social walking started.", Toast.LENGTH_SHORT).show();
 		
 		this.WalkingData = WalkHistoryManager.StartNewLog();
 
@@ -169,7 +162,7 @@ public class WalkService extends Service
 //		Log.d(TAG, strXml);
 		
 		// save log file
-		SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATE_FORMAT_FOR_HISTORY);
+		SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATE_FORMAT_FOR_HISTORY, Locale.US);
 		String filename = formatter.format(WalkingData.StartTime) + ".log";
 		
 		try
@@ -183,7 +176,6 @@ public class WalkService extends Service
 		{
 			e.printStackTrace();
 			Log.d(TAG, e.getLocalizedMessage());
-			Toast.makeText(getApplicationContext(), "file save failed.", Toast.LENGTH_SHORT).show();
 		}
 				
 		Toast.makeText(getBaseContext(), "social walking stopped.", Toast.LENGTH_SHORT).show();
@@ -205,7 +197,6 @@ public class WalkService extends Service
 		if (isBetterLocation(newLoc, LastBestLocation))
 		{
 			LastBestLocation = newLoc;
-//			Toast.makeText(getApplicationContext(), "LOC. " + LastBestLocation.getLatitude() + ", " + LastBestLocation.getLongitude(), Toast.LENGTH_SHORT).show();
 			Log.d(TAG, "[LOC] lat:" + LastBestLocation.getLatitude() + ", lng:" + LastBestLocation.getLongitude() + ", accu:" + LastBestLocation.getAccuracy());
 		}
 	}
@@ -280,14 +271,7 @@ public class WalkService extends Service
 		{
 			Location loc = (Location)intent.getExtras().get(Globals.EXTRA_KEY_LOCATION);
 			if (null != loc)
-			{
 				UpdateNewLocation(loc);
-//				WalkLogItem logItem = WalkingData.AddLog(loc);
-//				Log.d(TAG, "[walk log, " + logItem.LogDate.toLocaleString() + "] dist:" + logItem.DistanceFromPrevious + ", spd:" + logItem.CurrentSpeed);
-//				Log.d(TAG, "[walking] dist:" + WalkingData.TotalDistanceString() + ", seconds:" + WalkingData.TotalWalkingTimeString() + ", avg:" + WalkingData.AverageSpeed());
-				
-			}
 		}
 	}
-
 }

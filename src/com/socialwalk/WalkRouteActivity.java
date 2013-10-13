@@ -17,7 +17,8 @@ import com.nhn.android.maps.overlay.NMapPathLineStyle;
 import com.nhn.android.mapviewer.overlay.NMapMyLocationOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPathDataOverlay;
-import com.socialwalk.WalkHistory.WalkLogItem;
+import com.socialwalk.dataclass.WalkHistory;
+import com.socialwalk.dataclass.WalkHistory.WalkLogItem;
 
 public class WalkRouteActivity extends NMapActivity implements OnMapStateChangeListener, OnMapViewTouchEventListener
 {

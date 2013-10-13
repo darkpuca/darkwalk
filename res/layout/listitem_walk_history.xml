@@ -13,7 +13,7 @@
         android:layout_centerVertical="true"
 		android:gravity="right"
         android:textSize="16sp"
-        android:textColor="@color/GRAY"
+        android:textColor="@color/RED"
         android:textStyle="bold" />
     
     <TextView

@@ -251,15 +251,31 @@
 	        android:layout_alignParentBottom="true"
 	        android:layout_centerHorizontal="true"
 	        android:background="@drawable/main_start_bg" >
+			<RelativeLayout
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_centerInParent="true" >
+		        <ImageView
+		            android:id="@+id/stopIcon"
+			        android:layout_width="32dp"
+			        android:layout_height="32dp"
+			        android:layout_centerVertical="true"
+			        android:layout_alignParentLeft="true"
+			        android:src="@drawable/walk_stop_icon"
+			        android:scaleType="fitCenter"
+			        android:background="@color/TRANSPARENT" />
+		        <TextView 
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_toRightOf="@+id/stopIcon"
+		            android:layout_centerVertical="true"
+		            android:layout_marginLeft="4dp"
+		            android:textSize="28sp"
+		            android:textColor="@color/MAIN_BG" 
+		            android:textStyle="bold"
+		            android:text="@string/WALK_STOP" />			    			    
+			</RelativeLayout>
 
-	        <ImageView
-		        android:layout_width="match_parent"
-		        android:layout_height="30dp"
-		        android:layout_centerVertical="true"
-		        android:layout_centerHorizontal="true"
-		        android:src="@drawable/walk_stop"
-		        android:scaleType="fitCenter"
-		        android:background="@color/TRANSPARENT" />
 	        
          </RelativeLayout>
         

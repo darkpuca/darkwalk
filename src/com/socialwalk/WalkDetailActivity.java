@@ -1,5 +1,7 @@
 package com.socialwalk;
 
+import com.socialwalk.dataclass.WalkHistory;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class WalkDetailActivity extends Activity
@@ -24,8 +27,8 @@ public class WalkDetailActivity extends Activity
 		
 		UpdateDetails();
 		
-		Button btnRoute = (Button)findViewById(R.id.btnRoute);
-		btnRoute.setOnClickListener(new OnClickListener()
+		RelativeLayout routeButtonLayout = (RelativeLayout)findViewById(R.id.routeButtonLayout);
+		routeButtonLayout.setOnClickListener(new OnClickListener()
 		{			
 			@Override
 			public void onClick(View v)
@@ -38,20 +41,13 @@ public class WalkDetailActivity extends Activity
 		
 		Button btnClose = (Button)findViewById(R.id.btnClose);
 		btnClose.setOnClickListener(new OnClickListener()
-		{	
+		{			
 			@Override
 			public void onClick(View v)
 			{
 				finish();
 			}
 		});
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.walk_detail, menu);
-		return true;
 	}
 	
 	private void UpdateDetails()

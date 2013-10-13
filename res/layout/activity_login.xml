@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/MAIN_BG"
-    tools:context=".LoginActivity" >
+    tools:context=".LoginActivity2" >
     
     <ImageView
         android:id="@+id/imgLogo"
@@ -49,7 +49,7 @@
 	                android:layout_below="@+id/userIdLabel"
 	                android:layout_marginTop="4sp"
 	                android:padding="8dp"
-	                android:background="@drawable/login_field_bg" >
+	                android:background="@drawable/field_rounded_bg" >
 	                
 	                <ImageView
 	                    android:id="@+id/userIdFieldIcon"
@@ -61,7 +61,7 @@
 
 				    <EditText 
 				        android:id="@+id/loginUid"
-				        android:inputType="text"
+				        android:inputType="textEmailAddress"
 				        android:layout_width="match_parent" 
 				        android:layout_height="wrap_content"
 				        android:layout_centerVertical="true"
@@ -100,7 +100,7 @@
 	                android:layout_below="@+id/userPwdLabel"
 	                android:layout_marginTop="4sp"
 	                android:padding="8dp"
-	                android:background="@drawable/login_field_bg" >
+	                android:background="@drawable/field_rounded_bg" >
 	                
 	                <ImageView
 	                    android:id="@+id/userPwdFieldIcon"

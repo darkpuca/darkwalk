@@ -1,0 +1,141 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CommunityPostDetailActivity" >
+
+    <RelativeLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="8dp"
+        android:background="@color/MAIN_BG" >
+        <TextView
+            android:id="@+id/titleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="24sp"
+            android:textColor="@color/WHITE"
+            android:textStyle="bold"
+            android:text="@string/TITLE_COMMUNITY" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/replyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/activity_vertical_margin"
+        android:background="@color/LIGHT_GRAY" >
+	    <Button
+	        android:id="@+id/btnReply"
+	        android:layout_width="match_parent"
+	        android:layout_height="48dp"
+	        android:layout_alignParentTop="true"
+	        android:layout_centerHorizontal="true"
+	        android:layout_marginBottom="8dp"
+	        android:background="@drawable/orange_bg"
+	        android:textSize="20sp"
+	        android:textStyle="bold"
+	        android:textColor="@color/WHITE"
+	        android:text="@string/WRITE_REPLY" />
+	    <ListView
+	        android:id="@+id/repliesList"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_below="@+id/btnReply"
+	        android:background="@drawable/innerframe_shape" />
+    </RelativeLayout> 
+    
+    <RelativeLayout
+        android:id="@+id/contentsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="240dp"
+        android:layout_below="@+id/titleLayout"
+        android:layout_above="@+id/replyLayout"
+        android:padding="12dp" >
+        <TextView
+            android:id="@+id/writer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:textSize="14sp"
+            android:textColor="@color/GRAY" />
+        <TextView
+            android:id="@+id/regDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:textSize="14sp"
+            android:textColor="@color/GRAY" />
+	 	<TextView
+	        android:id="@+id/viewCountLabel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginRight="4dp"
+	        android:textSize="13sp"
+	        android:textStyle="normal"
+	        android:textColor="@color/GRAY"
+	        android:text="@string/VIEW_COUNT" />
+		<TextView
+	        android:id="@+id/viewCount"
+	        android:layout_width="30dp"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_toRightOf="@+id/viewCountLabel"
+	        android:gravity="right"
+	        android:textSize="13sp"
+	        android:textStyle="bold"
+	        android:textColor="@color/GRAY" />    
+	    <TextView
+	        android:id="@+id/replyCountLabel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_toRightOf="@+id/viewCount"
+	        android:layout_marginLeft="16dp"
+	        android:layout_marginRight="4dp"
+	        android:textSize="13sp"
+	        android:textStyle="normal"
+	        android:textColor="@color/GRAY"
+	        android:text="@string/REPLY_COUNT" />
+	    <TextView
+	        android:id="@+id/replyCount"
+	        android:layout_width="30dp"
+	        android:layout_height="wrap_content"
+	        android:layout_marginRight="4dp"
+	        android:layout_alignParentBottom="true"
+	        android:layout_toRightOf="@+id/replyCountLabel"
+	        android:gravity="right"
+	        android:textSize="13sp"
+	        android:textStyle="normal"
+	        android:textColor="@color/GRAY" />
+        <ScrollView
+            android:id="@+id/contentScroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:minHeight="200dp"
+            android:layout_below="@+id/writer"
+            android:layout_above="@+id/viewCountLabel"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp" >
+	        <TextView
+	            android:id="@+id/contents"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:textSize="18sp"
+	            android:textColor="@color/DARK_GRAY" />
+        </ScrollView>
+        
+	    
+    </RelativeLayout>
+        
+</RelativeLayout>

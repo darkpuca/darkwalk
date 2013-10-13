@@ -1,11 +1,13 @@
 package com.socialwalk;
 
-import java.util.Date;
+
 
 
 
 public class Globals
 {
+	public static final int SECURE_SESSION_FLAG = 0;
+	
 	public static final String[] sampleStrings = { "sample string1", "sample string2", "sample string3", "sample string4", "sample string5", "sample string6", "sample string7", "sample string8", "sample string9" };
 
 	public static final String URL_SERVER_DOMAIN = "http://218.145.31.240";
@@ -21,6 +23,7 @@ public class Globals
 	
 	public static final String URL_NEO_AD_DOMAIN = "http://web.howapi.co.kr";
 	public static final String URL_NEO_AD = URL_NEO_AD_DOMAIN + "/zzzCashSlide.asp?tp=1";
+	public static final String URL_NEO_AD2 = URL_NEO_AD_DOMAIN + "/zzzparsing.asp?tp=1";
 
 	public static final String URL_AROUNDERS_REQ_TEST = "http://test.arounders.co.kr/adRequest.skp";
 	public static final String AROUNDERS_REQ_URL = "http://ad.arounders.co.kr/adRequest.skp";
@@ -28,12 +31,14 @@ public class Globals
 	public static final String AROUNDERS_APP_KEY = "123";
 
 	public static final String EXTRA_KEY_URL = "url";
-	public static final String EXTRA_KEY_COMMUNITY_ID = "group_id";
-	public static final String EXTRA_KEY_COMMUNITY_NAME = "group_name";
-	public static final String EXTRA_KEY_COMMUNITY_DESC = "group_desc";
-	
+	public static final String EXTRA_KEY_COMMUNITY_SEQUENCE = "communitySeq";
+	public static final String EXTRA_KEY_COMMUNITY_NAME = "communityName";
+	public static final String EXTRA_KEY_COMMUNITY_DESC = "communityDesc";
 	public static final String EXTRA_KEY_LOCATION = "location";
 	public static final String EXTRA_KEY_FILENAME = "filename";
+	public static final String EXTRA_KEY_POST_SEQUENCE = "postSeq";
+	public static final String EXTRA_KEY_WRITER_SEQUENCE = "writerSeq";
+	
 
 	public static final String PREF_ENVIRNMENT = "ENV";
 	public static final String PREF_NAME_SLIDER = "SLIDER";
@@ -48,12 +53,13 @@ public class Globals
 	
 	public static final int NOTI_WALKING = 2000;
 	
-	public static final int INTENT_REQ_LOGIN = 10;
-	public static final int INTENT_REQ_GROUP_SELECT = 11;
-	public static final int INTENT_REQ_INTRO = 12;
-	public static final int INTENT_REQ_POSTING = 13;
+	public static final int INTENT_REQ_LOGIN = 1010;
+	public static final int INTENT_REQ_GROUP_SELECT = 1011;
+	public static final int INTENT_REQ_INTRO = 1012;
+	public static final int INTENT_REQ_POSTING = 1013;
+	public static final int INTENT_REQ_REFRESH = 1100;
 
-	public static final long INTRO_WAITING = 3000;
+	public static final long INTRO_WAITING = 2000;
 	
 	public static final int ERROR_NONE					= 0;
 	public static final int ERROR_NO_RESULT				= 1;
@@ -65,13 +71,12 @@ public class Globals
 	public static final int ERROR_SYNTAX				= 98;
 	public static final int ERROR_UNKNOWN				= 99;
 	
-	private Globals() {
-		// TODO Auto-generated constructor stub
+	public Globals()
+	{
 	}
-
-	
 	
 
 
+	
 }
 

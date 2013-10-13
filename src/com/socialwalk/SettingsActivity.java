@@ -115,8 +115,10 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 	@Override
 	public void onResponse(String response)
 	{
-		SWResponse serverResponse = new MyXmlParser(response).GetResponse();
-		if (0 == serverResponse.Code)
+		SWResponse result = new MyXmlParser(response).GetResponse();
+		if (null == result) return;
+		
+		if (0 == result.Code)
 		{
 			ServerRequestManager.IsLogin = false;
 			SocialWalkRequest.ClearSessionInformation();

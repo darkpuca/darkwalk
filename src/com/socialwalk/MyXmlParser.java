@@ -15,8 +15,18 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.util.Log;
 
-import com.socialwalk.WalkHistory.WalkLogItem;
-import com.socialwalk.request.AccountData;
+import com.socialwalk.dataclass.AccountData;
+import com.socialwalk.dataclass.AccountHeart;
+import com.socialwalk.dataclass.Beneficiaries;
+import com.socialwalk.dataclass.Beneficiary;
+import com.socialwalk.dataclass.Communities;
+import com.socialwalk.dataclass.Community;
+import com.socialwalk.dataclass.CommunityPostReplies;
+import com.socialwalk.dataclass.CommunityPostReplies.CommunityPostReply;
+import com.socialwalk.dataclass.CommunityPosts;
+import com.socialwalk.dataclass.CommunityPosts.CommunityPostItem;
+import com.socialwalk.dataclass.WalkHistory;
+import com.socialwalk.dataclass.WalkHistory.WalkLogItem;
 
 public class MyXmlParser
 {
@@ -79,6 +89,8 @@ public class MyXmlParser
 					tagName = parser.getName();
 					if (tagName.equalsIgnoreCase("Listing"))
 						adData = new SlideAdData();
+					else if (tagName.equalsIgnoreCase("AdId"))
+						adData.TargetUrl = parser.nextText();
 					else if (tagName.equalsIgnoreCase("ClickUrl"))
 						adData.TargetUrl = parser.nextText();
 					else if (tagName.equalsIgnoreCase("thumbimage"))
@@ -132,6 +144,10 @@ public class MyXmlParser
 						history.StartTime = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_HISTORY);
 					else if (tagName.equalsIgnoreCase("endTime"))
 						history.EndTime = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_HISTORY);
+					else if (tagName.equalsIgnoreCase("weight"))
+						history.setWeight(Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("heartRatio"))
+						history.setHeartRatio(Integer.parseInt(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("location"))
 						logItem = history.new WalkLogItem();
 					else if (tagName.equalsIgnoreCase("date"))
@@ -155,7 +171,7 @@ public class MyXmlParser
 					if (tagName.equalsIgnoreCase("location"))
 						history.LogItems.add(logItem);
 					else if (tagName.equalsIgnoreCase("walking"))
-						history.ReCalculateDistance();
+						history.ReCalculate();
 					break;
 				}					
 				eventType = parser.next();
@@ -214,41 +230,41 @@ public class MyXmlParser
 					if (tagName.equalsIgnoreCase("users"))
 						acc = new AccountData();
 					else if (tagName.equalsIgnoreCase("user_seq"))
-						acc.setUserSequence(parser.nextText());
+						acc.Sequence = parser.nextText();
 					else if (tagName.equalsIgnoreCase("user_id"))
-						acc.setUserId(parser.nextText());
+						acc.UserId = parser.nextText();
 					else if (tagName.equalsIgnoreCase("user_pw"))
-						acc.setUserPassword(parser.nextText());
+						acc.Password = parser.nextText();
 					else if (tagName.equalsIgnoreCase("realname"))
-						acc.setName(parser.nextText());
+						acc.Name = parser.nextText();
 					else if (tagName.equalsIgnoreCase("user_type"))
-						acc.setUserType(Integer.parseInt(parser.nextText()));
-					else if (tagName.equalsIgnoreCase("area_code"))
-						acc.setAreaCode(Integer.parseInt(parser.nextText()));
-					else if (tagName.equalsIgnoreCase("basic_code"))
-						acc.setAreaSubCode(Integer.parseInt(parser.nextText()));
+						acc.UserType = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("first_code"))
+						acc.AreaCode = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("second_code"))
+						acc.AreaSubCode = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("gender"))
-						acc.setGender(Integer.parseInt(parser.nextText()));
+						acc.Gender = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("birth_date"))
-						acc.setBirthday(dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER));
+						acc.Birthday = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("weight"))
-						acc.setWeight(Integer.parseInt(parser.nextText()));
+						acc.Weight = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("recommender_seq"))
-						acc.setRecommendedId(parser.nextText());
+						acc.RecommendedUserId = parser.nextText();
 					else if (tagName.equalsIgnoreCase("community_id"))
 					{
 						String val = parser.nextText();
 						if (0 == val.length())
-							acc.setCommunityId(-1);
+							acc.CommunitySeq = 0;
 						else
-							acc.setCommunityId(Integer.parseInt(val));
+							acc.CommunitySeq = Integer.parseInt(val);
 					}
 					else if (tagName.equalsIgnoreCase("verified"))
-						acc.setVerified(1 == Integer.parseInt(parser.nextText()));
+						acc.Verified = (1 == Integer.parseInt(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("reg_date"))
-						acc.setRegDate(dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER));
+						acc.RegDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("modify_date"))
-						acc.setModDate(dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER));
+						acc.ModifyDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
 					break;
 				case XmlPullParser.END_TAG:
 					break;
@@ -264,6 +280,85 @@ public class MyXmlParser
 			Log.d(TAG, e.getLocalizedMessage());
 			return null;
 		}
+	}
+	
+	public Communities GetCommunities()
+	{
+		if (null == m_xml || 0 == m_xml.length()) return null;
+		
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(m_xml));
+			
+			Communities commItems = null;
+			Community item = null;
+			
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT)
+			{
+				String tagName = null;
+				
+				switch (eventType)
+				{
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.END_DOCUMENT:						
+					break;
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("community"))
+						commItems = new Communities();
+					else if (tagName.equalsIgnoreCase("total"))
+						commItems.TotalCount = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("item"))
+						item = new Community();
+					else if (tagName.equalsIgnoreCase("community_id"))
+						item.Id = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("community_type"))
+						item.Type = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("owner_id"))
+						item.OwnerId = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("community_name"))
+						item.Name = parser.nextText();
+					else if (tagName.equalsIgnoreCase("approve_type"))
+						item.SignupType = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("community_desc"))
+						item.Description = parser.nextText();
+					else if (tagName.equalsIgnoreCase("verified"))
+						item.VerifyCode = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("opening_seq"))
+						item.MakerSequence = parser.nextText();
+					else if (tagName.equalsIgnoreCase("opening_name"))
+						item.MakerName = parser.nextText();
+					else if (tagName.equalsIgnoreCase("operator_seq"))
+						item.MasterSequence = parser.nextText();
+					else if (tagName.equalsIgnoreCase("operator_name"))
+						item.MasterName = parser.nextText();
+					else if (tagName.equalsIgnoreCase("reg_date"))
+						item.RegDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("modify_date"))
+						item.ModifyDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+					break;
+				case XmlPullParser.END_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("item"))
+						commItems.Items.add(item);
+					break;
+				}					
+				eventType = parser.next();
+			}
+			
+			return commItems;
+			
+		} 
+		catch (Exception e)
+		{
+			Log.d(TAG, e.getLocalizedMessage());
+			return null;
+		}
+
 	}
 	
 	public CommunityDetail GetCommunityDetail()
@@ -310,11 +405,11 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("owner_second_name"))
 						detail.AreaSubName = parser.nextText();
 					else if (tagName.equalsIgnoreCase("opening_seq"))
-						detail.MakerId = Integer.parseInt(parser.nextText());
+						detail.MakerSequence = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("opening_name"))
 						detail.MakerName = parser.nextText();
 					else if (tagName.equalsIgnoreCase("operator_seq"))
-						detail.MasterId = Integer.parseInt(parser.nextText());
+						detail.Mastersequence = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("operator_name"))
 						detail.MasterName = parser.nextText();
 					else if (tagName.equalsIgnoreCase("community_member_count"))
@@ -330,6 +425,291 @@ public class MyXmlParser
 				eventType = parser.next();
 			}			
 			return detail;
+		} 
+		catch (Exception e)
+		{
+			Log.d(TAG, e.getLocalizedMessage());
+			return null;
+		}
+	}
+	
+	public CommunityPosts GetCommunityPosts()
+	{
+		if (null == m_xml || 0 == m_xml.length()) return null;
+		
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(m_xml));
+			
+			CommunityPosts items = null;
+			CommunityPostItem item = null;
+			
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT)
+			{
+				String tagName = null;
+				
+				switch (eventType)
+				{
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.END_DOCUMENT:						
+					break;
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("community_info"))
+						items = new CommunityPosts();
+					else if (tagName.equalsIgnoreCase("total"))
+						items.TotalCount = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("item"))
+						item = items.new CommunityPostItem();
+					else if (tagName.equalsIgnoreCase("community_info_seq"))
+						item.Sequence = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("community_user_seq"))
+						item.UserSequence = parser.nextText();
+					else if (tagName.equalsIgnoreCase("content"))
+						item.Contents = parser.nextText();
+					else if (tagName.equalsIgnoreCase("attach_image"))
+						item.ImageUrl = parser.nextText();
+					else if (tagName.equalsIgnoreCase("view_count"))
+						item.ViewCount = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("reply_count"))
+						item.ReplyCount = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("verified"))
+						item.Verified = (boolean)(1 == Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("reg_date"))
+						item.RegDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("modify_date"))
+						item.ModifyDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("community_user_realname"))
+						item.Writer = parser.nextText();
+					break;
+				case XmlPullParser.END_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("item"))
+						items.Items.add(item);
+					else if (tagName.equalsIgnoreCase("community_info"))
+						return items;
+						
+					break;
+				}					
+				eventType = parser.next();
+			}
+			return null;
+		} 
+		catch (Exception e)
+		{
+			Log.d(TAG, e.getLocalizedMessage());
+			return null;
+		}
+	}
+	
+	public CommunityPostItem GetCommunityPostItem()
+	{
+		if (null == m_xml || 0 == m_xml.length()) return null;
+		
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(m_xml));
+			
+			CommunityPosts items = new CommunityPosts();
+			CommunityPostItem item = null;
+			
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT)
+			{
+				String tagName = null;
+				
+				switch (eventType)
+				{
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.END_DOCUMENT:						
+					break;
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("community_info"))
+						item = items.new CommunityPostItem();
+					else if (tagName.equalsIgnoreCase("community_info_seq"))
+						item.Sequence = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("community_user_seq"))
+						item.UserSequence = parser.nextText();
+					else if (tagName.equalsIgnoreCase("community_user_realname"))
+						item.Writer = parser.nextText();
+					else if (tagName.equalsIgnoreCase("content"))
+						item.Contents = parser.nextText();
+					else if (tagName.equalsIgnoreCase("attach_image"))
+						item.ImageUrl = parser.nextText();
+					else if (tagName.equalsIgnoreCase("view_count"))
+						item.ViewCount = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("reply_count"))
+						item.ReplyCount = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("reg_date"))
+						item.RegDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("modify_date"))
+						item.ModifyDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+					break;
+				case XmlPullParser.END_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("community_info"))
+						return item;
+						
+					break;
+				}					
+				eventType = parser.next();
+			}
+		} 
+		catch (Exception e)
+		{
+			Log.d(TAG, e.getLocalizedMessage());
+		}
+		return null;
+	}
+
+	public CommunityPostReplies GetCommunityReplies()
+	{
+		if (null == m_xml || 0 == m_xml.length()) return null;
+		
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(m_xml));
+			
+			CommunityPostReplies items = null;
+			CommunityPostReply item = null;
+			
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT)
+			{
+				String tagName = null;
+				
+				switch (eventType)
+				{
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.END_DOCUMENT:						
+					break;
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("reply_info"))
+						items = new CommunityPostReplies();
+					else if (tagName.equalsIgnoreCase("total"))
+						items.TotalCount = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("item"))
+						item = items.new CommunityPostReply();
+					else if (tagName.equalsIgnoreCase("reply_seq"))
+						item.Sequence = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("reply_user_seq"))
+						item.UserSequence = parser.nextText();
+					else if (tagName.equalsIgnoreCase("reply_realname"))
+						item.Writer = parser.nextText();
+					else if (tagName.equalsIgnoreCase("reply_data"))
+						item.Contents = parser.nextText();
+					else if (tagName.equalsIgnoreCase("reg_date"))
+						item.RegDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+					break;
+				case XmlPullParser.END_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("item"))
+						items.Items.add(item);
+					else if (tagName.equalsIgnoreCase("reply_info"))
+						return items;
+						
+					break;
+				}					
+				eventType = parser.next();
+			}
+			return null;
+		} 
+		catch (Exception e)
+		{
+			Log.d(TAG, e.getLocalizedMessage());
+			return null;
+		}
+	}
+
+	
+	public Beneficiaries GetBeneficiaries()
+	{
+		if (null == m_xml || 0 == m_xml.length()) return null;
+		
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(m_xml));
+			
+			Beneficiaries beneficiaries = null;
+			Beneficiary item = null;
+			
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT)
+			{
+				String tagName = null;
+				
+				switch (eventType)
+				{
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.END_DOCUMENT:						
+					break;
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("benefit"))
+						beneficiaries = new Beneficiaries();
+					else if (tagName.equalsIgnoreCase("total"))
+						beneficiaries.TotalCount = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("item"))
+						item = new Beneficiary();
+					else if (tagName.equalsIgnoreCase("benefit_seq"))
+						item.Sequence = parser.nextText();
+					else if (tagName.equalsIgnoreCase("first_code"))
+						item.AreaCode = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("first_name"))
+						item.AreaName = parser.nextText();
+					else if (tagName.equalsIgnoreCase("second_code"))
+						item.OrganizationCode = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("second_name"))
+						item.OrganizationName = parser.nextText();
+					else if (tagName.equalsIgnoreCase("name"))
+						item.Name = parser.nextText();
+					else if (tagName.equalsIgnoreCase("age"))
+						item.Age = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("gender"))
+						item.Gender = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("profile_image"))
+						item.ProfileUrl = parser.nextText();
+					else if (tagName.equalsIgnoreCase("benefit_desc"))
+						item.DescriptionUrl = parser.nextText();
+					else if (tagName.equalsIgnoreCase("target_price"))
+						item.TargetMoney = Double.parseDouble(parser.nextText());
+					else if (tagName.equalsIgnoreCase("current_price"))
+						item.CurrentMoney = Double.parseDouble(parser.nextText());
+					else if (tagName.equalsIgnoreCase("participant"))
+						item.Participants = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("start_date"))
+						item.StartDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("end_date"))
+						item.EndDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("benefit_date"))
+						item.EndDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("delivery_desc"))
+						item.ReviewsUrl = parser.nextText();
+					break;
+				case XmlPullParser.END_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("item"))
+						beneficiaries.Items.add(item);
+					break;
+				}					
+				eventType = parser.next();
+			}			
+			return beneficiaries;			
 		} 
 		catch (Exception e)
 		{
@@ -479,8 +859,6 @@ public class MyXmlParser
 			XmlPullParser parser = factory.newPullParser();
 			parser.setInput(new StringReader(m_xml));
 			
-			SWResponse response = null;
-			
 			int eventType = parser.getEventType();
 			while (eventType != XmlPullParser.END_DOCUMENT)
 			{
@@ -510,13 +888,62 @@ public class MyXmlParser
 			Log.d(TAG, e.getLocalizedMessage());
 			return -1;
 		}
-
+	}
+	
+	public AccountHeart GetHearts()
+	{
+		if (null == m_xml || 0 == m_xml.length()) return null;
+		
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(m_xml));
+			
+			AccountHeart hearts = null;
+			
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT)
+			{
+				String tagName = null;
+				
+				switch (eventType)
+				{
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.END_DOCUMENT:						
+					break;
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("users"))
+						hearts = new AccountHeart();
+					else if (tagName.equalsIgnoreCase("green_point"))
+						hearts.setGreenPoint(Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("total"))
+						hearts.setRedPointTotal(Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("current"))
+						hearts.setRedPoint(Integer.parseInt(parser.nextText()));
+					break;
+				case XmlPullParser.END_TAG:
+					break;
+				}					
+				eventType = parser.next();
+			}
+			
+			return hearts;			
+		} 
+		catch (Exception e)
+		{
+			Log.d(TAG, e.getLocalizedMessage());
+			return null;
+		}
 	}
 	
 	
 
 	public class SlideAdData
 	{
+		public String AdId;
 		public String TargetUrl;
 		public String ThumbnailUrl;		
 		public Date LastAccess;
@@ -549,19 +976,5 @@ public class MyXmlParser
 		public int Distance;
 		public double Latitude;
 		public double Longitude;
-	}
-	
-	public class CommunityDetail
-	{
-		public int Id, Type, OwnerId, SignupType, VerifyCode;
-		public String AreaName, AreaSubName, Name, Description;
-		public int MakerId, MasterId, MemberCount;
-		public String MakerName, MasterName;
-		public Date RegDate, ModifyDate;
-		
-		public CommunityDetail()
-		{
-			
-		}
 	}
 }

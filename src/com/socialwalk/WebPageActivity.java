@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 public class WebPageActivity extends Activity
 {
@@ -28,10 +27,11 @@ public class WebPageActivity extends Activity
 		webView.setWebViewClient(new WebCallBack());
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setBuiltInZoomControls(true);
+		webSettings.setJavaScriptEnabled(true);
+		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 		
 		// get target url
 		String urlString = getIntent().getStringExtra(Globals.EXTRA_KEY_URL);
-		Toast.makeText(this, "received url:" + urlString, Toast.LENGTH_LONG).show();
 
 		// prepare progress dialog
 		progDlg = new ProgressDialog(WebPageActivity.this);
@@ -62,21 +62,9 @@ public class WebPageActivity extends Activity
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon)
 		{
-			Log.d(TAG, "started url: " + url);
-			
 			if (!progDlg.isShowing())
 			{
-				progDlg.setTitle("page load");
-				progDlg.setMessage("please wait...");
-				progDlg.setButton("Cancel", new DialogInterface.OnClickListener()
-				{
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						dialog.dismiss();
-					}
-				});
-					
+				progDlg.setMessage(getResources().getString(R.string.MSG_PAGE_LOADING));
 				progDlg.show();
 			}
 

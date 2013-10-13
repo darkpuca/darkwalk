@@ -1,5 +1,6 @@
-package com.socialwalk;
+package com.socialwalk.dataclass;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -7,9 +8,10 @@ import java.util.TimeZone;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
-import android.annotation.SuppressLint;
 import android.location.Location;
 import android.location.LocationManager;
+
+import com.socialwalk.MyXmlWriter;
 
 public class WalkHistory
 {
@@ -21,8 +23,15 @@ public class WalkHistory
 	public boolean IsUploaded = false, IsWalking = false;
 	public Date StartTime, EndTime;
 	public String FileName;
+	private int weight;
+	private int heartRatio;
 	
 	private static final String TAG = "SW-WALK";
+	private static final float METs_WALK = 3.5f;
+	private static final float METs_RATIO_FOR_MINUTES = 1.0175f;
+	private static final float METs_RATIO_FOR_SECONDS = 0.016958f;
+	private static final int DEFAULT_WEIGHT = 70;
+	private static final int RED_HEART_WALK_POINT = 10;
 
 	public WalkHistory()
 	{
@@ -31,6 +40,19 @@ public class WalkHistory
 		this.TotalSpeed = 0;
 		this.StartTime = new Date();
 		this.IsWalking = true;
+		this.weight = DEFAULT_WEIGHT;
+		this.heartRatio = RED_HEART_WALK_POINT;
+	}
+	
+	public WalkHistory(int weight)
+	{
+		this.LogItems = new Vector<WalkLogItem>();
+		this.TotalDistance = 0;
+		this.TotalSpeed = 0;
+		this.StartTime = new Date();
+		this.IsWalking = true;
+		this.weight = weight; 
+		this.heartRatio = RED_HEART_WALK_POINT;
 	}
 	
 	public WalkLogItem AddLog(Location location)
@@ -44,7 +66,8 @@ public class WalkHistory
 		if (null != prevLog)
 		{
 			if ((prevLog.LogLocation.getLatitude() != newLog.LogLocation.getLatitude()) &&
-					(prevLog.LogLocation.getLongitude() != newLog.LogLocation.getLongitude()))
+					(prevLog.LogLocation.getLongitude() != newLog.LogLocation.getLongitude()) &&
+					(prevLog.LogLocation.getAltitude() != newLog.LogLocation.getAltitude()))
 			{
 				newLog.DistanceFromPrevious = newLog.LogLocation.distanceTo(prevLog.LogLocation);
 				this.TotalDistance += newLog.DistanceFromPrevious;
@@ -169,11 +192,12 @@ public class WalkHistory
 		return this.AverageSpeed(now);
 	}
 	
-	public void ReCalculateDistance()
+	public void ReCalculate()
 	{
-		this.TotalDistance = 0;
 		if (1 >= this.LogItems.size()) return;
 		
+		this.TotalDistance = 0;
+
 		WalkLogItem prevLog = this.LogItems.get(0);
 		for (int i = 1; i < this.LogItems.size(); i++)
 		{
@@ -181,8 +205,78 @@ public class WalkHistory
 			this.TotalDistance += log.LogLocation.distanceTo(prevLog.LogLocation);
 			prevLog = log;
 		}
+
+		if (0 == this.weight)
+			this.weight = DEFAULT_WEIGHT;
+		
+		if (0 == this.heartRatio)
+			this.heartRatio = RED_HEART_WALK_POINT;
 	}
 	
+	private long WalkingCalories(Date toDate)
+	{
+		long seconds = TotalWalkingSeconds(toDate);
+		long carories = (long)(METs_WALK * this.weight * seconds * METs_RATIO_FOR_SECONDS);
+
+		return carories;
+	}
+	
+	public String WalkingCaloriesString(Date toDate)
+	{
+		long calories = WalkingCalories(toDate);
+		
+		DecimalFormat format = new DecimalFormat("###,###");
+        String strCal = format.format(calories);
+        return strCal;
+	}
+
+	public String WalkingCaloriesStringFromNow()
+	{
+		Date now = new Date();
+		return WalkingCaloriesString(now);
+	}
+	
+	public String TotalCalories()
+	{
+		return WalkingCaloriesString(this.EndTime);
+	}
+	
+	private long RedHeart()
+	{
+		long distance = (long)(this.TotalDistance / 100);
+		return distance * RED_HEART_WALK_POINT;
+	}
+	
+	public String RedHeartString()
+	{
+		long hearts = RedHeart();
+		
+		DecimalFormat format = new DecimalFormat("###,###");
+        String strHearts = format.format(hearts);
+
+        return strHearts;
+	}
+	
+	public int getWeight()
+	{
+		return this.weight;
+	}
+
+	public void setWeight(int weight) 
+	{
+		this.weight = weight;
+	}
+	
+	public int getHeartRatio()
+	{
+		return this.heartRatio;
+	}
+
+	public void setHeartRatio(int heartRatio)
+	{
+		this.heartRatio = heartRatio;
+	}
+
 	public String GetXML()
 	{
 		if (false != this.IsWalking) return "";
@@ -214,7 +308,5 @@ public class WalkHistory
 		}
 	}
 
-	
-	
 }
 

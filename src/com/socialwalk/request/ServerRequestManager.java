@@ -18,15 +18,19 @@ import com.android.volley.toolbox.StringRequest;
 import com.socialwalk.Globals;
 import com.socialwalk.MyXmlParser;
 import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.dataclass.AccountData;
+import com.socialwalk.dataclass.AccountHeart;
 import com.socialwalk.MyXmlWriter;
 
 public class ServerRequestManager implements Response.Listener<String>, Response.ErrorListener
 {
-	public static boolean IsLogin = true;
+	public static boolean IsLogin = false;
 	public static AccountData LoginAccount = null;
 	
 	private static final String TAG = "SW-NET";
-	private static final int REQUEST_AUTOLOGIN = 1;
+	
+	private static final int REQUEST_TYPE_AUTOLOGIN = 1;
+	private static final int REQUEST_TYPE_HEARTS = 2;
 	
 	private int m_reqType = 0;
 
@@ -47,8 +51,6 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		SocialWalkRequest req = new SocialWalkRequest(Method.POST, urlString, listener, errorListener);
 		req.SetXMLBody(xmlBody);
 		reqQueue.add(req);
-		
-		IsLogin = true;
 	}
 	
 	public void Logout(Response.Listener<String> listener, Response.ErrorListener errorListener)
@@ -64,7 +66,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 	
 	public void AutoLogin(Context context)
 	{
-		if (IsLogin) return;
+		if (true == IsLogin) return;
 		
 		SharedPreferences loginPrefs = context.getSharedPreferences(Globals.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
 		
@@ -74,7 +76,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 			String uid = loginPrefs.getString(Globals.PREF_KEY_USER_ID, "");
 			String pwd = loginPrefs.getString(Globals.PREF_KEY_PASSWORD, "");
 			
-			m_reqType = REQUEST_AUTOLOGIN;
+			m_reqType = REQUEST_TYPE_AUTOLOGIN;
 			this.Login(this, this, uid, pwd);
 		}
 	}
@@ -84,10 +86,24 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
 		if (null == reqQueue) return;
 		
-		String urlString = Globals.URL_SERVER_DOMAIN + "/users/" + LoginAccount.getUserSequence();
+		String urlString = Globals.URL_SERVER_DOMAIN + "/users/" + LoginAccount.Sequence;
 
 		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
 		reqQueue.add(req);
+	}
+	
+	public void CommunityGroups(Response.Listener<String> listener, Response.ErrorListener errorListener, int pageIndex)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		
+		int pageSize = 10;
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community/" + LoginAccount.Sequence + "/page/" + pageIndex + "/" + pageSize;
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);		
+
 	}
 	
 	public void CommunitySearch(Response.Listener<String> listener, Response.ErrorListener errorListener, String keyword, int pageIndex)
@@ -110,7 +126,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 			return;
 		}
 		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community/search/" + 
-		LoginAccount.getUserSequence() + "/" + utfKeyword + "/page/" + pageIndex + "/" + pageSize;
+		LoginAccount.Sequence + "/" + utfKeyword + "/page/" + pageIndex + "/" + pageSize;
 		
 		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
 		reqQueue.add(req);		
@@ -138,6 +154,17 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		reqQueue.add(req);		
 	}
 	
+	public void CommunityPostDetail(Response.Listener<String> listener, Response.ErrorListener errorListener, int postSequence)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community_info/" + postSequence;
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+	
 	public void CommunityPosting(Response.Listener<String> listener, Response.ErrorListener errorListener, int communityId, String contents)
 	{
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
@@ -145,23 +172,87 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		if (null == LoginAccount) return;
 
 		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community_info/" + communityId;
-		String xmlBody = MyXmlWriter.CommunityPosting(LoginAccount.getUserSequence(), communityId, contents);
+		String xmlBody = MyXmlWriter.CommunityPosting(LoginAccount.Sequence, communityId, contents);
 		
 		SocialWalkRequest req = new SocialWalkRequest(Method.POST, urlString, listener, errorListener);
 		req.SetXMLBody(xmlBody);
 		reqQueue.add(req);		
 	}
 	
+	
+	public void CommunityPostDelete(Response.Listener<String> listener, Response.ErrorListener errorListener, int postSequence)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
 
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community_info/" + postSequence;
+		SocialWalkRequest req = new SocialWalkRequest(Method.DELETE, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+
+	
+	public void CommunityReplies(Response.Listener<String> listener, Response.ErrorListener errorListener, int postSequence, int pageIndex)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+
+		int pageSize = 10;
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/reply_info/" + postSequence + "/page/" + pageIndex + "/" + pageSize;
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);
+	}
+	
+	public void ReplyPosting(Response.Listener<String> listener, Response.ErrorListener errorListener, int postSequence, String contents)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/reply_info/" + postSequence;
+		String xmlBody = MyXmlWriter.ReplyPosting(LoginAccount.Sequence, postSequence, contents);
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.POST, urlString, listener, errorListener);
+		req.SetXMLBody(xmlBody);
+		reqQueue.add(req);		
+	}
+
+	
+	public void Beneficiaries(Response.Listener<String> listener, Response.ErrorListener errorListener, boolean isGlobal, int pageIndex)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		
+		int pageSize = 10;
+		String target = isGlobal ? "ALL" : "LOCAL";
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/benefit/" + target + "/page/" + pageIndex +pageIndex + "/" + pageSize;
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.POST, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+	
+	public void UpdateHearts(Response.Listener<String> listener, Response.ErrorListener errorListener)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/users/" + LoginAccount.Sequence + "/point";
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
 	
 	public void ChangePassword(Response.Listener<String> listener, Response.ErrorListener errorListener, String newPassword)
 	{
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
 		if (null == reqQueue) return;
 		
-		final String xmlBody = MyXmlWriter.ChangePassword(LoginAccount.getUserPassword(), newPassword);
+		final String xmlBody = MyXmlWriter.ChangePassword(LoginAccount.Password, newPassword);
 
-		String urlString = Globals.URL_SERVER_DOMAIN + "/users/" + LoginAccount.getUserSequence() + "/user_pw";
+		String urlString = Globals.URL_SERVER_DOMAIN + "/users/" + LoginAccount.Sequence + "/user_pw";
 		
 		SocialWalkRequest req = new SocialWalkRequest(Method.PUT, urlString, listener, errorListener)
 		{
@@ -199,7 +290,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		if (null == LoginAccount) return;
 		
 		String url = Globals.URL_SERVER_DOMAIN + "/api/community";
-		String xmlBody = MyXmlWriter.CreateGroup(LoginAccount.getUserSequence(), name, desc);
+		String xmlBody = MyXmlWriter.CreateGroup(LoginAccount.Sequence, name, desc);
 		
 		SocialWalkRequest req = new SocialWalkRequest(Method.POST, url, listener, errorListener);
 		req.SetXMLBody(xmlBody);
@@ -219,7 +310,6 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		StringRequest req = new StringRequest(Method.GET, url, listener, errorListener);
 		queue.add(req);
 	}
-
 	
 	
 	public void AroundersItems(Response.Listener<String> listener, Response.ErrorListener errorListener, double latitude, double longitude)
@@ -249,15 +339,20 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		queue.add(req);
 	}
 	
-	public static void BuildLoginAccountFromSessionData()
+	
+	public void AccumulateHeart(Response.Listener<String> listener, Response.ErrorListener errorListener, String adSeq)
 	{
-		if (!IsLogin) return;
+		RequestQueue queue = RequestManager.getRequestQueue();
+		if (null == queue) return;
+		if (null == LoginAccount) return;
 		
-		String sessionData = SocialWalkRequest.GetSessionData();
-		if (null == sessionData) return;
+		String url = Globals.URL_SERVER_DOMAIN + "/api//ad_info/" + adSeq;
+		String xmlBody = MyXmlWriter.AccumulateHeart(LoginAccount.Sequence);
 		
-		MyXmlParser parser = new MyXmlParser(sessionData);
-		LoginAccount = parser.GetAccountData();
+		SocialWalkRequest req = new SocialWalkRequest(Method.POST, url, listener, errorListener);
+		req.SetXMLBody(xmlBody);
+		
+		queue.add(req);
 	}
 	
 	
@@ -274,16 +369,42 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		SWResponse result = new MyXmlParser(response).GetResponse();
 		if (null == result) return;
 		
-		if (Globals.ERROR_NONE == result.Code)
+		if (REQUEST_TYPE_AUTOLOGIN == m_reqType)
 		{
-			IsLogin = true;
-			BuildLoginAccountFromSessionData();
-		}		
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				IsLogin = true;
+				BuildLoginAccountFromSessionData();
+				
+				UpdateHearts(this, this);
+			}		
+		}
+		else if (REQUEST_TYPE_HEARTS == m_reqType)
+		{
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				if (null == LoginAccount) return;
+				
+				MyXmlParser parser = new MyXmlParser(response);
+				AccountHeart hearts = parser.GetHearts();
+				if (null == hearts) return;
+				LoginAccount.Hearts.Copy(hearts);
+			}
+		}
+	}
+
+	
+	public static void BuildLoginAccountFromSessionData()
+	{
+		if (false == IsLogin) return;
+		
+		String sessionData = SocialWalkRequest.GetSessionData();
+		if (null == sessionData) return;
+		
+		MyXmlParser parser = new MyXmlParser(sessionData);
+		LoginAccount = parser.GetAccountData();
 	}
 	
-
-	
-
 	
 
 }

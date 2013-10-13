@@ -1,5 +1,8 @@
 package com.socialwalk;
 
+import com.socialwalk.dataclass.WalkHistory;
+import com.socialwalk.dataclass.WalkHistoryManager;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,10 +48,14 @@ public class WalkResultActivity extends Activity
 			TextView distance = (TextView)findViewById(R.id.distance);
 			TextView walkTime = (TextView)findViewById(R.id.walkTime);
 			TextView walkSpeed = (TextView)findViewById(R.id.walkSpeed);
+			TextView calories = (TextView)findViewById(R.id.calories);
+			TextView hearts = (TextView)findViewById(R.id.resultHeart);
 
 			distance.setText(lastWalk.TotalDistanceString());
 			walkTime.setText(lastWalk.TotalWalkingTimeString());
 			walkSpeed.setText(lastWalk.AverageSpeed());
+			calories.setText(lastWalk.TotalCalories());
+			hearts.setText(lastWalk.RedHeartString());
 		}
 
 	}

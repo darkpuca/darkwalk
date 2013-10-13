@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:padding="6dp"
         android:background="@drawable/main_start_bg" >
 
@@ -105,8 +104,7 @@
 				android:layout_marginLeft="6dp"
 				android:textSize="16sp"
 				android:textStyle="bold"
-				android:textColor="@color/BLACK"
-				android:text="가나다라" />
+				android:textColor="@color/BLACK" />
 	        
 		</RelativeLayout>
 	    
@@ -144,8 +142,7 @@
 				android:layout_marginLeft="6dp"
 				android:textSize="16sp"
 				android:textStyle="bold"
-				android:textColor="@color/BLACK"
-				android:text="GROUP_NAME" />
+				android:textColor="@color/BLACK" />
 	        	        
 	    </RelativeLayout>
          
@@ -187,8 +184,7 @@
                 android:layout_marginLeft="16dp"
                 android:textSize="17sp"
                 android:textColor="@color/WHITE"
-                android:textStyle="bold"
-                android:text="XXX 하트" />
+                android:textStyle="bold" />
             
             <Button
                 android:id="@+id/btnSupport"
@@ -230,8 +226,7 @@
                 android:layout_marginLeft="16dp"
                 android:textSize="17sp"
                 android:textColor="@color/WHITE"
-                android:textStyle="bold"
-                android:text="XXX 하트" />
+                android:textStyle="bold" />
             
             <TextView
                 android:id="@+id/redHeartTotal"
@@ -239,10 +234,10 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/redHeart"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="@color/WHITE"
-                android:text="(x,xxx 하트)" />
+                android:textColor="@color/WHITE" />
             
         </RelativeLayout>
         
@@ -342,15 +337,31 @@
 	        android:layout_alignParentBottom="true"
 	        android:layout_centerHorizontal="true"
 	        android:background="@drawable/main_start_bg" >
-
-	        <ImageView
-		        android:layout_width="match_parent"
-		        android:layout_height="30dp"
-		        android:layout_centerVertical="true"
-		        android:layout_centerHorizontal="true"
-		        android:src="@drawable/main_start"
-		        android:scaleType="fitCenter"
-		        android:background="@color/TRANSPARENT" />
+			<RelativeLayout
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_centerInParent="true" >
+		        <ImageView
+		            android:id="@+id/startIcon"
+			        android:layout_width="32dp"
+			        android:layout_height="32dp"
+			        android:layout_centerVertical="true"
+			        android:layout_alignParentLeft="true"
+			        android:src="@drawable/main_start_icon"
+			        android:scaleType="fitCenter"
+			        android:background="@color/TRANSPARENT" />
+		        <TextView
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_centerVertical="true"
+		            android:layout_toRightOf="@+id/startIcon"
+		            android:layout_marginLeft="4dp"
+		            android:textSize="28sp"
+		            android:textColor="@color/MAIN_BG"
+		            android:textStyle="bold"
+		            android:text="@string/WALK_START" />
+			</RelativeLayout>
+			
 	        
          </RelativeLayout>
         

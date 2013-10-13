@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.StringRequest;
+import com.socialwalk.Globals;
 import com.squareup.okhttp.internal.Base64;
 
 public class SocialWalkRequest extends StringRequest
@@ -36,6 +37,7 @@ public class SocialWalkRequest extends StringRequest
 	public SocialWalkRequest(int method, String url, Listener<String> listener, ErrorListener errorListener)
 	{
 		super(method, url, listener, errorListener);
+		System.out.println(url);
 	}
 	
 	void SetXMLBody(String xmlBody)
@@ -55,7 +57,7 @@ public class SocialWalkRequest extends StringRequest
 		if (!SessionData.isEmpty())
 			headers.put("Session-data", SessionData);
 		
-		headers.put("Secure-flag", Integer.toString(0));
+		headers.put("Secure-flag", Integer.toString(Globals.SECURE_SESSION_FLAG));
 		
 		return headers;
 	}

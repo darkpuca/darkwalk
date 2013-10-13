@@ -6,11 +6,15 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Vector;
 
+import com.socialwalk.dataclass.WalkHistory;
+
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -27,7 +31,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class WalkHistoryActivity extends Activity
 {
@@ -35,27 +38,24 @@ public class WalkHistoryActivity extends Activity
 	private ListView m_historyList;
 	private Vector<File> m_logFiles;
 	private HistoryAdapter m_historyAdapter;
-	
+	ProgressDialog m_progDlg;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_walk_history);
 		
+		
 		m_historyList = (ListView)findViewById(R.id.historyList);
 
-		m_logFiles = GetLogFiles();
-
-		if (BuildHistoryAdapter(m_logFiles))
-			m_historyList.setAdapter(m_historyAdapter);
-		
 		m_historyList.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
 			public void onItemClick(AdapterView<?> adpater, View view, int position, long id)
 			{
 				File logFile = m_logFiles.get(position);
-				Toast.makeText(getBaseContext(), logFile.getName(), Toast.LENGTH_SHORT).show();
+//				Toast.makeText(getBaseContext(), logFile.getName(), Toast.LENGTH_SHORT).show();
 				
 				Intent i = new Intent(getBaseContext(), WalkDetailActivity.class);
 				i.putExtra(Globals.EXTRA_KEY_FILENAME, logFile.getName());
@@ -75,7 +75,40 @@ public class WalkHistoryActivity extends Activity
 				startActivity(i);
 			}
 		});
+		
+		m_progDlg = new ProgressDialog(WalkHistoryActivity.this);
+		m_progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		m_progDlg.setCancelable(false);
+
+		
+		Handler handler = new Handler();
+		handler.post(new Runnable()
+		{			
+			@Override
+			public void run()
+			{
+				m_progDlg.setMessage(getResources().getString(R.string.MSG_LOADING));
+				m_progDlg.show();
+			}
+		});
+		
+		handler.postDelayed(PrepareDataRunnable, 1000);
+
 	}
+	
+	private Runnable PrepareDataRunnable = new Runnable()
+	{		
+		@Override
+		public void run()
+		{
+			m_logFiles = GetLogFiles();
+
+			if (BuildHistoryAdapter(m_logFiles))
+				m_historyList.setAdapter(m_historyAdapter);
+			
+			m_progDlg.dismiss();
+		}
+	};
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -122,8 +155,8 @@ public class WalkHistoryActivity extends Activity
 				@Override
 				public void onClick(DialogInterface dialog, int which)
 				{
-					Toast.makeText(getBaseContext(), "[DELETE ALL]", Toast.LENGTH_SHORT).show();
-//					ClearHistories();
+//					Toast.makeText(getBaseContext(), "[DELETE ALL]", Toast.LENGTH_SHORT).show();
+					ClearHistories();
 				}
 			});
 			
@@ -247,7 +280,7 @@ public class WalkHistoryActivity extends Activity
 			DateFormat sdf = new SimpleDateFormat("yyyy. MM.dd HH:mm", Locale.US);
 			String dateString = sdf.format(history.StartTime);
 			viewContainer.logDate.setText(dateString);
-			viewContainer.hearts.setText("xxx ÇÏÆ®");
+			viewContainer.hearts.setText(history.RedHeartString() + getResources().getString(R.string.HEART));
 			viewContainer.distance.setText(history.TotalDistanceString());
 			
 			return rowView;

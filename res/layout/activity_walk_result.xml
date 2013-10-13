@@ -177,7 +177,8 @@
 	        android:layout_below="@+id/caloriesLayout"
 	        android:layout_marginTop="16dp"
 	        android:layout_marginBottom="16dp"
-	        android:layout_centerHorizontal="true" />
+	        android:layout_centerHorizontal="true"
+	        android:visibility="invisible" />
 	    
 	   	<RelativeLayout
 	        android:id="@+id/messageLayout"
@@ -214,15 +215,25 @@
 	            android:layout_toRightOf="@+id/resultHeartIcon"
 	            android:textSize="16sp"
 	            android:textStyle="bold"
+	            android:textColor="@color/LIGHT_RED" />
+	        <TextView
+	            android:id="@+id/heartUnit"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_below="@+id/walkResultMessage1"
+	            android:layout_toRightOf="@+id/resultHeart"
+	            android:layout_marginLeft="2dp"
+	            android:textSize="16sp"
+	            android:textStyle="bold"
 	            android:textColor="@color/LIGHT_RED"
-	            android:text="### 하트" />
-	        
+	            android:text="@string/HEART" />
+
 	        <TextView
 	            android:id="@+id/walkResultMessage2"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:layout_below="@+id/walkResultMessage1"
-	            android:layout_toRightOf="@+id/resultHeart"
+	            android:layout_toRightOf="@+id/heartUnit"
 	            android:textSize="16sp"
 	            android:textStyle="bold"
 	            android:textColor="@color/BLACK"

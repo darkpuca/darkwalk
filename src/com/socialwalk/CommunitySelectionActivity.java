@@ -25,38 +25,47 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.dataclass.Communities;
+import com.socialwalk.dataclass.Community;
 import com.socialwalk.request.ServerRequestManager;
 
-public class GroupSelectionActivity extends Activity
+public class CommunitySelectionActivity extends Activity
 implements OnItemClickListener, Response.Listener<String>, Response.ErrorListener, OnClickListener
 {
-	private static final int INTENT_REQ_CREATE_GROUP = 10;
-	private static final int INTENT_REQ_GROUP_JOIN = 11;
+	private static final int INTENT_REQ_CREATE_COMMUNITY = 10;
+	private static final int INTENT_REQ_COMMUNITY_JOIN = 11;
+	
+	private static final int REQUEST_COMMUNITY_ITEMS = 20;
+	private static final int REQUEST_COMMUNITY_SEARCH = 21;
 	
 	private EditText keyword;
 	private ListView resultList;
 	private Button btnCreate, btnSearch;
 	private TextView noResultMessage;
 	
-	private CommunityListAdapter m_adapter;
-	private Vector<CommunityListItem> m_searchItems = null;
-	private int pageIndex = 0;
+	private CommunityListAdapter m_communityAdapter, m_searchAdapter;
+	private Communities m_communities = null, m_searchResults = null;
+	private int m_requestType = 0;;
+	private ServerRequestManager m_server = new ServerRequestManager();
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_group_selection);
+		setContentView(R.layout.activity_community_selection);
 		
-		m_searchItems = new Vector<CommunityListItem>();
-		m_adapter = new CommunityListAdapter(this, m_searchItems);
+		m_communities = new Communities();
+		m_communityAdapter = new CommunityListAdapter(this, m_communities.Items);
+		
+		m_searchResults = new Communities();
+		m_searchAdapter = new CommunityListAdapter(this, m_searchResults.Items);
 		
 		resultList = (ListView)findViewById(R.id.resultList);
-		resultList.setAdapter(m_adapter);
+		resultList.setAdapter(m_communityAdapter);
 		resultList.setOnItemClickListener(this);
 		
-		keyword = (EditText)findViewById(R.id.searchKeyword);		
+		keyword = (EditText)findViewById(R.id.searchKeyword);
 		
 		btnCreate = (Button)findViewById(R.id.btnCreateGroup);
 		btnCreate.setOnClickListener(this);
@@ -65,6 +74,10 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		btnSearch.setOnClickListener(this);
 		
 		noResultMessage = (TextView)findViewById(R.id.noResultMessage);
+		
+		// request community list
+		m_requestType = REQUEST_COMMUNITY_ITEMS;
+		m_server.CommunityGroups(this, this, m_communities.PageIndex);
 	}
 
 	@Override
@@ -80,24 +93,24 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		Toast.makeText(this, "list item selected. idx: " + position, Toast.LENGTH_SHORT).show();
 		
 		int groupId = 12345;
-		Intent i = new Intent(this, GroupDetailActivity.class);
-		i.putExtra(Globals.EXTRA_KEY_COMMUNITY_ID, groupId);
-		startActivityForResult(i, INTENT_REQ_GROUP_JOIN);
+		Intent i = new Intent(this, CommunityDetailActivity.class);
+		i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, groupId);
+		startActivityForResult(i, INTENT_REQ_COMMUNITY_JOIN);
 	}
 
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		if (INTENT_REQ_CREATE_GROUP == requestCode)
+		if (INTENT_REQ_CREATE_COMMUNITY == requestCode)
 		{
 			if (RESULT_OK == resultCode)
 			{
-				int groupId = data.getIntExtra(Globals.EXTRA_KEY_COMMUNITY_ID, -1);
+				int commSeq = data.getIntExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, 0);
 				String name = data.getStringExtra(Globals.EXTRA_KEY_COMMUNITY_NAME);
 				String desc = data.getStringExtra(Globals.EXTRA_KEY_COMMUNITY_DESC);
 				
-				Toast.makeText(getBaseContext(), "id:" + groupId + ", name:" + name + ", desc:" + desc, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getBaseContext(), "id:" + commSeq + ", name:" + name + ", desc:" + desc, Toast.LENGTH_SHORT).show();
 				
 //				Intent i = new Intent();
 //				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_ID, groupId);
@@ -106,7 +119,7 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 //				finish();
 			}
 		}
-		else if (INTENT_REQ_GROUP_JOIN == requestCode)
+		else if (INTENT_REQ_COMMUNITY_JOIN == requestCode)
 		{
 			if (RESULT_OK == resultCode)
 			{
@@ -127,11 +140,11 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 	{
 		if (btnCreate.equals(v))
 		{
-			Intent i = new Intent(getBaseContext(), CreateGroupActivity.class);
+			Intent i = new Intent(getBaseContext(), CreateCommunityActivity.class);
 			if (0 < keyword.getText().length())
 				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, keyword.getText().toString());
 			
-			startActivityForResult(i, INTENT_REQ_CREATE_GROUP);
+			startActivityForResult(i, INTENT_REQ_CREATE_COMMUNITY);
 		}
 		else if (btnSearch.equals(v))
 		{
@@ -152,21 +165,12 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 			{
 				noResultMessage.setVisibility(View.GONE);
 				
-				ServerRequestManager server = new ServerRequestManager();
-				pageIndex = 0;
-				server.CommunitySearch(this, this, keyword.getText().toString(), pageIndex);
+				m_requestType = REQUEST_COMMUNITY_SEARCH;
+				m_server.CommunitySearch(this, this, keyword.getText().toString(), m_searchResults.PageIndex);
 			}
-
-			
 		}
 	}
-
 	
-	public class CommunityListItem
-	{
-		public String Name, Description;
-		public int Id;
-	}
 	
 	private static class CommunityItemContainer
 	{
@@ -174,12 +178,12 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		public TextView Description;
 	}
 	
-	public class CommunityListAdapter extends ArrayAdapter<CommunityListItem>
+	public class CommunityListAdapter extends ArrayAdapter<Community>
 	{
 		private Activity m_context = null;
-		private Vector<CommunityListItem> m_items = null;
+		private Vector<Community> m_items = null;
 		
-		public CommunityListAdapter(Activity context, Vector<CommunityListItem> items)
+		public CommunityListAdapter(Activity context, Vector<Community> items)
 		{
 			super(context, R.layout.listitem_community_search, items);
 
@@ -214,7 +218,7 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 				container = (CommunityItemContainer)rowView.getTag();
 			}
 			
-			CommunityListItem item = m_items.get(position);
+			Community item = m_items.get(position);
 			
 			container.Name.setText(item.Name);
 			container.Description.setText(item.Description);
@@ -227,7 +231,7 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{
-		Log.e("", error.getLocalizedMessage());
+		System.out.println(error.getLocalizedMessage());
 	}
 
 	@Override
@@ -238,13 +242,32 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		
 		MyXmlParser parser = new MyXmlParser(response);
 		SWResponse result = parser.GetResponse();
-		if (Globals.ERROR_NONE == result.Code)
+		if (null == result) return;
+		
+		if (REQUEST_COMMUNITY_ITEMS == m_requestType)
 		{
-			
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				Communities recvItems = parser.GetCommunities();
+				if (null == recvItems) return;
+				
+				m_communities.Items.addAll(recvItems.Items);
+			}
 		}
-		else if (Globals.ERROR_NO_RESULT == result.Code)
+		else if (REQUEST_COMMUNITY_SEARCH == m_requestType)
 		{
-			noResultMessage.setVisibility(View.VISIBLE);			
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				Communities recvItems = parser.GetCommunities();
+				if (null == recvItems) return;
+				
+				m_searchResults.Items.addAll(recvItems.Items);
+				
+			}
+			else if (Globals.ERROR_NO_RESULT == result.Code)
+			{
+				noResultMessage.setVisibility(View.VISIBLE);			
+			}
 		}
 	}
 

@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class GroupDetailActivity extends Activity
+public class CommunityDetailActivity extends Activity
 {
 	private Button btnJoin;
 	private ServerRequestManager m_server = null;
@@ -21,7 +21,7 @@ public class GroupDetailActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_group_detail);
+		setContentView(R.layout.activity_community_detail);
 		
 		m_server = new ServerRequestManager();
 		
@@ -35,7 +35,7 @@ public class GroupDetailActivity extends Activity
 				if (true == m_server.GroupJoin("root", selGroupId))
 				{
 					Intent i = new Intent();
-					i.putExtra(Globals.EXTRA_KEY_COMMUNITY_ID, selGroupId);
+					i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, selGroupId);
 					setResult(RESULT_OK, i);
 					finish();
 				}

@@ -1,0 +1,111 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateCommunityActivity" >
+    
+    <RelativeLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:background="@color/MAIN_BG" >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="24sp"
+            android:textColor="@color/WHITE"
+            android:textStyle="bold"
+            android:text="@string/TITLE_CREATE_GROUP" />
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleLayout"
+        android:padding="@dimen/activity_vertical_margin" >
+	    <RelativeLayout
+	        android:id="@+id/nameLayout"
+	        android:layout_width="match_parent"
+	        android:layout_height="40dp" >
+	        <TextView
+	            android:id="@+id/nameLabel"
+	            android:layout_width="80dp"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_centerVertical="true"
+	            android:visibility="gone"
+	            android:textSize="16sp"
+	            android:textColor="@color/DARK_GRAY"
+	            android:text="@string/GROUP_NAME" />	
+	        <Button
+	            android:id="@+id/btnCheck"
+	            android:layout_width="80dp"
+	            android:layout_height="match_parent"
+	            android:layout_alignParentRight="true"
+	            android:layout_centerVertical="true"
+	            android:layout_marginLeft="4dp"
+	            android:background="@drawable/darkgray_rounded_bg"
+	            android:textSize="14sp"
+	            android:textColor="@color/WHITE"
+	            android:text="@string/CHECK_DUPLICATE" />
+	        <EditText
+	            android:id="@+id/groupName"
+	            android:inputType="text"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_toRightOf="@+id/nameLabel"
+	            android:layout_toLeftOf="@+id/btnCheck"
+	            android:background="@drawable/field_rounded_bg"
+	            android:hint="@string/GROUP_NAME" />        
+	    </RelativeLayout>
+
+	    <RelativeLayout
+	        android:id="@+id/descLayout"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_marginTop="8dp"
+	        android:layout_below="@+id/nameLayout" >
+	        
+	        <TextView
+	            android:id="@+id/descLabel"
+	            android:layout_width="80dp"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_alignParentTop="true"
+	            android:visibility="gone"
+	            android:textSize="16sp"
+	            android:textColor="@color/DARK_GRAY"
+	            android:text="@string/GROUP_DESCRIPTION" />
+	        
+	        <EditText
+	            android:id="@+id/groupDesc"
+	            android:inputType="textMultiLine"
+	            android:gravity="top"
+	            android:layout_width="match_parent" 
+	            android:layout_height="match_parent"
+	            android:layout_toRightOf="@+id/descLabel"
+	            android:scrollbars="vertical"
+	            android:layout_alignParentTop="true"
+	            android:layout_above="@+id/btnCreateGroup"
+	            android:background="@drawable/field_rounded_bg"
+	            android:hint="@string/GROUP_DESCRIPTION" />
+	        
+			<Button 
+				android:id="@+id/btnCreateGroup"
+				android:layout_width="match_parent"
+				android:layout_height="50dp"
+				android:layout_marginTop="@dimen/activity_vertical_margin"
+				android:layout_alignParentBottom="true"
+				android:background="@drawable/yellow_rounded_bg"
+				android:textSize="20sp"
+				android:textStyle="bold"
+				android:textColor="@color/WHITE"
+				android:text="@string/CREATE_GROUP" />        
+	        
+	    </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

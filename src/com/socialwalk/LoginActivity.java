@@ -1,6 +1,5 @@
 package com.socialwalk;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -18,10 +17,10 @@ import android.widget.EditText;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.dataclass.AccountHeart;
 import com.socialwalk.request.ServerRequestManager;
 
-
-public class LoginActivity extends Activity 
+public class LoginActivity extends Activity
 implements View.OnClickListener, Response.Listener<String>, Response.ErrorListener
 {
 	SharedPreferences loginPrefs;
@@ -30,7 +29,11 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 	CheckBox chkAuto;
 	
 	private ServerRequestManager m_server = null;
+	private int reqType;
 	
+	private static final int REQUEST_LOGIN = 100;
+	private static final int REQUEST_HEARTS = 101;
+
 	private static final String TAG = "SW-LOGIN";
 	
 	@Override
@@ -49,8 +52,8 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 		btnLogin = (Button)findViewById(R.id.btnLogin);
 
 		// sample value
-		txtUid.setText("kms7610@lycos.co.kr");
-		txtPwd.setText("jin090701");
+		txtUid.setText("kms7610@gmail.com");
+		txtPwd.setText("jinsuyeon0701");
 		chkAuto.setChecked(false);
 		
 		Button btnSignUp = (Button)findViewById(R.id.btnSignUp);
@@ -103,6 +106,7 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 		String uid = txtUid.getText().toString();
 		String pwd = txtPwd.getText().toString();
 
+		reqType = REQUEST_LOGIN;
 		m_server.Login(this, this, uid, pwd);
 	}
 
@@ -119,17 +123,42 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 		
 		MyXmlParser parser = new MyXmlParser(response);
 		
-		SWResponse swResponse = parser.GetResponse();
-		if (null == swResponse) return;
+		SWResponse result = parser.GetResponse();
+		if (null == result) return;
 		
-		if (Globals.ERROR_NONE == swResponse.Code)
+		if (REQUEST_LOGIN == reqType)
 		{
-			ServerRequestManager.IsLogin = true;
-			ServerRequestManager.BuildLoginAccountFromSessionData();
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				ServerRequestManager.IsLogin = true;
+				ServerRequestManager.BuildLoginAccountFromSessionData();
 
-			Utils.SaveLoginParams(this, chkAuto.isChecked(), txtUid.getText().toString(), txtPwd.getText().toString());
-			setResult(RESULT_OK);
-			this.finish();
+				Utils.SaveLoginParams(this, chkAuto.isChecked(), txtUid.getText().toString(), txtPwd.getText().toString());
+				
+				reqType = REQUEST_HEARTS;
+				m_server.UpdateHearts(this, this);
+			}
+			else if (Globals.ERROR_NO_RESULT == result.Code)
+			{
+				new AlertDialog.Builder(this)
+				.setTitle(R.string.TITLE_INFORMATION)
+				.setMessage(R.string.MSG_ACCOUNT_NOT_EXIST)
+				.setNeutralButton(R.string.CLOSE, null)
+				.show();
+			}
 		}
+		else if (REQUEST_HEARTS == reqType)
+		{
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				AccountHeart hearts = parser.GetHearts();
+				if (null == hearts) return;
+				ServerRequestManager.LoginAccount.Hearts.Copy(hearts);
+			}
+			
+			setResult(RESULT_OK);
+			finish();
+		}
+
 	}
 }

@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateCommunityActivity" >
+
+    <RelativeLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="8dp"
+        android:background="@color/MAIN_BG" >
+        <TextView
+            android:id="@+id/titleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="24sp"
+            android:textColor="@color/WHITE"
+            android:textStyle="bold"
+            android:text="@string/TITLE_REPLY_POSTING" />
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleLayout"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:background="@color/WHITE" >
+		<EditText
+		    android:id="@+id/contents"
+		    android:inputType="textMultiLine"
+		    android:gravity="top"
+		    android:layout_width="match_parent" 
+		    android:layout_height="match_parent"
+		    android:scrollbars="vertical"
+		    android:layout_above="@+id/buttonsLayout"
+		    android:padding="6dp"
+		    android:layout_marginBottom="8dp"
+		    android:background="@drawable/field_rounded_bg"
+		    android:hint="@string/MSG_EMPTY_CONTENTS" />
+		
+		<RelativeLayout
+		    android:id="@+id/buttonsLayout"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:layout_alignParentBottom="true" >
+			<Button 
+				android:id="@+id/btnPost"
+				android:layout_width="120dp"
+				android:layout_height="match_parent"
+				android:layout_alignParentRight="true"
+				android:background="@drawable/yellow_rounded_bg"
+				android:textSize="20sp"
+				android:textStyle="bold"
+				android:textColor="@color/WHITE"
+				android:text="@string/REPLY_POSTING" />     
+		</RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

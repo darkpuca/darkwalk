@@ -1,63 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:layout_margin="4dp" >
+    android:layout_height="100dp"
+    android:minHeight="100dp"
+    android:padding="6dp" >
 
-    <TextView
-        android:id="@+id/subject"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:text="SUBJECT" />
-    
-    <TextView
-        android:id="@+id/writerLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/subject"
-        android:text="@string/WRITER" />
     <TextView
         android:id="@+id/writer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/subject"
-        android:layout_toRightOf="@+id/writerLabel"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:textSize="15sp"
         android:textStyle="bold"
-        android:text="WRITER" />
+        android:textColor="@color/DARK_GRAY" />
     
     <TextView
-        android:id="@+id/viewCount"
-        android:layout_width="40dp"
+        android:id="@+id/postContents"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/subject"
-        android:layout_alignParentRight="true"
+        android:layout_below="@+id/writer"
+        android:layout_marginBottom="4dp"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:textSize="16sp"
         android:textStyle="bold"
-        android:text="XXX" />    
-    <TextView
+        android:textColor="@color/DARK_GRAY" />
+    
+ 	<TextView
+        android:id="@+id/viewCount"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:gravity="right"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="@color/GRAY" />    
+ 	<TextView
         android:id="@+id/viewCountLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/subject"
+        android:layout_below="@+id/postContents"
+        android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/viewCount"
+        android:layout_marginLeft="8dp"
+        android:textSize="13sp"
+        android:textStyle="normal"
+        android:textColor="@color/GRAY"
         android:text="@string/VIEW_COUNT" />
     
     <TextView
-        android:id="@+id/replyCount"
-        android:layout_width="40dp"
+        android:id="@+id/replies"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:layout_marginRight="4dp"
-        android:layout_below="@+id/subject"
+        android:layout_below="@+id/postContents"
         android:layout_toLeftOf="@+id/viewCountLabel"
-        android:textStyle="bold"
-        android:text="XXX" />
+        android:layout_alignParentBottom="true"
+        android:gravity="right"
+        android:textSize="13sp"
+        android:textStyle="normal"
+        android:textColor="@color/GRAY" />
     <TextView
         android:id="@+id/replyCountLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/subject"
-        android:layout_toLeftOf="@+id/replyCount"
+        android:layout_below="@+id/postContents"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/replies"
+        android:textSize="13sp"
+        android:textStyle="normal"
+        android:textColor="@color/GRAY"
         android:text="@string/REPLY_COUNT" />
+    <TextView
+        android:id="@+id/regDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/postContents"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:textSize="13sp"
+        android:textColor="@color/GRAY" />
 
 </RelativeLayout>

@@ -1,0 +1,97 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CommunitySelectionActivity" >
+
+    <RelativeLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:background="@color/MAIN_BG" >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="24sp"
+            android:textColor="@color/WHITE"
+            android:textStyle="bold"
+            android:text="@string/TITLE_GROUP_SELECTION" />
+    </RelativeLayout>
+    
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleLayout"
+	    android:padding="@dimen/activity_vertical_margin"
+        android:background="@drawable/innerframe_shape" >
+        
+	    <RelativeLayout 
+	        android:id="@+id/keywordLayout"
+	        android:layout_width="match_parent"
+	        android:layout_height="40dp" >
+	        <Button
+	            android:id="@+id/btnSearch"
+	            android:layout_width="80dp"
+	            android:layout_height="match_parent"
+	            android:layout_alignParentRight="true"
+	            android:layout_centerVertical="true"
+	            android:layout_marginLeft="4dp"
+	            android:background="@drawable/darkgray_rounded_bg"
+	            android:textSize="16sp"
+	            android:textColor="@color/WHITE"
+	            android:textStyle="bold"
+	            android:text="@string/SEARCH" />
+	
+	        <EditText
+	            android:id="@+id/searchKeyword"
+	            android:inputType="text"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_toLeftOf="@+id/btnSearch"
+	            android:layout_centerHorizontal="true"
+	            android:ems="10"
+	            android:background="@drawable/field_rounded_bg"
+	            android:hint="@string/MSG_EMPTY_KEYWORD" >
+	        </EditText>
+	    </RelativeLayout>
+	    
+        <Button
+	        android:id="@+id/btnCreateGroup"
+	        android:layout_width="match_parent"
+	        android:layout_height="56dp"
+	        android:layout_alignParentBottom="true"
+	        android:background="@drawable/yellow_rounded_bg"
+	        android:textSize="20sp"
+	        android:textStyle="bold"
+	        android:textColor="@color/WHITE"
+	        android:text="@string/CREATE_GROUP" />
+        
+        <ListView
+			android:id="@+id/resultList"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_marginTop="8dp"
+	        android:layout_marginBottom="8dp"
+	        android:layout_below="@+id/keywordLayout"
+	        android:layout_above="@+id/btnCreateGroup" />
+	    <TextView
+	        android:id="@+id/noResultMessage"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@+id/keywordLayout"
+	        android:gravity="center"
+	        android:visibility="gone"
+	        android:layout_marginTop="16dp"
+	        android:textSize="24sp"
+	        android:textStyle="bold"
+	        android:text="@string/MSG_NO_SEARCH_RESULT" />
+        
+    </RelativeLayout>
+
+
+</RelativeLayout>
