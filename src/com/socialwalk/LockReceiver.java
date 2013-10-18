@@ -17,9 +17,9 @@ public class LockReceiver extends BroadcastReceiver
 		if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
 		{
 			wasScreenOn = false;
-			Intent i = new Intent(context, SlideActivity.class);
-			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			context.startActivity(i);
+//			Intent i = new Intent(context, SlideActivity.class);
+//			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			context.startActivity(i);
 		}
 		else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON))
 		{

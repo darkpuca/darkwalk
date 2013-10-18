@@ -217,6 +217,18 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		req.SetXMLBody(xmlBody);
 		reqQueue.add(req);		
 	}
+	
+	public void ReplyDelete(Response.Listener<String> listener, Response.ErrorListener errorListener, int replySequence)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/reply_info/" + replySequence;
+		SocialWalkRequest req = new SocialWalkRequest(Method.DELETE, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+
 
 	
 	public void Beneficiaries(Response.Listener<String> listener, Response.ErrorListener errorListener, boolean isGlobal, int pageIndex)
@@ -300,7 +312,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 	
 	
 	
-	public void NeoClickItem(Response.Listener<String> listener, Response.ErrorListener errorListener)
+	public void UpdateNeoClickItems(Response.Listener<String> listener, Response.ErrorListener errorListener)
 	{
 		RequestQueue queue = RequestManager.getRequestQueue();
 		if (null == queue) return;

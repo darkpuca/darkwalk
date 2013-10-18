@@ -25,6 +25,8 @@ import com.socialwalk.dataclass.CommunityPostReplies;
 import com.socialwalk.dataclass.CommunityPostReplies.CommunityPostReply;
 import com.socialwalk.dataclass.CommunityPosts;
 import com.socialwalk.dataclass.CommunityPosts.CommunityPostItem;
+import com.socialwalk.dataclass.NeoClickItems;
+import com.socialwalk.dataclass.NeoClickItems.NeoClickItem;
 import com.socialwalk.dataclass.WalkHistory;
 import com.socialwalk.dataclass.WalkHistory.WalkLogItem;
 
@@ -62,7 +64,7 @@ public class MyXmlParser
 		}
 	}
 	
-	public SlideAdData GetAdData()
+	public NeoClickItems GetNeoClickItems()
 	{
 		if (null == m_xml || 0 == m_xml.length()) return null;
 		
@@ -72,7 +74,8 @@ public class MyXmlParser
 			XmlPullParser parser = factory.newPullParser();
 			parser.setInput(new StringReader(m_xml));
 			
-			SlideAdData adData = null;
+			NeoClickItems items = null;
+			NeoClickItem item = null;
 			
 			int eventType = parser.getEventType();
 			while (eventType != XmlPullParser.END_DOCUMENT)
@@ -87,22 +90,29 @@ public class MyXmlParser
 					break;
 				case XmlPullParser.START_TAG:
 					tagName = parser.getName();
-					if (tagName.equalsIgnoreCase("Listing"))
-						adData = new SlideAdData();
+					if (tagName.equalsIgnoreCase("Results"))
+						items = new NeoClickItems();
+					else if (tagName.equalsIgnoreCase("Listing"))
+						item = items.new NeoClickItem();
 					else if (tagName.equalsIgnoreCase("AdId"))
-						adData.TargetUrl = parser.nextText();
+						item.Sequence = parser.nextText();
 					else if (tagName.equalsIgnoreCase("ClickUrl"))
-						adData.TargetUrl = parser.nextText();
+						item.TargetUrl = parser.nextText();
 					else if (tagName.equalsIgnoreCase("thumbimage"))
-						adData.ThumbnailUrl = parser.nextText();
+						item.ThumbnailUrl = parser.nextText();
 					break;
 				case XmlPullParser.END_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("Results"))
+						return items;
+					else if (tagName.equalsIgnoreCase("Listing"))
+						items.Items.add(item);
 					break;
 				}					
 				eventType = parser.next();
 			}
 			
-			return adData;
+			return null;
 			
 		} 
 		catch (Exception e)
@@ -265,6 +275,12 @@ public class MyXmlParser
 						acc.RegDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("modify_date"))
 						acc.ModifyDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("first_name"))
+						acc.AreaName = parser.nextText();
+					else if (tagName.equalsIgnoreCase("second_name"))
+						acc.AreaSubName = parser.nextText();
+					else if (tagName.equalsIgnoreCase("community_name"))
+						acc.CommunityName = parser.nextText();
 					break;
 				case XmlPullParser.END_TAG:
 					break;
@@ -918,11 +934,29 @@ public class MyXmlParser
 					if (tagName.equalsIgnoreCase("users"))
 						hearts = new AccountHeart();
 					else if (tagName.equalsIgnoreCase("green_point"))
-						hearts.setGreenPoint(Integer.parseInt(parser.nextText()));
+					{
+						String text = parser.nextText();
+						if (0 == text.length())
+							hearts.setGreenPoint(0);
+						else
+							hearts.setGreenPoint(Integer.parseInt(text));
+					}
 					else if (tagName.equalsIgnoreCase("total"))
-						hearts.setRedPointTotal(Integer.parseInt(parser.nextText()));
+					{
+						String text = parser.nextText();
+						if (0 == text.length())
+							hearts.setRedPointTotal(0);
+						else
+							hearts.setRedPointTotal(Integer.parseInt(text));
+					}
 					else if (tagName.equalsIgnoreCase("current"))
-						hearts.setRedPoint(Integer.parseInt(parser.nextText()));
+					{
+						String text = parser.nextText();
+						if (0 == text.length())
+							hearts.setRedPoint(0);
+						else
+							hearts.setRedPoint(Integer.parseInt(text));
+					}
 					break;
 				case XmlPullParser.END_TAG:
 					break;
@@ -939,20 +973,6 @@ public class MyXmlParser
 		}
 	}
 	
-	
-
-	public class SlideAdData
-	{
-		public String AdId;
-		public String TargetUrl;
-		public String ThumbnailUrl;		
-		public Date LastAccess;
-		
-		public SlideAdData()
-		{
-			LastAccess = new Date();
-		}
-	}	
 	
 	public class SWResponse
 	{

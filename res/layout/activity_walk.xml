@@ -106,7 +106,7 @@
         <RelativeLayout
             android:id="@+id/distanceLayout"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="48dp"
            	android:layout_alignParentTop="true"
            	android:paddingLeft="12dp"
            	android:paddingRight="8dp"
@@ -148,7 +148,7 @@
         <RelativeLayout
             android:id="@+id/speedLayout"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="48dp"
             android:layout_below="@+id/distanceLayout"
             android:background="@drawable/walk_info_bg"
            	android:paddingLeft="12dp"
@@ -171,7 +171,7 @@
                 android:textSize="15sp"
                 android:textColor="@color/WHITE"
                 android:textStyle="bold"
-                android:text="@string/AVERAGE_SPEED" />
+                android:text="@string/CURRENT_SPEED" />
             
             <TextView
                 android:id="@+id/walkSpeed"
@@ -250,7 +250,7 @@
 	        android:layout_height="60dp"
 	        android:layout_alignParentBottom="true"
 	        android:layout_centerHorizontal="true"
-	        android:background="@drawable/main_start_bg" >
+	        android:background="@drawable/gray_button_selector" >
 			<RelativeLayout
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"

@@ -73,8 +73,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		
 		if (Globals.ERROR_NONE == result.Code)
 		{
-			Intent i = new Intent();
-			setResult(RESULT_OK, i);
+			setResult(RESULT_OK);
 			finish();
 		}
 	}

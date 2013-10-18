@@ -6,7 +6,7 @@ public class AccountData
 {
 	public String UserId, Sequence, Password, Name;
 	public int UserType, AreaCode, AreaSubCode, OrganizationCode, OrganizationSubCode;
-	public String OrganizationKey, RecommendedUserId;
+	public String OrganizationKey, RecommendedUserId, CommunityName, AreaName, AreaSubName;
 	public int Gender, Weight, CommunitySeq;
 	public Date Birthday, RegDate, ModifyDate;
 	public boolean Verified;

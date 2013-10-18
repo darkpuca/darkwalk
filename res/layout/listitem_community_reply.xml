@@ -12,7 +12,7 @@
         android:layout_alignParentLeft="true"
         android:textSize="12sp"
         android:textStyle="bold"
-        android:textColor="@color/DARK_GRAY"
+        android:textColor="@color/GRAY"
         android:text="WRITER" />
     <TextView
         android:id="@+id/regDate"

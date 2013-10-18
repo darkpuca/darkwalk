@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -38,10 +41,12 @@ implements Response.Listener<String>, Response.ErrorListener
 	private ServerRequestManager m_server;
 	private CommunityReplyAdapter m_adapter;
 	private int reqType, pageIndex;
+	private ListView repliesList;
 	
 	private static final int REQUEST_POST_DETAIL = 100;
 	private static final int REQUEST_REPLIES = 101;
 	private static final int REQUEST_POST_DELETE = 102;
+	private static final int REQUEST_REPLY_DELETE = 103;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -52,8 +57,9 @@ implements Response.Listener<String>, Response.ErrorListener
 		m_server = new ServerRequestManager();
 		
 		m_adapter = new CommunityReplyAdapter(this, new Vector<CommunityPostReply>());
-		ListView repliesList = (ListView)findViewById(R.id.repliesList);
+		repliesList = (ListView)findViewById(R.id.repliesList);
 		repliesList.setAdapter(m_adapter);
+		registerForContextMenu(repliesList);
 		
 		this.writerSequence = getIntent().getStringExtra(Globals.EXTRA_KEY_WRITER_SEQUENCE);
 		this.communitySequence = getIntent().getIntExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, 0);
@@ -94,6 +100,54 @@ implements Response.Listener<String>, Response.ErrorListener
 	}
 	
 	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo)
+	{
+		if (null != ServerRequestManager.LoginAccount)
+		{
+			if (ServerRequestManager.LoginAccount.Sequence.equalsIgnoreCase(writerSequence))
+			{
+				getMenuInflater().inflate(R.menu.reply_popup, menu);
+				super.onCreateContextMenu(menu, v, menuInfo);
+			}
+		}
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item)
+	{
+		final AdapterContextMenuInfo menuInfo = (AdapterContextMenuInfo)item.getMenuInfo();
+
+		if (R.id.action_delete == item.getItemId())
+		{
+			AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+			dlg.setCancelable(false);
+			dlg.setTitle(R.string.TITLE_INFORMATION);
+			dlg.setMessage(R.string.MSG_REPLY_DELETE_CONFIRM);
+			dlg.setPositiveButton(R.string.CONTINUE, new DialogInterface.OnClickListener()
+			{	
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{	
+					CommunityPostReply reply = m_adapter.getItem(menuInfo.position);
+					reqType = REQUEST_REPLY_DELETE;
+					m_server.ReplyDelete(CommunityPostDetailActivity.this, CommunityPostDetailActivity.this, reply.Sequence);
+				}
+			});
+			
+			dlg.setNegativeButton(R.string.CANCEL, new DialogInterface.OnClickListener()
+			{				
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					dialog.dismiss();
+				}
+			});
+			dlg.show();
+		}
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
 		menu.getItem(0).setEnabled(true);
@@ -105,7 +159,6 @@ implements Response.Listener<String>, Response.ErrorListener
 				menu.getItem(0).setEnabled(true);
 			}
 		}
-		
 		return true;
 	}
 
@@ -138,7 +191,6 @@ implements Response.Listener<String>, Response.ErrorListener
 			});
 			dlg.show();
 		}
-
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -201,7 +253,6 @@ implements Response.Listener<String>, Response.ErrorListener
 				CommunityPostItem postItem = parser.GetCommunityPostItem();
 				if (null != postItem)
 					UpdateContents(postItem);
-				
 				RefreshReplies();
 			}
 		}
@@ -217,6 +268,13 @@ implements Response.Listener<String>, Response.ErrorListener
 					
 				for (CommunityPostReply item : replies.Items)
 					m_adapter.add(item);
+				
+				TextView replyCount = (TextView)findViewById(R.id.replyCount);
+				replyCount.setText(Integer.toString(m_adapter.getCount()));
+			}
+			else if (Globals.ERROR_NO_RESULT == result.Code)
+			{
+				m_adapter.clear();
 			}
 		}
 		else if (REQUEST_POST_DELETE == reqType)
@@ -226,6 +284,11 @@ implements Response.Listener<String>, Response.ErrorListener
 				setResult(RESULT_OK);
 				finish();
 			}
+		}
+		else if (REQUEST_REPLY_DELETE == reqType)
+		{
+			if (Globals.ERROR_NONE == result.Code || Globals.ERROR_NO_RESULT == result.Code)
+				RefreshReplies();
 		}
 	}
 	
@@ -258,7 +321,7 @@ implements Response.Listener<String>, Response.ErrorListener
 			{
 				try {
 					LayoutInflater inflater = m_context.getLayoutInflater();
-					rowView = inflater.inflate(R.layout.listitem_community_post, null, true);					
+					rowView = inflater.inflate(R.layout.listitem_community_reply, null, true);					
 				} catch (Exception e) {
 					Log.d("SW", e.getLocalizedMessage());
 					return null;

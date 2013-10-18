@@ -1,13 +1,13 @@
 package com.socialwalk;
 
 
-import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.PhoneStateListener;
@@ -23,51 +23,51 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
-import com.socialwalk.MyXmlParser.SlideAdData;
+import com.socialwalk.dataclass.NeoClickItems;
+import com.socialwalk.dataclass.NeoClickItems.NeoClickItem;
 import com.socialwalk.request.ImageCacheManager;
 import com.socialwalk.request.ServerRequestManager;
 
-public class SlideActivity extends Activity implements Response.Listener<String>, Response.ErrorListener
+public class SlideActivity extends Activity
+implements Response.Listener<String>, Response.ErrorListener
 {
 	public static boolean IsPhoneCalling = false;
 
 	private static final String TAG = "SW-SLIDE";
 	private static final int SLIDER_OUTOFBOUNDS = 0;
 	private static final int SLIDER_IN_AD = 1;
-	private static final int SLIDER_IN_HOME = 2;
+//	private static final int SLIDER_IN_HOME = 2;
 	private static final int SLIDER_IN_START = 3;
 	private static final int SLIDER_IN_STOP = 4;
 	private static final int SLIDER_AREA_OFFSET = 32;
-	
-	private static SlideAdData CurrentAdData = null;
-	private static final int AD_LIMIT = 3;
-	private static int CURRENT_AD_INDEX = 0;
-	private static final long AD_POINT_INTERVAL = 60 * 60 * 1000;
 
-	KeyguardManager.KeyguardLock keyLock;
-	boolean isDragmode;
+	private NeoClickItem currentNeoClick = null;
+	private static NeoClickItems NeoClickAds = new NeoClickItems();
+	
+	private KeyguardManager.KeyguardLock keyLock;
+	private boolean isDragmode;
 	
 	LayoutParams layoutParams;
 	private int m_windowWidth, m_windowHeight;
-	int m_sliderWidth, m_sliderHeight;
-	ImageView imgCenter, imgAd, imgHome, imgStart, imgStop;
+	private int m_sliderWidth, m_sliderHeight, m_layoutH, m_marginBottom, m_startHeight;
+	ImageView imgCenter, imgAd, imgStart, imgStop;  // imgHome
 	RelativeLayout sliderLayout;
 	
 	private ServerRequestManager m_server = null;
 	private NetworkImageView m_adImage;
 
+	
 	@Override
 	public void onAttachedToWindow()
 	{
-//		getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG | WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.TYPE_KEYGUARD);
 		getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG | WindowManager.LayoutParams.TYPE_KEYGUARD);
-
 		super.onAttachedToWindow();
 	}
 
@@ -76,7 +76,6 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 	{
 		super.onCreate(savedInstanceState);
 				
-//		int flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_FULLSCREEN;
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
 		getWindow().addFlags(flags);
 		
@@ -88,13 +87,17 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		
 		sliderLayout = (RelativeLayout)findViewById(R.id.sliderLayout);
 		imgCenter = (ImageView)findViewById(R.id.imgSlideCenter);
-		imgHome = (ImageView)findViewById(R.id.imgSlideHome);
 		imgAd = (ImageView)findViewById(R.id.imgSlideAd);
+//		imgHome = (ImageView)findViewById(R.id.imgSlideHome);
 		imgStart = (ImageView)findViewById(R.id.imgSlideStart);
 		imgStop = (ImageView)findViewById(R.id.imgSlideStop);
 		
+		m_layoutH = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, this.getResources().getDisplayMetrics());
+		m_marginBottom = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, this.getResources().getDisplayMetrics());
+		
 		int centerSize = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, this.getResources().getDisplayMetrics());
 		m_sliderWidth = m_sliderHeight = centerSize;
+		m_startHeight = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, this.getResources().getDisplayMetrics());
 		
 		// slider 레이아웃 위치조정
 		m_windowWidth = getWindowManager().getDefaultDisplay().getWidth();
@@ -117,7 +120,6 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 	        {
 		        // start lock service
 				startService(new Intent(this, LockService.class));
-				
 	        }
 
 			StateListener phoneListener = new StateListener();
@@ -162,15 +164,15 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 							ShowAdPage();
 							break;
 						}
-						case SLIDER_IN_HOME:
-						{
-							Log.d(TAG, "slider in HOME area.");
-							Intent i = new Intent(getBaseContext(), MainActivity.class);
-							i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-							startActivity(i);
-							finish();
-							break;
-						}
+//						case SLIDER_IN_HOME:
+//						{
+//							Log.d(TAG, "slider in HOME area.");
+//							Intent i = new Intent(getBaseContext(), MainActivity.class);
+//							i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//							startActivity(i);
+//							finish();
+//							break;
+//						}
 						case SLIDER_IN_START:
 						{
 							Log.d(TAG, "slider in START area.");
@@ -180,7 +182,9 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 						case SLIDER_IN_STOP:
 						{
 							Log.d(TAG, "slider in STOP area.");
-							StopWalking();
+//							StopWalking();
+							DisableKeyguard();
+							finish();
 							break;
 						}
 						default:
@@ -208,7 +212,6 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		
 		// auto-login
 		m_server.AutoLogin(this);
-
 	}
 	
 	@Override
@@ -224,10 +227,8 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		window.getDecorView().getWindowVisibleDisplayFrame(rectgle);
 		int statusBarHeight = rectgle.top;
 
-		int layoutH = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 320, this.getResources().getDisplayMetrics());
-		int marginBottom = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, this.getResources().getDisplayMetrics());
 		int centerX = (m_windowWidth - m_sliderWidth) / 2;
-		int centerY = (m_windowHeight - layoutH - statusBarHeight - marginBottom) + (layoutH - m_sliderHeight) / 2;
+		int centerY = m_windowHeight - statusBarHeight - m_marginBottom - m_startHeight + (m_startHeight - m_sliderHeight)/2;
 		
 		MarginLayoutParams centerMarginParams = new MarginLayoutParams(imgCenter.getLayoutParams());
 		centerMarginParams.setMargins(centerX, centerY, 0, 0);
@@ -242,11 +243,6 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		imgAd.getLocationOnScreen(posAd);
 		int adW = imgAd.getWidth();
 		int adH = imgAd.getHeight();
-		
-		int[] posHome = new int[2];
-		imgHome.getLocationOnScreen(posHome);
-		int homeW = imgHome.getWidth();
-		int homeH = imgHome.getHeight();
 		
 		int[] posStart = new int[2];
 		imgStart.getLocationOnScreen(posStart);
@@ -263,11 +259,11 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 				posY >= (posAd[1] - SLIDER_AREA_OFFSET) &&
 				posY <= (posAd[1] + adH + SLIDER_AREA_OFFSET))
 			return SLIDER_IN_AD;
-		else if (posX >= (posHome[0] - SLIDER_AREA_OFFSET) && 
-				posX <= (posHome[0] + homeW + SLIDER_AREA_OFFSET) && 
-				posY >= (posHome[1] - SLIDER_AREA_OFFSET) &&
-				posY <= (posHome[1] + homeH + SLIDER_AREA_OFFSET))
-			return SLIDER_IN_HOME;
+//		else if (posX >= (posHome[0] - SLIDER_AREA_OFFSET) && 
+//				posX <= (posHome[0] + homeW + SLIDER_AREA_OFFSET) && 
+//				posY >= (posHome[1] - SLIDER_AREA_OFFSET) &&
+//				posY <= (posHome[1] + homeH + SLIDER_AREA_OFFSET))
+//			return SLIDER_IN_HOME;
 		else if (posX >= (posStart[0] - SLIDER_AREA_OFFSET) && 
 				posX <= (posStart[0] + startW + SLIDER_AREA_OFFSET) && 
 				posY >= (posStart[1] - SLIDER_AREA_OFFSET) &&
@@ -301,14 +297,6 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		//super.onBackPressed();
 	}
 
-	
-
-	@Override
-	protected void onStop()
-	{
-		super.onStop();
-		finish();
-	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
@@ -357,65 +345,74 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		
 		UpdateWalkingState();
 		
-		Utils.defaultTool.SetBaseActivity(this);
-		
-		if (Utils.defaultTool.IsNetworkAvailable())
-		{
-			UpdateSlideAd();
-		}
-		
 		if (true == IsPhoneCalling)
 		{
 			finish();
 			return;
 		}
 
+		Utils.defaultTool.SetBaseActivity(this);
+		if (Utils.defaultTool.IsNetworkAvailable())
+			UpdateSlideAd();
+		
+//		MoveSliderToStartPosition();
 		Handler handler = new Handler();
-		handler.post(new Runnable()
+		handler.postDelayed(new Runnable()
 		{			
 			@Override
 			public void run()
 			{
 				MoveSliderToStartPosition();
 			}
-		});
+		}, 100);
 
 		super.onResume();
 	}
-	
+
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+	}
 
 	private void ShowAdPage()
 	{
-		if (null == CurrentAdData)
+		if (null == this.currentNeoClick)
 		{
 			finish();
 		}
 		else
 		{
 			Intent i = new Intent(this, WebPageActivity.class);
-			i.putExtra(Globals.EXTRA_KEY_URL, CurrentAdData.TargetUrl);
+			i.putExtra(Globals.EXTRA_KEY_URL, currentNeoClick.TargetUrl);
 			startActivity(i);
 			finish();
-
-			Calendar c = Calendar.getInstance();
-			long now = c.getTimeInMillis();
-			long lastAccess = CurrentAdData.LastAccess.getTime();
-			long gap = now - lastAccess;
 			
-			if (AD_POINT_INTERVAL < gap)
+			if (currentNeoClick.IsBillingAvailable())
 			{
-				// TODO: 적립 코드 추가 필요
-				CurrentAdData.LastAccess.setTime(c.getTimeInMillis());
+				// TODO: 광고 적립 루틴 구현
 			}
-			
+			else
+			{
+				Toast.makeText(this, "over clicked", Toast.LENGTH_SHORT).show();
+			}
+				
+			currentNeoClick.SetAccessStamp();
 		}		
 	}
 	
 	private void StartWalking()
 	{
+		// 걷기 상태이면 그냥 슬라이드 화면 종
+		if (WalkService.IsStarted)
+		{
+			finish();
+			return;
+		}
+		
 		if (!ServerRequestManager.IsLogin)
 		{
-			Intent i = new Intent(this, LoginActivity.class);
+			Intent i = new Intent(getBaseContext(), LoginActivity.class);
 			startActivity(i);
 			return;
 		}
@@ -424,6 +421,8 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		{
 			MoveSliderToStartPosition();
 			Utils.defaultTool.showGpsSettingWithDialog();
+			
+			
 			return;
 		}
 		
@@ -431,8 +430,8 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		{
 			Intent i = new Intent(getApplicationContext(), WalkService.class);
 			startService(i);
+			finish();
 		}
-		finish();
 
 	}
 	
@@ -456,31 +455,34 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 	
 	public void UpdateSlideAd()
 	{
-		if (CURRENT_AD_INDEX >= AD_LIMIT)
-			CURRENT_AD_INDEX = 0;
-		
-		if ((CURRENT_AD_INDEX+1) > LockService.SlideAdList.size())
+		// 광고 업데이트 5초 이하면 변경 안함
+		if (null != LockService.NeoClickUpdateTime)
 		{
-			m_server.NeoClickItem(this, this);
+			Date now = new Date();
+			long diffInMs = now.getTime() - LockService.NeoClickUpdateTime.getTime();
+			long diffInSeconds = TimeUnit.MILLISECONDS.toSeconds(diffInMs);
+			if (1 > diffInSeconds) return;
+		}
+		
+		if (0 == LockService.NeoClickAds.Items.size())
+		{
+			m_server.UpdateNeoClickItems(this, this);
 		}
 		else
 		{
-			SlideAdData adData = LockService.SlideAdList.get(CURRENT_AD_INDEX);
-			UpdateControls(adData);
+			currentNeoClick = LockService.NeoClickAds.GetNextItem();
+			UpdateControls();
 		}
 		
-		CURRENT_AD_INDEX++;
+		LockService.NeoClickUpdateTime = new Date();
 	}
 	
-	public void UpdateControls(SlideAdData adData)
+	public void UpdateControls()
 	{
-		if (null == adData) return;
+		if (null == currentNeoClick) return;
 		
-		CurrentAdData = adData;
-		
-		// clear
 		m_adImage.setImageUrl(null, null);
-		m_adImage.setImageUrl(adData.ThumbnailUrl, ImageCacheManager.getInstance().getImageLoader());
+		m_adImage.setImageUrl(currentNeoClick.ThumbnailUrl, ImageCacheManager.getInstance().getImageLoader());
 	}
 	
 	
@@ -527,15 +529,14 @@ public class SlideActivity extends Activity implements Response.Listener<String>
 		System.out.println(response);
 		
 		MyXmlParser parser = new MyXmlParser(response);
-		SlideAdData adData = parser.GetAdData();
+		NeoClickItems items = parser.GetNeoClickItems();
 		
-		if (null != adData)
-		{
-			LockService.SlideAdList.add(adData);
-			UpdateControls(adData);
-		}
+		if (null == items) return;
+		LockService.NeoClickAds.SetItems(items.Items);
+		
+		this.currentNeoClick = LockService.NeoClickAds.GetNextItem();
+		UpdateControls();
 	}
-
 }
 
 

@@ -28,6 +28,8 @@
     <string name="TITLE_COMMUNITY_POSTING">커뮤니티 글쓰기</string>
     <string name="TITLE_COMMUNITY_POST_DETAIL">커뮤니티 글상세</string>
     <string name="TITLE_REPLY_POSTING">커뮤니티 댓글쓰기</string>
+    <string name="TITLE_MORE">더보기</string>
+    <string name="TITLE_PROFILE">프로필</string>
     <string name="CLOSE">닫기</string>
     <string name="LOGIN">로그인</string>
     <string name="LOGOUT">로그아웃</string>
@@ -41,8 +43,19 @@
     <string name="SELECT">선택</string>
     <string name="BACK">뒤로</string>
     <string name="EXIT">종료</string>
-    <string name="WALKING_PROGRESS">걷기 실행중</string>
+    <string name="NOTICE">공지사항</string>
+    <string name="PROFILE">프로필</string>
+    <string name="HELP">도움말</string>
+    <string name="SOCIALWALK_INFORM">소셜워크 알리기</string>
+    <string name="SOCIALWALK_INFO">소셜워크 소개</string>
+    <string name="HEART_MALL">하트몰</string>
+    <string name="SPONSOR">후원사</string>
+    <string name="SOCIALWALK_VOLUNTEERS">소셜워크 봉사단</string>
+    <string name="SETTINGS">설정</string>
+    <string name="QNA">문의하기</string>
+    <string name="MY_GROUP">내그룹</string>
     <string name="WALKING_IDLE">걷기 대기중</string>
+    <string name="WALKING_PROGRESS">걷기 진행중</string>
     <string name="CREATE_GROUP">그룹 생성</string>
     <string name="JOIN_REQUEST">가입 신청</string>
     <string name="JOIN_TYPE">가입 방식</string>
@@ -55,6 +68,7 @@
     <string name="SUPPORT">후원하기</string>
     <string name="DISTANCE">이동 거리</string>
     <string name="AVERAGE_SPEED">평균 속도</string>
+    <string name="CURRENT_SPEED">현재 속도</string>
     <string name="WALK_TIME">이동 시간</string>
     <string name="BURNED_CALLORIES">예상 소모 칼로리</string>
     <string name="SHOW_ROUTE">이동 경로 보기</string>
@@ -115,6 +129,7 @@
     <string name="MSG_ACCOUNT_NOT_EXIST">존재하지 않는 회원입니다. 회원가입을 해주십시요.</string>
     <string name="MSG_INVALID_POST">잘못된 커뮤니티 글정보입니다.</string>
     <string name="MSG_POST_DELETE_CONFIRM">커뮤니티 글을 삭제하시겠습니까?</string>
+    <string name="MSG_REPLY_DELETE_CONFIRM">댓글을 삭제하시겠습니까?</string>
     
     <color name="WALK_INFO_PANEL_BG">#80000000</color>
     <color name="SLIDE_WALK_STATE">#80000000</color>

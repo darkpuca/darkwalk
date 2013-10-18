@@ -86,7 +86,7 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 		}	
 		else if (m_btnEditProfile.equals(v))
 		{
-			Intent i = new Intent(this, ProfilesActivity.class);
+			Intent i = new Intent(this, ProfileActivity.class);
 			startActivity(i);
 		}
 	}

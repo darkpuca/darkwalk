@@ -152,8 +152,8 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 			if (Globals.ERROR_NONE == result.Code)
 			{
 				AccountHeart hearts = parser.GetHearts();
-				if (null == hearts) return;
-				ServerRequestManager.LoginAccount.Hearts.Copy(hearts);
+				if (null != hearts)
+					ServerRequestManager.LoginAccount.Hearts.Copy(hearts);
 			}
 			
 			setResult(RESULT_OK);

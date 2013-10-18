@@ -1,6 +1,6 @@
 package com.socialwalk;
 
-import java.util.Vector;
+import java.util.Date;
 
 import android.app.KeyguardManager;
 import android.app.Service;
@@ -9,12 +9,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 
-import com.socialwalk.MyXmlParser.SlideAdData;
+import com.socialwalk.dataclass.NeoClickItems;
 
 public class LockService extends Service
 {
 	public static boolean IsRegisted = false;
-	public static Vector<SlideAdData> SlideAdList = new Vector<SlideAdData>();
+	public static NeoClickItems NeoClickAds = new NeoClickItems();
+	public static Date NeoClickUpdateTime;
 
 	private BroadcastReceiver mReceiver;
 	

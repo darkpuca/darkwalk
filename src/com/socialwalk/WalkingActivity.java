@@ -181,24 +181,18 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 							TextView walkTime = (TextView)findViewById(R.id.walkTime);
 							
 							walkDistance.setText(currentWalk.TotalDistanceString());
-							walkSpeed.setText(currentWalk.AverageSpeedFromNow());
+//							walkSpeed.setText(currentWalk.AverageSpeedFromNow());
 							walkTime.setText(currentWalk.TotalWalkingTimeStringFromNow());
-
-//							TextView groupName = (TextView)findViewById(R.id.groupName);
-//							groupName.setText(currentWalk.WalkingCaloriesStringFromNow());
 							
-//							WalkLogItem lastItem = currentWalk.GetLastValidItem();
-//							if (null != lastItem)
-//							{
-//								String speed = String.format(getResources().getString(R.string.FORMAT_SPEED), lastItem.CurrentSpeed);
-//								TextView userName = (TextView)findViewById(R.id.userName);
-//								userName.setText(speed);
-//								
+							WalkLogItem lastItem = currentWalk.GetLastValidItem();
+							if (null != lastItem)
+							{
+								String speed = String.format(getResources().getString(R.string.FORMAT_SPEED), lastItem.CurrentSpeed);
+								walkSpeed.setText(speed);
+								
 //								if (IsMapMode)
-//								{
 //									mapController.setMapCenter(lastItem.LogLocation.getLongitude(), lastItem.LogLocation.getLatitude());
-//								}
-//							}
+							}
 						}
 					}
 				});

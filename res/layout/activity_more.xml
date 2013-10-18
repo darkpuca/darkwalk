@@ -1,0 +1,330 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MoreActivity" >
+
+    <RelativeLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="8dp"
+        android:background="@color/MAIN_BG" >
+        <TextView
+            android:id="@+id/titleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="24sp"
+            android:textColor="@color/WHITE"
+            android:textStyle="bold"
+            android:text="@string/TITLE_MORE" />
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleLayout"
+        android:background="@color/WHITE"
+        android:padding="@dimen/activity_horizontal_margin" >
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="@color/MAIN_BG" >
+
+            <LinearLayout
+                android:id="@+id/firstLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp" >
+
+                <RelativeLayout
+                    android:id="@+id/noticeLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp" >
+                    <ImageView
+                        android:id="@+id/noticeIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/icon_more_notice_selector" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/noticeIcon"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/NOTICE"
+                        android:textColor="@color/DARK_GRAY"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/profileLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp" >
+                    <ImageView
+                        android:id="@+id/profileIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/icon_more_profile_selector" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/profileIcon"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/PROFILE"
+                        android:textColor="@color/DARK_GRAY"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/helpLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp" >
+                    <ImageView
+                        android:id="@+id/helpIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/icon_more_help_selector" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/helpIcon"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/HELP"
+                        android:textColor="@color/DARK_GRAY"
+                        android:textSize="14sp" />
+				</RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/informLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp" >
+                    <ImageView
+                        android:id="@+id/informIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/icon_more_inform_selector" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/informIcon"
+                        android:gravity="center_horizontal"
+                        android:text="@string/SOCIALWALK_INFORM"
+                        android:textColor="@color/DARK_GRAY"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/secondLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/firstLine"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp" >
+
+                <RelativeLayout
+                    android:id="@+id/infoLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp" >
+                    <ImageView
+                        android:id="@+id/infoIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/icon_more_info_selector" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/infoIcon"
+                        android:gravity="center_horizontal"
+                        android:textSize="14sp"
+                        android:textColor="@color/DARK_GRAY"
+                        android:text="@string/SOCIALWALK_INFO" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/heartmallLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp" >
+                    <ImageView
+                        android:id="@+id/heartmallIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/icon_more_heartmall_selector" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/heartmallIcon"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/HEART_MALL"
+                        android:textColor="@color/DARK_GRAY"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/sponsorLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp" >
+                    <ImageView
+                        android:id="@+id/sponsorIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/icon_more_sponsor_selector" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/sponsorIcon"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/SPONSOR"
+                        android:textColor="@color/DARK_GRAY"
+                        android:textSize="14sp" />
+				</RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/volunteerLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp" >
+                    <ImageView
+                        android:id="@+id/volunteerIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/icon_more_volunteers_selector" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/volunteerIcon"
+                        android:gravity="center_horizontal"
+                        android:text="@string/SOCIALWALK_VOLUNTEERS"
+                        android:textColor="@color/DARK_GRAY"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/thirdLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/secondLine"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp" >
+
+                <RelativeLayout
+                    android:id="@+id/settingLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp" >
+                    <ImageView
+                        android:id="@+id/settingIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/icon_more_settings_selector" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/settingIcon"
+                        android:gravity="center_horizontal"
+                        android:textSize="14sp"
+                        android:textColor="@color/DARK_GRAY"
+                        android:text="@string/SETTINGS" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/qnaLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp" >
+                    <ImageView
+                        android:id="@+id/qnaIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/icon_more_qna_selector" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/qnaIcon"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/QNA"
+                        android:textColor="@color/DARK_GRAY"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/mygroupLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp" >
+                    <ImageView
+                        android:id="@+id/groupIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/icon_more_group_selector" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/groupIcon"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/MY_GROUP"
+                        android:textColor="@color/DARK_GRAY"
+                        android:textSize="14sp" />
+				</RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp" >
+                </RelativeLayout>
+            </LinearLayout>
+            
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

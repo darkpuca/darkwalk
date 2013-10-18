@@ -20,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -150,14 +151,24 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			}
 		});
         
-        ImageButton btnSettings = (ImageButton)findViewById(R.id.btnSettings);
-        btnSettings.setOnClickListener(new OnClickListener()
+        ImageButton btnMore = (ImageButton)findViewById(R.id.btnMore);
+        btnMore.setOnClickListener(new OnClickListener()
         {			
 			@Override
 			public void onClick(View v)
 			{
-				Intent i = new Intent(getBaseContext(), SettingsActivity.class);
+				Intent i = new Intent(getBaseContext(), MoreActivity.class);
 				startActivity(i);
+			}
+		});
+        
+        RelativeLayout supportLayout = (RelativeLayout)findViewById(R.id.supportLayout);
+        supportLayout.setOnClickListener(new OnClickListener()
+        {			
+			@Override
+			public void onClick(View v)
+			{
+				Toast.makeText(getBaseContext(), "support button pressed!", Toast.LENGTH_SHORT).show();
 			}
 		});
         
@@ -403,15 +414,18 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		{
 			TextView userName = (TextView)findViewById(R.id.userName);
 			TextView groupName = (TextView)findViewById(R.id.groupName);
+			TextView areaName = (TextView)findViewById(R.id.areaName);
+			
 			userName.setText(ServerRequestManager.LoginAccount.Name);
-			groupName.setText(ServerRequestManager.LoginAccount.OrganizationKey);
+			groupName.setText(ServerRequestManager.LoginAccount.CommunityName);
+			String areaNameVal = ServerRequestManager.LoginAccount.AreaName + " " + ServerRequestManager.LoginAccount.AreaSubName;
+			areaName.setText(areaNameVal);			
 
 			if (null != ServerRequestManager.LoginAccount.Hearts)
 			{
 				TextView greenHearts = (TextView)findViewById(R.id.greenHeart);
 				TextView redHearts = (TextView)findViewById(R.id.redHeart);
 				TextView totalRedHearts = (TextView)findViewById(R.id.redHeartTotal);
-				
 				
 				String strGreenHearts = ServerRequestManager.LoginAccount.Hearts.getGreenPoint() + getResources().getString(R.string.HEART);
 				String strRedHearts = ServerRequestManager.LoginAccount.Hearts.getRedPoint() + getResources().getString(R.string.HEART);

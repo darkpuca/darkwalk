@@ -2,16 +2,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SettingsActivity" >
+    
+    <RelativeLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="8dp"
+        android:background="@color/MAIN_BG" >
+        <TextView
+            android:id="@+id/titleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="24sp"
+            android:textColor="@color/WHITE"
+            android:textStyle="bold"
+            android:text="@string/TITLE_SETTINGS" />
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleLayout"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:background="@color/WHITE" >
+        
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layoutProfile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleLayout" >
         
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/imgProfile"

@@ -98,7 +98,8 @@ public class WalkService extends Service
 		
 		Notification noti = new Notification(android.R.drawable.ic_dialog_map, "SOCIALWALK", System.currentTimeMillis());
 		noti.setLatestEventInfo(getApplicationContext(), "SocialWalk", "Walking is started.", pi);
-		m_notificationManager.notify(Globals.NOTI_WALKING, noti);
+//		m_notificationManager.notify(Globals.NOTI_WALKING, noti);
+		startForeground(1, noti);
 		
 		IntentFilter filter = new IntentFilter("com.darkpuca.socialwalk.location");
 		m_walkReceiver = new WalkUpdateReceiver();

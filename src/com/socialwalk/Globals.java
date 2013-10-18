@@ -18,7 +18,7 @@ public class Globals
 	public static final String URL_ABOUT = URL_SERVER_DOMAIN + "/mobile/socialwalk.php";
 	public static final String URL_SPONSOR = URL_SERVER_DOMAIN + "/mobile/sponsor.php";
 	public static final String URL_VOLUNTEERS = URL_SERVER_DOMAIN + "/mobile/socialwalk.group.php";
-	public static final String URL_CONTECT_US = URL_SERVER_DOMAIN + "/mobile/contact.php";
+	public static final String URL_CONTACT_US = URL_SERVER_DOMAIN + "/mobile/contact.php";
 	
 	
 	public static final String URL_NEO_AD_DOMAIN = "http://web.howapi.co.kr";
