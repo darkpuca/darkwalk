@@ -167,75 +167,15 @@
         <RelativeLayout
             android:id="@+id/heartLayout"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="70dp"
            	android:layout_alignParentTop="true"
            	android:padding="8dp"
            	android:background="@color/LIGHT_GRAY" >
            	
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true" >"
-	            <ImageView
-	                android:id="@+id/imgGreen"
-	                android:src="@drawable/main_green_heart"
-	                android:layout_width="18dp"
-	                android:layout_height="18dp"
-	                android:layout_alignParentLeft="true"
-	                android:layout_alignParentTop="true" />
-	            <TextView
-	                android:id="@+id/greenHeart"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_toRightOf="@+id/imgGreen"
-	                android:layout_alignTop="@+id/imgGreen"
-	                android:layout_alignBottom="@+id/imgGreen"
-	                android:layout_marginLeft="4dp"
-	                android:gravity="center_vertical"
-	                android:textSize="14sp"
-	                android:textStyle="bold"
-	                android:textColor="@color/LIGHT_GREEN"
-	                android:text="GREEN_HEART" />
-	            
-	            <ImageView
-	                android:id="@+id/imgRed"
-	                android:src="@drawable/main_red_heart"
-	                android:layout_width="18dp"
-	                android:layout_height="18dp"
-	                android:layout_below="@+id/imgGreen" />
-	            <TextView
-	                android:id="@+id/redHeart"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_toRightOf="@+id/imgRed"
-	                android:layout_alignTop="@+id/imgRed"
-	                android:layout_alignBottom="@+id/imgRed"
-	                android:layout_marginLeft="4dp"
-	                android:gravity="center_vertical"
-	                android:textSize="14sp"
-	                android:textColor="@color/LIGHT_RED"
-	                android:textStyle="bold"
-	                android:text="RED_HEART" />
-	            <TextView
-	                android:id="@+id/redHeartTotal"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_toRightOf="@+id/redHeart"
-	                android:layout_alignTop="@+id/imgRed"
-	                android:layout_alignBottom="@+id/imgRed"
-	                android:layout_marginLeft="4dp"
-	                android:gravity="center_vertical"
-	                android:textSize="12sp"
-	                android:textStyle="bold"
-	                android:textColor="@color/LIGHT_RED"
-	                android:text="TOTAL_HEART" />
-			</RelativeLayout>
-            
-            <RelativeLayout
                 android:id="@+id/supportLayout"
-                android:layout_width="90dp"
-                android:layout_height="36dp"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/main_sponsor_bg_selector" >
@@ -257,6 +197,65 @@
 	                android:textColor="@color/WHITE"
 	                android:text="@string/SUPPORT" />                
             </RelativeLayout>
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/supportLayout"
+                android:orientation="vertical" >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+		            <ImageView
+		                android:id="@+id/imgGreen"
+		                android:src="@drawable/main_green_heart"
+		                android:layout_width="22dp"
+		                android:layout_height="22dp"
+		                android:layout_alignParentLeft="true"
+		                android:layout_centerVertical="true" />
+		            <TextView
+		                android:id="@+id/greenHeart"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_toRightOf="@+id/imgGreen"
+		                android:layout_centerVertical="true"
+		                android:layout_marginLeft="4dp"
+		                android:textSize="20sp"
+		                android:textStyle="bold"
+		                android:textColor="@color/LIGHT_GREEN" />		            
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+		            <ImageView
+		                android:id="@+id/imgRed"
+		                android:src="@drawable/main_red_heart"
+		                android:layout_width="22dp"
+		                android:layout_height="22dp"
+		                android:layout_alignParentLeft="true"
+		                android:layout_centerVertical="true" />
+		            <TextView
+		                android:id="@+id/redHeart"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_toRightOf="@+id/imgRed"
+		                android:layout_centerVertical="true"
+		                android:layout_marginLeft="4dp"
+		                android:textSize="20sp"
+		                android:textColor="@color/LIGHT_RED"
+		                android:textStyle="bold" />
+		            <TextView
+		                android:id="@+id/redHeartTotal"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_toRightOf="@+id/redHeart"
+		                android:layout_centerVertical="true"
+		                android:layout_marginLeft="4dp"
+		                android:textSize="17sp"
+		                android:textStyle="bold"
+		                android:textColor="@color/LIGHT_RED" />
+                </RelativeLayout>
+            </LinearLayout>
         </RelativeLayout>
         
         

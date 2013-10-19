@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
+import android.app.KeyguardManager.KeyguardLock;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -23,9 +24,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -67,6 +68,10 @@ implements Response.Listener<String>, Response.ErrorListener
 	
 	private ServerRequestManager m_server = null;
 	private NetworkImageView m_adImage;
+	
+	private int loginReqType;
+	private static final int LOGIN_REQ_START = 300;
+	private static final int LOGIN_REQ_AD = 301;
 
 	
 	@Override
@@ -81,8 +86,12 @@ implements Response.Listener<String>, Response.ErrorListener
 	{
 		super.onCreate(savedInstanceState);
 				
-		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
+		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | 
+				WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+				WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
 		getWindow().addFlags(flags);
+		
+		DisableKeyguard();
 		
 		setContentView(R.layout.activity_slide);
 		
@@ -189,6 +198,7 @@ implements Response.Listener<String>, Response.ErrorListener
 							Log.d(TAG, "slider in STOP area.");
 //							StopWalking();
 							DisableKeyguard();
+							SlideActivity.this.moveTaskToBack(true);
 							finish();
 							break;
 						}
@@ -344,6 +354,12 @@ implements Response.Listener<String>, Response.ErrorListener
 	@Override
 	protected void onResume()
 	{
+		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | 
+				WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+				WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
+		
+		getWindow().addFlags(flags);
+
 		DisableKeyguard();
 		
 		UpdateWalkingState();
@@ -377,12 +393,38 @@ implements Response.Listener<String>, Response.ErrorListener
 	{
 		super.onPause();
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (Globals.INTENT_REQ_LOGIN == requestCode)
+		{
+			if (RESULT_OK == resultCode)
+			{
+				if (LOGIN_REQ_AD == this.loginReqType)
+					ShowAdPage();
+				else if (LOGIN_REQ_START == this.loginReqType)
+					StartWalking();
+				
+				this.loginReqType = 0;
+			}
+		}
+		else if (Globals.INTENT_REQ_WEBVIEW == requestCode)
+		{
+//			moveTaskToBack(true);
+//			finish();
+//			return;
+		}
+		
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 
 	private void ShowAdPage()
 	{
 		
 		if (null == this.currentNeoClick)
 		{
+			moveTaskToBack(true);
 			finish();
 		}
 		else
@@ -390,13 +432,16 @@ implements Response.Listener<String>, Response.ErrorListener
 			if (!ServerRequestManager.IsLogin)
 			{
 				Intent i = new Intent(getBaseContext(), LoginActivity.class);
-				startActivity(i);
+				this.loginReqType = LOGIN_REQ_AD;
+				startActivityForResult(i, Globals.INTENT_REQ_LOGIN);
 				return;
 			}
-
-			Intent i = new Intent(this, WebPageActivity.class);
+			
+			Intent i = new Intent(getApplicationContext(), WebPageActivity.class);
 			i.putExtra(Globals.EXTRA_KEY_URL, currentNeoClick.TargetUrl);
+			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(i);
+			
 			finish();
 			
 			if (currentNeoClick.IsBillingAvailable())
@@ -410,22 +455,25 @@ implements Response.Listener<String>, Response.ErrorListener
 			}
 				
 			currentNeoClick.SetAccessStamp();
+			
 		}		
 	}
 	
 	private void StartWalking()
 	{
-		// 걷기 상태이면 그냥 슬라이드 화면 종
+		// 걷기 상태이면 그냥 슬라이드 화면 종료
 		if (WalkService.IsStarted)
 		{
 			finish();
+			moveTaskToBack(true);
 			return;
 		}
 		
 		if (!ServerRequestManager.IsLogin)
 		{
 			Intent i = new Intent(getBaseContext(), LoginActivity.class);
-			startActivity(i);
+			this.loginReqType = LOGIN_REQ_START;
+			startActivityForResult(i, Globals.INTENT_REQ_LOGIN);
 			return;
 		}
 		
@@ -461,9 +509,13 @@ implements Response.Listener<String>, Response.ErrorListener
 	
 	private void DisableKeyguard()
 	{
-		KeyguardManager km = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
-		KeyguardManager.KeyguardLock kl = km.newKeyguardLock("IN");
-		kl.disableKeyguard();
+//		KeyguardManager km = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
+//		KeyguardManager.KeyguardLock kl = km.newKeyguardLock("IN");
+//		kl.disableKeyguard();
+		
+		KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
+		KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
+		lock.disableKeyguard();
 	}
 
 	

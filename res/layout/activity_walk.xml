@@ -48,8 +48,7 @@
 				android:layout_marginLeft="6dp"
 				android:textSize="16sp"
 				android:textStyle="bold"
-				android:textColor="@color/BLACK"
-				android:text="가나다라" />
+				android:textColor="@color/BLACK" />
 	        
 		</RelativeLayout>
 	    
@@ -68,6 +67,7 @@
 				android:layout_centerVertical="true" />
 
 	        <TextView
+	            android:id="@+id/areaName"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_alignTop="@+id/imgUserGroup"
@@ -75,8 +75,7 @@
 	            android:layout_marginLeft="6dp"
 	            android:textSize="14sp"
 	            android:textStyle="bold"
-	            android:textColor="@color/WHITE"
-	            android:text="@string/GROUP_UPPER" />
+	            android:textColor="@color/WHITE" />
 	        	        
 			<TextView
 				android:id="@+id/groupName"
@@ -87,8 +86,7 @@
 				android:layout_marginLeft="6dp"
 				android:textSize="16sp"
 				android:textStyle="bold"
-				android:textColor="@color/BLACK"
-				android:text="GROUP_NAME" />
+				android:textColor="@color/BLACK" />
 	        	        
 	    </RelativeLayout>
          
@@ -106,20 +104,18 @@
         <RelativeLayout
             android:id="@+id/distanceLayout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="36dp"
            	android:layout_alignParentTop="true"
            	android:paddingLeft="12dp"
            	android:paddingRight="8dp"
             android:background="@drawable/walk_info_bg" >
-			
             <ImageView
                 android:id="@+id/imgDistance"
                 android:src="@drawable/walk_distance_icon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true" />
-            
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -130,7 +126,6 @@
                 android:textColor="@color/WHITE"
                 android:textStyle="bold"
                 android:text="@string/DISTANCE" />
-            
             <TextView
                 android:id="@+id/walkDistance"
                 android:layout_width="wrap_content"
@@ -140,28 +135,24 @@
                 android:layout_marginRight="12dp"
                 android:textSize="18sp"
                 android:textColor="@color/WHITE"
-                android:textStyle="bold"
-                android:text="DISTANCE" />
-            
+                android:textStyle="bold" />
         </RelativeLayout>
         
         <RelativeLayout
             android:id="@+id/speedLayout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="36dp"
             android:layout_below="@+id/distanceLayout"
             android:background="@drawable/walk_info_bg"
            	android:paddingLeft="12dp"
            	android:paddingRight="8dp" >
-            
             <ImageView
                 android:id="@+id/imgSpeed"
                 android:src="@drawable/walk_speed_icon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true" />
-            
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -172,7 +163,6 @@
                 android:textColor="@color/WHITE"
                 android:textStyle="bold"
                 android:text="@string/CURRENT_SPEED" />
-            
             <TextView
                 android:id="@+id/walkSpeed"
                 android:layout_width="wrap_content"
@@ -182,14 +172,105 @@
                 android:layout_marginRight="12dp"
                 android:textSize="18sp"
                 android:textColor="@color/WHITE"
-                android:textStyle="bold"
-                android:text="AVG_SPEED" />
+                android:textStyle="bold" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/heartsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_below="@+id/speedLayout"
+            android:background="@drawable/walk_info_bg"
+           	android:paddingLeft="12dp"
+           	android:paddingRight="8dp" >
+            <ImageView
+                android:id="@+id/imgRedHeart"
+                android:src="@drawable/main_red_heart"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imgRedHeart"
+                android:layout_centerVertical="true" >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+		            <TextView
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_centerVertical="true"
+		                android:layout_marginLeft="16dp"
+		                android:textSize="15sp"
+		                android:textColor="@color/WHITE"
+		                android:textStyle="bold"
+		                android:text="@string/TOTAL_HEARTS" />
+		            <TextView
+		                android:id="@+id/totalHearts"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_alignParentRight="true"
+		                android:layout_centerVertical="true"
+		                android:layout_marginRight="12dp"
+		                android:textSize="18sp"
+		                android:textColor="@color/WHITE"
+		                android:textStyle="bold" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+		            <TextView
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_centerVertical="true"
+		                android:layout_marginLeft="16dp"
+		                android:textSize="15sp"
+		                android:textColor="@color/WHITE"
+		                android:textStyle="bold"
+		                android:text="@string/WALK_HEARTS" />
+		            <TextView
+		                android:id="@+id/walkHearts"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_alignParentRight="true"
+		                android:layout_centerVertical="true"
+		                android:layout_marginRight="12dp"
+		                android:textSize="18sp"
+		                android:textColor="@color/WHITE"
+		                android:textStyle="bold" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+		            <TextView
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_centerVertical="true"
+		                android:layout_marginLeft="16dp"
+		                android:textSize="15sp"
+		                android:textColor="@color/WHITE"
+		                android:textStyle="bold"
+		                android:text="@string/TOUCH_HEARTS" />
+		            <TextView
+		                android:id="@+id/touchHearts"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_alignParentRight="true"
+		                android:layout_centerVertical="true"
+		                android:layout_marginRight="12dp"
+		                android:textSize="18sp"
+		                android:textColor="@color/WHITE"
+		                android:textStyle="bold" />
+                </RelativeLayout>
+			</LinearLayout>
         </RelativeLayout>
         
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/speedLayout"
+            android:layout_below="@+id/heartsLayout"
             android:layout_above="@+id/layoutStop" >
             
 			<ImageView
@@ -205,7 +286,6 @@
 		        android:layout_width="match_parent"
 		        android:layout_height="match_parent"
 		        android:visibility="invisible" />
-			
 			<ImageButton
 			    android:id="@+id/btnMyLocation"
 			    android:layout_width="32dp"
@@ -217,7 +297,7 @@
 				android:src="@drawable/walk_my_location"
 				android:scaleType="fitCenter"
 				android:background="@color/TRANSPARENT" />
-			
+
 			<Button
 			    android:id="@+id/btnMode"
 			    android:layout_width="wrap_content"
@@ -228,15 +308,13 @@
 			    android:layout_marginTop="8dp"
 			    android:visibility="invisible"
 			    android:text="mode" />
-			
-            
         </RelativeLayout>
             
         <TextView
             android:id="@+id/walkTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/speedLayout"
+            android:layout_below="@+id/heartsLayout"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="12dp"
             android:textSize="32sp"
@@ -275,14 +353,6 @@
 		            android:textStyle="bold"
 		            android:text="@string/WALK_STOP" />			    			    
 			</RelativeLayout>
-
-	        
          </RelativeLayout>
-        
-        
     </RelativeLayout>
-	
-    
-    
-
 </RelativeLayout>

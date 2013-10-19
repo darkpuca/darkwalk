@@ -25,14 +25,14 @@ public class LockReceiver extends BroadcastReceiver
 		{
 			wasScreenOn = true;
 			Intent i = new Intent(context, SlideActivity.class);
-			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			context.startActivity(i);
 		}
 		else if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED))
 		{
 			Log.d("SW", "BOOT_COMPLETED received.");
 			Intent i = new Intent(context, SlideActivity.class);
-			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			context.startActivity(i);
 		}
 

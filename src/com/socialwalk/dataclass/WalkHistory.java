@@ -34,7 +34,7 @@ public class WalkHistory
 	private static final float METs_RATIO_FOR_MINUTES = 1.0175f;
 	private static final float METs_RATIO_FOR_SECONDS = 0.016958f;
 	private static final int DEFAULT_WEIGHT = 70;
-	private static final int RED_HEART_WALK_POINT = 10;
+	private static final int RED_HEART_WALK_POINT = 1;
 
 	public WalkHistory()
 	{
@@ -79,7 +79,10 @@ public class WalkHistory
 				long diffInMs = newLog.LogTime.getTime() - prevLog.LogTime.getTime();
 				float speed = (float)(newLog.DistanceFromPrevious / diffInMs *1000L);
 
-				newLog.CurrentSpeed = speed;
+				// km/h로 속도 변환
+				newLog.CurrentSpeed = speed * 3.6f;
+				
+				// 걷기 속도 제한
 //				if (newLog.CurrentSpeed > 20)
 //					newLog.IsValid = false;
 			}
@@ -178,14 +181,14 @@ public class WalkHistory
 	{
 		float speed_mps = this.TotalDistance / (float)this.TotalWalkingSeconds(toDate);
 		float speed_kmh = speed_mps * 3.6f;
-		String retVal = String.format(Locale.US, "%.2fkm/h", speed_kmh);
+		String retVal = String.format(Locale.US, "%.2f km/h", speed_kmh);
 		
 		return retVal;
 	}
 	
 	public String AverageSpeed()
 	{
-		if (1 >= this.LogItems.size()) return "0.0km/h";
+		if (1 >= this.LogItems.size()) return "0.0 km/h";
 		WalkLogItem lastLog = this.LogItems.lastElement();
 		return this.AverageSpeed(lastLog.LogTime);
 	}
@@ -247,7 +250,7 @@ public class WalkHistory
 	
 	private long RedHeartByWalk()
 	{
-		long distance = (long)(this.TotalDistance / 100);
+		long distance = (long)(this.TotalDistance / 10);
 		return distance * RED_HEART_WALK_POINT;
 	}
 	

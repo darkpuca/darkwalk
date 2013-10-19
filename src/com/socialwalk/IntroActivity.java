@@ -2,10 +2,14 @@ package com.socialwalk;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.android.volley.Response;
@@ -28,6 +32,7 @@ implements Response.Listener<String>, Response.ErrorListener
 		}
 	};
 	
+	private ImageView imgAd;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -36,6 +41,10 @@ implements Response.Listener<String>, Response.ErrorListener
 		setContentView(R.layout.activity_intro);
 
 		server = new ServerRequestManager();
+
+		imgAd = (ImageView)findViewById(R.id.imgAd);
+		Bitmap newBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.intro_bg);
+		imgAd.setImageBitmap(newBitmap );
 		
 		autoCloseHandler = new Handler();
 		autoCloseHandler.postDelayed(autoCloseRunnable, Globals.INTRO_WAITING);
@@ -61,9 +70,18 @@ implements Response.Listener<String>, Response.ErrorListener
 		});
 	}
 
+	
+	@Override
+	public void onBackPressed()
+	{
+		return;
+	}
+
+
 	@Override
 	protected void onDestroy()
 	{
+		((BitmapDrawable)imgAd.getDrawable()).getBitmap().recycle();
 		super.onDestroy();
 	}
 

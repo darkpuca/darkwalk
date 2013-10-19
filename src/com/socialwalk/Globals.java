@@ -60,8 +60,9 @@ public class Globals
 	public static final int INTENT_REQ_INTRO = 1012;
 	public static final int INTENT_REQ_POSTING = 1013;
 	public static final int INTENT_REQ_REFRESH = 1100;
+	public static final int INTENT_REQ_WEBVIEW = 1101;
 
-	public static final long INTRO_WAITING = 5000;
+	public static final long INTRO_WAITING = 2000;
 
 	public static final String AD_TYPE_SLIDE = "slide";
 	public static final String AD_TYPE_INTRO = "intro";

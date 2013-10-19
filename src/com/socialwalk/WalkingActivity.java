@@ -111,7 +111,7 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 		{
 			walkAni.setVisibility(View.INVISIBLE);
 			walkMap.setVisibility(View.VISIBLE);
-			mapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 14);
+			mapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 13);
 		}
 		else
 		{
@@ -187,22 +187,26 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 						if(null != currentWalk)
 						{							
 							TextView walkDistance = (TextView)findViewById(R.id.walkDistance);
-							TextView walkSpeed = (TextView)findViewById(R.id.walkSpeed);
-							TextView walkTime = (TextView)findViewById(R.id.walkTime);
-							
 							walkDistance.setText(currentWalk.TotalDistanceString());
-//							walkSpeed.setText(currentWalk.AverageSpeedFromNow());
+
+							TextView walkSpeed = (TextView)findViewById(R.id.walkSpeed);
+							WalkLogItem lastItem = currentWalk.GetLastValidItem();
+							String speed;
+							if (null != lastItem)
+								speed = String.format(getResources().getString(R.string.FORMAT_SPEED), lastItem.CurrentSpeed);
+							else
+								speed = String.format(getResources().getString(R.string.FORMAT_SPEED), 0.0f);
+
+							walkSpeed.setText(speed);
+
+							TextView walkTime = (TextView)findViewById(R.id.walkTime);
 							walkTime.setText(currentWalk.TotalWalkingTimeStringFromNow());
 							
-							WalkLogItem lastItem = currentWalk.GetLastValidItem();
-							if (null != lastItem)
-							{
-								String speed = String.format(getResources().getString(R.string.FORMAT_SPEED), lastItem.CurrentSpeed);
-								walkSpeed.setText(speed);
-								
-//								if (IsMapMode)
-//									mapController.setMapCenter(lastItem.LogLocation.getLongitude(), lastItem.LogLocation.getLatitude());
-							}
+							TextView walkHearts = (TextView)findViewById(R.id.walkHearts);
+							walkHearts.setText(currentWalk.RedHeartStringByWalk() + getResources().getString(R.string.HEART));
+							
+							TextView touchHearts = (TextView)findViewById(R.id.touchHearts);
+							touchHearts.setText(currentWalk.RedHeartStringByTouch() + getResources().getString(R.string.HEART));
 						}
 					}
 				});
@@ -211,6 +215,7 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 		updateTimer = new Timer();
 		updateTimer.scheduleAtFixedRate(updateTask, 1000, 1000);
 
+		UpdateUserInformation();
 	}
 
 	@Override
@@ -240,6 +245,35 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 		return true;
 	}
 
+	private void UpdateUserInformation()
+	{
+		if (false == ServerRequestManager.IsLogin) return;
+		if (null == ServerRequestManager.LoginAccount) return;
+		
+		try
+		{
+			TextView userName = (TextView)findViewById(R.id.userName);
+			TextView groupName = (TextView)findViewById(R.id.groupName);
+			TextView areaName = (TextView)findViewById(R.id.areaName);
+			
+			userName.setText(ServerRequestManager.LoginAccount.Name);
+			groupName.setText(ServerRequestManager.LoginAccount.CommunityName);
+			String areaNameVal = ServerRequestManager.LoginAccount.AreaName + " " + ServerRequestManager.LoginAccount.AreaSubName;
+			areaName.setText(areaNameVal);			
+
+			if (null != ServerRequestManager.LoginAccount.Hearts)
+			{
+				TextView totalHearts = (TextView)findViewById(R.id.totalHearts);
+				String strTotalHearts = ServerRequestManager.LoginAccount.Hearts.getRedPointTotal() + getResources().getString(R.string.HEART);
+				totalHearts.setText(strTotalHearts);
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getLocalizedMessage());
+		}
+	}
+	
 	
 	@Override
 	public void onLongPress(NMapView arg0, MotionEvent arg1) {

@@ -5,11 +5,10 @@
     tools:context=".IntroActivity" >
 
     <ImageView
-        android:src="@drawable/intro_bg"
+        android:id="@+id/imgAd"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
-    
     <RelativeLayout
         android:id="@+id/layoutHeartButton"
         android:layout_width="70dp"

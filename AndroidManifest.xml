@@ -27,7 +27,7 @@
         <activity
             android:name="com.socialwalk.MainActivity"
             android:label="@string/APP_NAME"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
@@ -40,7 +40,7 @@
             android:name="com.socialwalk.SlideActivity"
             android:clearTaskOnLaunch="true"
             android:label="@string/TITLE_SLIDE"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
@@ -52,42 +52,36 @@
         <activity
             android:name="com.socialwalk.CommunitySelectionActivity"
             android:label="@string/TITLE_GROUP_SELECTION"
-            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.CreateCommunityActivity"
             android:label="@string/TITLE_CREATE_GROUP"
-            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.CommunityDetailActivity"
             android:label="@string/TITLE_GROUP_DETAIL"
-            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.IntroActivity"
             android:label="@string/TITLE_INTRO"
-            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.LoginActivity"
             android:label="@string/TITLE_LOGIN"
-            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.WalkingActivity"
             android:label="@string/TITLE_WALK"
-            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>

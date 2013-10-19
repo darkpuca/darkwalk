@@ -32,7 +32,6 @@ import com.socialwalk.dataclass.WalkHistoryManager;
 import com.socialwalk.request.ServerRequestManager;
 
 public class WalkService extends Service
-implements Response.Listener<String>, Response.ErrorListener
 {
 	public static boolean IsStarted = false;
 	private static final String TAG = "SW_WALK_SVC";
@@ -50,8 +49,6 @@ implements Response.Listener<String>, Response.ErrorListener
 	private TimerTask locationTask;
 	private static int LocationWaitCount = 0;
 	
-	private ServerRequestManager server = null;
-
 	public WalkService()
 	{
 
@@ -61,8 +58,6 @@ implements Response.Listener<String>, Response.ErrorListener
 	public void onCreate()
 	{
 		super.onCreate();
-		
-		this.server = new ServerRequestManager();
 		
 		m_notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		m_locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
@@ -101,12 +96,15 @@ implements Response.Listener<String>, Response.ErrorListener
 		this.WalkingData = WalkHistoryManager.StartNewLog();
 
 		// show notification item
-		Intent notiIntent = new Intent(getApplicationContext(), WalkingActivity.class);
+		Intent notiIntent = new Intent(getApplicationContext(), MainActivity.class);
+		notiIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, notiIntent, 0);
 		
 		Notification noti = new Notification(android.R.drawable.ic_dialog_map, "SOCIALWALK", System.currentTimeMillis());
-		noti.setLatestEventInfo(getApplicationContext(), "SocialWalk", "Walking is started.", pi);
-//		m_notificationManager.notify(Globals.NOTI_WALKING, noti);
+		String appName = getResources().getString(R.string.APP_NAME);
+		String message = getResources().getString(R.string.MSG_NOTI_SOCIAL_WALKING);
+		noti.setLatestEventInfo(getApplicationContext(), appName, message, pi);
+
 		startForeground(1, noti);
 		
 		IntentFilter filter = new IntentFilter("com.darkpuca.socialwalk.location");
@@ -198,9 +196,6 @@ implements Response.Listener<String>, Response.ErrorListener
 		// stop gps update
 		this.unregisterReceiver(m_walkReceiver);
 		m_locationManager.removeUpdates(m_locationIntent);
-		
-		// send walking result
-		server.WalkResult(this, this, WalkingData);
 	}
 	
 	
@@ -288,24 +283,4 @@ implements Response.Listener<String>, Response.ErrorListener
 	}
 
 
-	@Override
-	public void onErrorResponse(VolleyError e)
-	{
-		e.printStackTrace();
-	}
-
-	@Override
-	public void onResponse(String response)
-	{
-		if (0 == response.length()) return;
-		
-		MyXmlParser parser = new MyXmlParser(response);
-		SWResponse result = parser.GetResponse();
-		if (null == result) return;
-		
-		if (Globals.ERROR_NONE == result.Code)
-		{
-			
-		}
-	}
 }

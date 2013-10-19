@@ -46,6 +46,8 @@ public class WalkRouteActivity extends NMapActivity implements OnMapStateChangeL
 		walkMap.setOnMapViewTouchEventListener(this);
 		
 		mapController = walkMap.getMapController();
+		mapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 13);
+
 		mapResProvider = new NaverMapResourceProvider(this);
 		mapOverlayManager = new NMapOverlayManager(this, walkMap, mapResProvider);
 		

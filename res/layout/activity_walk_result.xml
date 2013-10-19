@@ -48,7 +48,7 @@
         <RelativeLayout
             android:id="@+id/distanceLayout"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="32dp"
             android:layout_alignParentTop="true"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -72,14 +72,13 @@
                 android:gravity="right"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/BLACK"
-                android:text="XXX.X km" />
+                android:textColor="@color/BLACK" />
         </RelativeLayout>
         
         <RelativeLayout
             android:id="@+id/timeLayout"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="32dp"
             android:layout_below="@+id/distanceLayout"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -103,14 +102,13 @@
                 android:gravity="right"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/BLACK"
-                android:text="00:00:00" />
+                android:textColor="@color/BLACK" />
         </RelativeLayout>
         
         <RelativeLayout
             android:id="@+id/speedLayout"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="32dp"
             android:layout_below="@+id/timeLayout"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -134,15 +132,74 @@
                 android:gravity="right"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/BLACK"
-                android:text="XXX.XX km/h" />
+                android:textColor="@color/BLACK" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/walkHeartsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_below="@+id/speedLayout"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/result_line_bg" >
+
+            <TextView
+                android:id="@+id/walkHeartsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"
+                android:textColor="@color/DARK_GRAY"
+                android:text="@string/WALK_HEARTS" />
+            <TextView
+                android:id="@+id/walkHearts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/walkHeartsLabel"
+                android:layout_centerVertical="true"
+                android:gravity="right"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/BLACK" />
+        </RelativeLayout>
+        
+        <RelativeLayout
+            android:id="@+id/touchHeartsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_below="@+id/walkHeartsLayout"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/result_line_bg" >
+
+            <TextView
+                android:id="@+id/touchHeartsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"
+                android:textColor="@color/DARK_GRAY"
+                android:text="@string/TOUCH_HEARTS" />
+            <TextView
+                android:id="@+id/touchHearts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/touchHeartsLabel"
+                android:layout_centerVertical="true"
+                android:gravity="right"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/BLACK" />
         </RelativeLayout>
         
         <RelativeLayout
             android:id="@+id/caloriesLayout"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_below="@+id/speedLayout"
+            android:layout_height="32dp"
+            android:layout_below="@+id/touchHeartsLayout"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:background="@drawable/result_line_bg" >

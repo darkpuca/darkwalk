@@ -1,5 +1,8 @@
 package com.socialwalk;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import com.socialwalk.dataclass.WalkHistory;
 
 import android.app.Activity;
@@ -14,7 +17,8 @@ import android.widget.TextView;
 
 public class WalkDetailActivity extends Activity
 {
-	private WalkHistory m_history = null;
+	private WalkHistory history = null;
+	private String targetFileName = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -22,8 +26,8 @@ public class WalkDetailActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_walk_detail);
 		
-		String fileName = getIntent().getStringExtra(Globals.EXTRA_KEY_FILENAME);
-		m_history = Utils.GetDefaultTool().WalkHistoryFromFile(this, fileName);
+		this.targetFileName = getIntent().getStringExtra(Globals.EXTRA_KEY_FILENAME);
+		this.history = Utils.GetDefaultTool().WalkHistoryFromFile(this, this.targetFileName);
 		
 		UpdateDetails();
 		
@@ -34,7 +38,7 @@ public class WalkDetailActivity extends Activity
 			public void onClick(View v)
 			{
 				Intent i = new Intent(getBaseContext(), WalkRouteActivity.class);
-				i.putExtra(Globals.EXTRA_KEY_FILENAME, WalkDetailActivity.this.m_history.FileName);
+				i.putExtra(Globals.EXTRA_KEY_FILENAME, targetFileName);
 				startActivity(i);
 			}
 		});
@@ -52,7 +56,7 @@ public class WalkDetailActivity extends Activity
 	
 	private void UpdateDetails()
 	{
-		if (null == m_history) return;
+		if (null == this.history) return;
 		
 		TextView distance = (TextView)findViewById(R.id.distance);
 		TextView walkTime = (TextView)findViewById(R.id.walkTime);
@@ -61,11 +65,14 @@ public class WalkDetailActivity extends Activity
 		TextView endTime = (TextView)findViewById(R.id.endTime);
 		TextView calories = (TextView)findViewById(R.id.calories);
 		
-		distance.setText(m_history.TotalDistanceString());
-		walkTime.setText(m_history.TotalWalkingTimeString());
-		walkSpeed.setText(m_history.AverageSpeed());
-		startTime.setText(m_history.StartTime.toLocaleString());
-		endTime.setText(m_history.EndTime.toLocaleString());		
+		distance.setText(this.history.TotalDistanceString());
+		walkTime.setText(this.history.TotalWalkingTimeString());
+		walkSpeed.setText(this.history.AverageSpeed());
+
+		SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATE_FORMAT_FOR_SERVER, Locale.US);
+		startTime.setText(formatter.format(this.history.StartTime));
+		endTime.setText(formatter.format(this.history.EndTime));
+		calories.setText(this.history.TotalCalories());
 	}
 
 }

@@ -68,6 +68,9 @@
     <string name="DISTANCE">이동 거리</string>
     <string name="AVERAGE_SPEED">평균 속도</string>
     <string name="CURRENT_SPEED">현재 속도</string>
+    <string name="TOTAL_HEARTS">전체 하트</string>
+    <string name="WALK_HEARTS">걷기 하트</string>
+    <string name="TOUCH_HEARTS">광고 하트</string>
     <string name="WALK_TIME">이동 시간</string>
     <string name="BURNED_CALLORIES">예상 소모 칼로리</string>
     <string name="SHOW_ROUTE">이동 경로 보기</string>
@@ -130,6 +133,8 @@
     <string name="MSG_POST_DELETE_CONFIRM">커뮤니티 글을 삭제하시겠습니까?</string>
     <string name="MSG_REPLY_DELETE_CONFIRM">댓글을 삭제하시겠습니까?</string>
     <string name="MSG_PASSWORD_MISSMATCH">비밀번호가 일치하지 않습니다.</string>
+    <string name="MSG_SEND_WALK_DATA">걷기 정보를 전송중입니다.</string>
+    <string name="MSG_NOTI_SOCIAL_WALKING">소셜워크 걷기가 진행중입니다.</string>
     
     <color name="WALK_INFO_PANEL_BG">#80000000</color>
     <color name="SLIDE_WALK_STATE">#80000000</color>
