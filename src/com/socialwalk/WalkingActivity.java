@@ -1,6 +1,5 @@
 package com.socialwalk;
 
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,6 +22,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapLocationManager;
@@ -34,12 +35,15 @@ import com.nhn.android.maps.nmapmodel.NMapError;
 import com.nhn.android.mapviewer.overlay.NMapMyLocationOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPathDataOverlay;
+import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.dataclass.WalkHistory;
-import com.socialwalk.dataclass.WalkHistoryManager;
 import com.socialwalk.dataclass.WalkHistory.WalkLogItem;
+import com.socialwalk.dataclass.WalkHistoryManager;
+import com.socialwalk.request.ServerRequestManager;
 
 public class WalkingActivity extends NMapActivity 
-implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeListener, View.OnClickListener
+implements OnMapStateChangeListener, OnMapViewTouchEventListener
+, OnPageChangeListener, View.OnClickListener
 {
 	static final String NAVER_MAP_KEY = "91325246f9eb73ab763580a53e90a23b";
 	private NMapView walkMap;
@@ -50,6 +54,10 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 	private NMapMyLocationOverlay mapMyLocationOverlay;
 	private NMapPathDataOverlay pathDataOverlay;
 
+	private ServerRequestManager server = null;
+	private int reqType;
+	private static final int REQUEST_WALK_RESULT = 100;
+	private static final int REQUEST_ACCUMULATE = 101;
 	
 	private ImageView walkAni;
 	private Timer updateTimer;
@@ -63,6 +71,8 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_walk);
+		
+		this.server = new ServerRequestManager();
 		
 		RelativeLayout layoutStop = (RelativeLayout)findViewById(R.id.layoutStop);
 		layoutStop.setOnClickListener(this);
@@ -330,12 +340,15 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 				{
 					AnimationDrawable charactorAnimation = (AnimationDrawable)walkAni.getBackground();
 					charactorAnimation.stop();
+					
+					WalkHistory currentWalk = WalkHistoryManager.LastWalking();
+					currentWalk.Finish();
 
 					// 서비스 중지
 					Intent svcIntent = new Intent(getApplicationContext(), WalkService.class);
 					stopService(svcIntent);
 					
-					// 걷기 결과 화면 전
+					// 걷기 결과 화면 전환
 					Intent i = new Intent(getApplicationContext(), WalkResultActivity.class);
 					startActivity(i);
 					
@@ -397,6 +410,4 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener, OnPageChangeLi
 		}
 
 	};
-
-
 }

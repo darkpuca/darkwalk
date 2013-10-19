@@ -9,9 +9,6 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.socialwalk.dataclass.WalkHistory;
-import com.socialwalk.dataclass.WalkHistoryManager;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,7 +17,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
@@ -28,7 +24,15 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.dataclass.WalkHistory;
+import com.socialwalk.dataclass.WalkHistoryManager;
+import com.socialwalk.request.ServerRequestManager;
+
 public class WalkService extends Service
+implements Response.Listener<String>, Response.ErrorListener
 {
 	public static boolean IsStarted = false;
 	private static final String TAG = "SW_WALK_SVC";
@@ -45,6 +49,8 @@ public class WalkService extends Service
 	private Handler locationHandler;
 	private TimerTask locationTask;
 	private static int LocationWaitCount = 0;
+	
+	private ServerRequestManager server = null;
 
 	public WalkService()
 	{
@@ -56,6 +62,8 @@ public class WalkService extends Service
 	{
 		super.onCreate();
 		
+		this.server = new ServerRequestManager();
+		
 		m_notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		m_locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 	}
@@ -65,8 +73,8 @@ public class WalkService extends Service
 	{
 		if (IsStarted)
 			StopWalking();
-
-		super.onDestroy();
+		else
+			super.onDestroy();
 	}
 
 	@Override
@@ -190,6 +198,9 @@ public class WalkService extends Service
 		// stop gps update
 		this.unregisterReceiver(m_walkReceiver);
 		m_locationManager.removeUpdates(m_locationIntent);
+		
+		// send walking result
+		server.WalkResult(this, this, WalkingData);
 	}
 	
 	
@@ -273,6 +284,28 @@ public class WalkService extends Service
 			Location loc = (Location)intent.getExtras().get(Globals.EXTRA_KEY_LOCATION);
 			if (null != loc)
 				UpdateNewLocation(loc);
+		}
+	}
+
+
+	@Override
+	public void onErrorResponse(VolleyError e)
+	{
+		e.printStackTrace();
+	}
+
+	@Override
+	public void onResponse(String response)
+	{
+		if (0 == response.length()) return;
+		
+		MyXmlParser parser = new MyXmlParser(response);
+		SWResponse result = parser.GetResponse();
+		if (null == result) return;
+		
+		if (Globals.ERROR_NONE == result.Code)
+		{
+			
 		}
 	}
 }

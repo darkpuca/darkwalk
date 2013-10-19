@@ -2,7 +2,8 @@ package com.socialwalk;
 
 
 
-import java.util.Vector;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,7 +26,9 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
-import com.socialwalk.MyXmlParser.AroundersItem;
+import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.dataclass.AroundersItems;
+import com.socialwalk.dataclass.AroundersItems.AroundersItem;
 import com.socialwalk.request.ImageCacheManager;
 import com.socialwalk.request.ServerRequestManager;
 
@@ -35,8 +38,17 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 	private ServerRequestManager m_server = null;
 	private LocationManager m_locationManager;
 	private LocationListener m_locationListener;
-	private AroundersItem m_currentArounders = null;
-	private RelativeLayout m_aroundersLayout = null;
+	private RelativeLayout m_aroundersLayout = null, m_startLayout = null;
+	
+	private AroundersItems aroundersAds = new AroundersItems();
+	private AroundersItem currentArounders = null;
+	private Date aroundersUpdateTime = null;
+	private boolean isIntroAdVisit = false;
+	
+	private int reqType = 0;
+	private static final int REQUEST_AROUNDERS = 200;
+	private static final int REQUEST_MAIN_ACCUMULATE = 201;
+	private static final int REQUEST_INTRO_ACCUMULATE = 202;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -54,36 +66,13 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
         m_aroundersLayout.setVisibility(View.GONE);
         m_aroundersLayout.setOnClickListener(this);
         
-        // create utility class
-        Utils.CreateDefaultTool(this);
-        
         // slide 서비스를 등록
         if (!LockService.IsRegisted)
 			startService(new Intent(this, LockService.class));
 
         // start button action
-		RelativeLayout layoutStart = (RelativeLayout)findViewById(R.id.layoutStartButton);
-		layoutStart.setOnClickListener(new OnClickListener()
-        {			
-			@Override
-			public void onClick(View v)
-			{
-				if (!Utils.defaultTool.IsGpsAvailable())
-				{
-					Utils.defaultTool.showGpsSettingWithDialog();
-		        }
-		        else
-		        {
-		        	// start walking service
-		        	Intent svcIntent = new Intent(getBaseContext(), WalkService.class);
-		        	startService(svcIntent);		        	
-		        	
-		        	// load walking state activity
-					Intent viewIntent = new Intent(getBaseContext(), WalkingActivity.class);
-					startActivity(viewIntent);
-		        }
-			}
-		});
+		m_startLayout = (RelativeLayout)findViewById(R.id.layoutStartButton);
+		m_startLayout.setOnClickListener(this);
         
         ImageButton btnSponsor = (ImageButton)findViewById(R.id.btnSponsor);
         btnSponsor.setOnClickListener(new OnClickListener()
@@ -175,19 +164,18 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
         
 		// show intro activity
 		Intent i = new Intent(this, IntroActivity.class);
-//		startActivityForResult(i, Globals.INTENT_REQ_INTRO);
-		startActivity(i);
+		startActivityForResult(i, Globals.INTENT_REQ_INTRO);
 
 		// delayed run start up proc
-		Handler handler = new Handler();
-		handler.postDelayed(new Runnable()
-		{			
-			@Override
-			public void run()
-			{
-				StartupProc();
-			}
-		}, Globals.INTRO_WAITING);
+//		Handler handler = new Handler();
+//		handler.postDelayed(new Runnable()
+//		{			
+//			@Override
+//			public void run()
+//			{
+//				StartupProc();
+//			}
+//		}, Globals.INTRO_WAITING);
 
     }
 
@@ -241,8 +229,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 	@Override
 	protected void onResume()
 	{
-		Utils.defaultTool.SetBaseActivity(this);
-		
         if (WalkService.IsStarted)
         {
         	// 걷기 모드로 시작일 경우 걷기 상태 화면으로 바로 이동
@@ -251,6 +237,21 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
         }
         else
         {
+        	UpdateUserInformation();
+        	
+        	// 저장된 어라운더스 광고 정보가 있을 경우 이를 이용하여 위치 기반 광고를 표시한다.
+        	m_aroundersLayout.setVisibility(View.INVISIBLE);
+        	if (0 < this.aroundersAds.Items.size())
+        	{
+        		AroundersItem item = this.aroundersAds.GetItem();
+        		if (null != item)
+        		{
+        			this.currentArounders = item;
+        			UpdateArounders();
+        		}
+        	}
+        	
+        	// 네트워크 기반 위치정보 수신 모듈 재시작
         	if (null != m_locationManager && null != m_locationListener)
         		m_locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 100, m_locationListener);
         }
@@ -276,10 +277,16 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			if (RESULT_OK == resultCode)
 			{
 				UpdateUserInformation();
+				
+				if (this.isIntroAdVisit)
+				{
+					reqType = REQUEST_INTRO_ACCUMULATE;
+					m_server.AccumulateHeart(this, this, Globals.AD_TYPE_INTRO, "", Globals.AD_POINT_INTRO);
+				}
 			}
 			else
 			{
-				Utils.defaultTool.showFinishDialog(R.string.MSG_NO_LOGIN_EXIT);
+				Utils.GetDefaultTool().ShowFinishDialog(this, R.string.MSG_NO_LOGIN_EXIT);
 			}
 		}
 		else if (Globals.INTENT_REQ_GROUP_SELECT == requestCode)
@@ -294,7 +301,12 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		else if (Globals.INTENT_REQ_INTRO == requestCode)
 		{
 			if (RESULT_OK == resultCode)
+			{
+				if (null != data)
+					this.isIntroAdVisit = data.getBooleanExtra(Globals.EXTRA_KEY_INTRO_AD_VISIT, false);
+				
 				StartupProc();
+			}
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
@@ -303,9 +315,10 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 	private final void StartupProc()
 	{
         // check network connection
-        if (!Utils.defaultTool.IsNetworkAvailable())
+		MainApplication app = (MainApplication)getApplication();
+        if (!app.IsNetworkAvailable())
         {
-        	Utils.defaultTool.showFinishDialog(R.string.MSG_NETWORK_NOT_CONNECTED);
+        	Utils.GetDefaultTool().ShowFinishDialog(this, R.string.MSG_NETWORK_NOT_CONNECTED);
 			return;
         }
         
@@ -319,9 +332,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
         {
         	UpdateUserInformation();
         }
-        
-        // arounders update
-//        m_server.AroundersItems(MainActivity.this, MainActivity.this, 37.5666091, 126.978371);
 	}
 
 
@@ -336,29 +346,69 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 	{
 		if (0 == response.length()) return;
 		
-		System.out.println(response);
+		MyXmlParser parser = new MyXmlParser(response);
 		
-		Vector<AroundersItem> items = new MyXmlParser(response).GetArounders();
-		if (null == items) return;
-		if (0 == items.size()) return;
-		
+		if (REQUEST_AROUNDERS == reqType)
+		{
+			System.out.println(response);
+			
+			AroundersItems items = parser.GetArounders();
+			if (null == items) return;
+			if (0 == items.Items.size()) return;
+			
+			this.aroundersUpdateTime = new Date();
+			this.aroundersAds.Items.clear();
+			this.aroundersAds.Items.addAll(items.Items);
+			
+			this.currentArounders = this.aroundersAds.GetItem();
+			UpdateArounders();
+		}
+		else if (REQUEST_MAIN_ACCUMULATE == reqType)
+		{
+			SWResponse result = parser.GetResponse();
+			if (null == result) return;
+			
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(Globals.AD_POINT_AROUNDERS);
+				UpdateUserInformation();
+			}
+			else
+			{
+				// TODO: 적립 실패할 경우 어떻게 처리하지?
+				System.out.println("하트 적립 실패");
+			}
+		}
+		else if (REQUEST_INTRO_ACCUMULATE == reqType)
+		{
+			SWResponse result = parser.GetResponse();
+			if (null == result) return;
+			
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(Globals.AD_POINT_INTRO);
+				UpdateUserInformation();
+			}
+			
+		}
+	}
+
+	private void UpdateArounders()
+	{
 		RelativeLayout layoutArounders = (RelativeLayout)findViewById(R.id.layoutArounders);
 		layoutArounders.setVisibility(View.VISIBLE);
-		
-		m_currentArounders = items.get(0);
 		
 		NetworkImageView adIcon = (NetworkImageView)findViewById(R.id.adIcon);
 		TextView adCompany = (TextView)findViewById(R.id.adCompany);
 		TextView adPromotion = (TextView)findViewById(R.id.adPromo);
 		TextView adDistance = (TextView)findViewById(R.id.adDistance);
 		
-		adIcon.setImageUrl(m_currentArounders.IconURL, ImageCacheManager.getInstance().getImageLoader());
-		adCompany.setText(m_currentArounders.Company);
-		adPromotion.setText(m_currentArounders.Promotion);
-		adDistance.setText(Integer.toString(m_currentArounders.Distance) + "m");
+		adIcon.setImageUrl(currentArounders.IconURL, ImageCacheManager.getInstance().getImageLoader());
+		adCompany.setText(currentArounders.Company);
+		adPromotion.setText(currentArounders.Promotion);
+		adDistance.setText(Integer.toString(currentArounders.Distance) + "m");
 	}
-	
-	
+
 	
 	private class MyLocationListener implements LocationListener
 	{
@@ -369,7 +419,20 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		{
 			if (null != location)
 			{
+				if (null == aroundersUpdateTime)
+				{
+					aroundersUpdateTime = new Date();
+				}
+				else
+				{
+					// 어라운더스 정보가 10분 이내의 정보이면 갱신하지 않는다
+					Date now = new Date();
+					long diffInMs = now.getTime() - aroundersUpdateTime.getTime();
+					long diffInMinutes= TimeUnit.MILLISECONDS.toMinutes(diffInMs);
+					if (10 > diffInMinutes) return;
+				}
 		        // 위치기반 광고의 위치정보는 네트워크를 이용한 위치 정보를 활용한다.
+				reqType = REQUEST_AROUNDERS;
 		        m_server.AroundersItems(MainActivity.this, MainActivity.this, location.getLatitude(), location.getLongitude());
 			}
 			
@@ -397,11 +460,33 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 	{
 		if (m_aroundersLayout.equals(v))
 		{
-			if (null == m_currentArounders) return;
+			if (null == currentArounders) return;
 			
+			reqType = REQUEST_MAIN_ACCUMULATE;
+			m_server.AccumulateHeart(this, this, Globals.AD_TYPE_MAIN, currentArounders.getSequence(), Globals.AD_POINT_AROUNDERS);
+			
+			this.currentArounders.SetAccessStamp();
 			Intent i = new Intent(getBaseContext(), WebPageActivity.class);
-			i.putExtra(Globals.EXTRA_KEY_URL, m_currentArounders.TargetURL);
+			i.putExtra(Globals.EXTRA_KEY_URL, currentArounders.getTargetURL());
 			startActivity(i);
+		}
+		else if (m_startLayout.equals(v))
+		{
+			MainApplication app = (MainApplication)getApplication();
+			if (!app.IsGpsAvailable())
+			{
+				Utils.GetDefaultTool().ShowGpsSettingWithDialog(this);
+	        }
+	        else
+	        {
+	        	// start walking service
+	        	Intent svcIntent = new Intent(getBaseContext(), WalkService.class);
+	        	startService(svcIntent);		        	
+	        	
+	        	// load walking state activity
+				Intent viewIntent = new Intent(getBaseContext(), WalkingActivity.class);
+				startActivity(viewIntent);
+	        }
 		}
 	}
 	

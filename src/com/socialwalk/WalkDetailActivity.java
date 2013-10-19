@@ -23,7 +23,7 @@ public class WalkDetailActivity extends Activity
 		setContentView(R.layout.activity_walk_detail);
 		
 		String fileName = getIntent().getStringExtra(Globals.EXTRA_KEY_FILENAME);
-		m_history = Utils.defaultTool.WalkHistoryFromFile(fileName);
+		m_history = Utils.GetDefaultTool().WalkHistoryFromFile(this, fileName);
 		
 		UpdateDetails();
 		

@@ -49,8 +49,20 @@ public class NeoClickItems
 		public void SetAccessStamp()
 		{
 			if (0 == accessCount)
+			{
 				firstAccess = new Date();
-
+			}
+			else
+			{
+				Date now = new Date();			
+				long diffInMs = now.getTime() - this.firstAccess.getTime();
+				long diffInHour = TimeUnit.MILLISECONDS.toHours(diffInMs);
+				if (1 <=  diffInHour)
+				{
+					accessCount = 0;
+					firstAccess = new Date();
+				}
+			}
 			accessCount++;
 
 		}
@@ -61,21 +73,11 @@ public class NeoClickItems
 			
 			Date now = new Date();			
 			long diffInMs = now.getTime() - this.firstAccess.getTime();
-			
-			// TODO: 테스트 값 수정, 테스트 위해 10분으로 적립 간격 지정
-//			long diffInHour = TimeUnit.MILLISECONDS.toHours(diffInMs);
-//			if (1 > diffInHour)
-			long diffInHour = TimeUnit.MILLISECONDS.toMinutes(diffInMs);
-			if (10 > diffInHour)
-			{
+			long diffInHour = TimeUnit.MILLISECONDS.toHours(diffInMs);
+			if (1 > diffInHour)
 				return (accessLimit >= accessCount);
-			}
 			else if (1 <= diffInHour)
-			{
-				accessCount = 0;
-				firstAccess = null;
 				return true;
-			}
 			
 			return false;
 		}

@@ -27,7 +27,7 @@
         <activity
             android:name="com.socialwalk.MainActivity"
             android:label="@string/APP_NAME"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
@@ -40,9 +40,8 @@
             android:name="com.socialwalk.SlideActivity"
             android:clearTaskOnLaunch="true"
             android:label="@string/TITLE_SLIDE"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:configChanges="keyboardHidden|orientation"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
@@ -88,70 +87,55 @@
         <activity
             android:name="com.socialwalk.WalkingActivity"
             android:label="@string/TITLE_WALK"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.WalkResultActivity"
             android:label="@string/TITLE_WALK_RESULT"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.WalkDetailActivity"
             android:label="@string/TITLE_WALK_DETAIL"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.WalkRouteActivity"
             android:label="@string/TITLE_WALK_ROUTE"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.WalkHistoryActivity"
             android:label="@string/TITLE_WALK_HISTORY"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.RankingActivity"
             android:label="@string/TITLE_RANKING"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.SettingsActivity"
             android:label="@string/TITLE_SETTINGS"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" >
-        </activity>
-        <activity
-            android:name="com.socialwalk.ProfilesActivity"
-            android:label="@string/TITLE_PROFILES"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.BeneficiariesActivity"
             android:label="@string/TITLE_SPONSOR"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.socialwalk.CommunityActivity"
             android:label="@string/TITLE_COMMUNITY"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
@@ -173,7 +157,19 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
-
+        <activity
+            android:name="com.socialwalk.MoreActivity"
+            android:label="@string/TITLE_MORE"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.ProfileActivity"
+            android:label="@string/TITLE_PROFILE"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
+        </activity>
+        
         <service android:name="com.socialwalk.LockService" >
         </service>
         <service android:name="com.socialwalk.WalkService" >
@@ -188,15 +184,6 @@
         </receiver>
         <receiver android:name="com.socialwalk.WalkLocationReceiver" >
         </receiver>
-
-        <activity
-            android:name="com.socialwalk.MoreActivity"
-            android:label="@string/TITLE_MORE" >
-        </activity>
-        <activity
-            android:name="com.socialwalk.ProfileActivity"
-            android:label="@string/TITLE_PROFILE" >
-        </activity>
     </application>
 
 </manifest>

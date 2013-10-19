@@ -53,7 +53,7 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 
 		// sample value
 		txtUid.setText("kms7610@gmail.com");
-		txtPwd.setText("jinsuyeon0701");
+		txtPwd.setText("jin0701");
 		chkAuto.setChecked(false);
 		
 		Button btnSignUp = (Button)findViewById(R.id.btnSignUp);
@@ -128,6 +128,8 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 		
 		if (REQUEST_LOGIN == reqType)
 		{
+			reqType = 0;
+			
 			if (Globals.ERROR_NONE == result.Code)
 			{
 				ServerRequestManager.IsLogin = true;
@@ -140,15 +142,17 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 			}
 			else if (Globals.ERROR_NO_RESULT == result.Code)
 			{
-				new AlertDialog.Builder(this)
-				.setTitle(R.string.TITLE_INFORMATION)
-				.setMessage(R.string.MSG_ACCOUNT_NOT_EXIST)
-				.setNeutralButton(R.string.CLOSE, null)
-				.show();
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_ACCOUNT_NOT_EXIST);
+			}
+			else if (Globals.ERROR_PASSWORD_NOT_MATCH == result.Code)
+			{
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_PASSWORD_MISSMATCH);
 			}
 		}
 		else if (REQUEST_HEARTS == reqType)
 		{
+			reqType = 0;
+			
 			if (Globals.ERROR_NONE == result.Code)
 			{
 				AccountHeart hearts = parser.GetHearts();

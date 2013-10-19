@@ -2,7 +2,7 @@ package com.socialwalk.dataclass;
 
 public class AccountHeart
 {
-	private int greenPoint, redPoint, redPointTotal;
+	private int greenPoint, redPointWalk, redPointTouch, redPointTotal;
 	
 	public AccountHeart()
 	{
@@ -21,12 +21,33 @@ public class AccountHeart
 
 	public int getRedPoint()
 	{
-		return redPoint;
+		return redPointWalk + redPointTouch;
 	}
 
-	public void setRedPoint(int redPoint)
+	public void setRedPoint(int walkPoint, int touchPoint)
 	{
-		this.redPoint = redPoint;
+		this.redPointWalk = walkPoint;
+		this.redPointTouch = touchPoint;
+	}
+	
+	public int getRedPointByWalk()
+	{
+		return this.redPointWalk;
+	}
+	
+	public int getRedPointByTouch()
+	{
+		return this.redPointTouch;
+	}
+	
+	public void setRedPointByWalk(int point)
+	{
+		this.redPointWalk = point;
+	}
+	
+	public void setRedPointByTouch(int point)
+	{
+		this.redPointTouch = point;
 	}
 
 	public int getRedPointTotal()
@@ -44,16 +65,23 @@ public class AccountHeart
 		this.greenPoint += point;
 	}
 	
-	public void addRedPoint(int point)
+	public void addRedPointByWalk(int point)
 	{
-		this.redPoint += point;
+		this.redPointWalk += point;
 		this.redPointTotal += point;
 	}
-	
+
+	public void addRedPointByTouch(int point)
+	{
+		this.redPointTouch += point;
+		this.redPointTotal += point;
+	}
+
 	public void Copy(AccountHeart hearts)
 	{
 		this.greenPoint = hearts.getGreenPoint();
-		this.redPoint = hearts.getRedPoint();
+		this.redPointWalk = hearts.getRedPointByWalk();
+		this.redPointTouch = hearts.getRedPointByTouch();
 		this.redPointTotal = hearts.getRedPointTotal();
 	}
 }

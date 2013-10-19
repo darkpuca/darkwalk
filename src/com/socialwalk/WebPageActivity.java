@@ -1,15 +1,18 @@
 package com.socialwalk;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 public class WebPageActivity extends Activity
 {
@@ -30,6 +33,30 @@ public class WebPageActivity extends Activity
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 		
+		webView.setWebChromeClient(new WebChromeClient()
+		{
+		    @Override
+		    public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result)
+		    {
+		        new AlertDialog.Builder(WebPageActivity.this)
+		            .setTitle(R.string.TITLE_INFORMATION)
+		            .setMessage(message)
+		            .setPositiveButton(android.R.string.ok,
+		                    new AlertDialog.OnClickListener()
+		                    {
+		                        public void onClick(DialogInterface dialog, int which)
+		                        {
+		                            result.confirm();
+		                        }
+		                    })
+		            .setCancelable(false)
+		            .create()
+		            .show();
+		 
+		        return true;
+		    };
+		});
+		
 		// get target url
 		String urlString = getIntent().getStringExtra(Globals.EXTRA_KEY_URL);
 
@@ -41,13 +68,6 @@ public class WebPageActivity extends Activity
 		webView.loadUrl(urlString);
 
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.web_page, menu);
-		return true;
-	}
 	
 	private class WebCallBack extends WebViewClient
 	{
@@ -55,6 +75,18 @@ public class WebPageActivity extends Activity
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url)
 		{
+			Toast.makeText(getBaseContext(), url, Toast.LENGTH_SHORT).show();
+			String[] names = url.split("/");
+			String targetName = names[names.length-1];
+			System.out.println(targetName);
+			
+			if (targetName.equalsIgnoreCase("join_success.html"))
+			{
+				setResult(RESULT_OK);
+				finish();
+				return false;
+			}
+			
 			//return false;
 			return super.shouldOverrideUrlLoading(view, url);
 		}

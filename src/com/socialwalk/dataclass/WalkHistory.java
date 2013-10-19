@@ -11,7 +11,9 @@ import java.util.concurrent.TimeUnit;
 import android.location.Location;
 import android.location.LocationManager;
 
+import com.socialwalk.Globals;
 import com.socialwalk.MyXmlWriter;
+import com.socialwalk.Utils;
 
 public class WalkHistory
 {
@@ -23,6 +25,7 @@ public class WalkHistory
 	public boolean IsUploaded = false, IsWalking = false;
 	public Date StartTime, EndTime;
 	public String FileName;
+	private int AdTouchCount;
 	private int weight;
 	private int heartRatio;
 	
@@ -42,6 +45,7 @@ public class WalkHistory
 		this.IsWalking = true;
 		this.weight = DEFAULT_WEIGHT;
 		this.heartRatio = RED_HEART_WALK_POINT;
+		this.AdTouchCount = 0;
 	}
 	
 	public WalkHistory(int weight)
@@ -241,22 +245,40 @@ public class WalkHistory
 		return WalkingCaloriesString(this.EndTime);
 	}
 	
-	private long RedHeart()
+	private long RedHeartByWalk()
 	{
 		long distance = (long)(this.TotalDistance / 100);
 		return distance * RED_HEART_WALK_POINT;
 	}
 	
-	public String RedHeartString()
+	private long RedHeartByTouch()
 	{
-		long hearts = RedHeart();
-		
-		DecimalFormat format = new DecimalFormat("###,###");
-        String strHearts = format.format(hearts);
-
-        return strHearts;
+		return this.AdTouchCount * Globals.AD_POINT_WALK;
 	}
 	
+	public long RedHearts()
+	{
+		return RedHeartByWalk() + RedHeartByTouch();
+	}
+	
+	public String RedHeartString()
+	{
+		long hearts = RedHearts();
+		return Utils.GetDefaultTool().DecimalNumberString(hearts);
+	}
+	
+	public String RedHeartStringByWalk()
+	{
+		long hearts = RedHeartByWalk();
+		return Utils.GetDefaultTool().DecimalNumberString(hearts);
+	}
+
+	public String RedHeartStringByTouch()
+	{
+		long hearts = RedHeartByTouch();
+		return Utils.GetDefaultTool().DecimalNumberString(hearts);
+	}
+
 	public int getWeight()
 	{
 		return this.weight;
@@ -276,6 +298,7 @@ public class WalkHistory
 	{
 		this.heartRatio = heartRatio;
 	}
+	
 
 	public String GetXML()
 	{

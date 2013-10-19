@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
+import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.dataclass.NeoClickItems;
 import com.socialwalk.dataclass.NeoClickItems.NeoClickItem;
 import com.socialwalk.request.ImageCacheManager;
@@ -47,12 +48,16 @@ implements Response.Listener<String>, Response.ErrorListener
 	private static final int SLIDER_IN_START = 3;
 	private static final int SLIDER_IN_STOP = 4;
 	private static final int SLIDER_AREA_OFFSET = 32;
+	
+	private static final int REQUEST_NEOCLICK = 100;
+	private static final int REQUEST_ACCUMULATE_VISIT = 101;
+	private static final int REQUEST_ACCUMULATE_START = 102;
 
 	private NeoClickItem currentNeoClick = null;
-	private static NeoClickItems NeoClickAds = new NeoClickItems();
 	
 	private KeyguardManager.KeyguardLock keyLock;
 	private boolean isDragmode;
+	private int reqType = 0;
 	
 	LayoutParams layoutParams;
 	private int m_windowWidth, m_windowHeight;
@@ -208,8 +213,6 @@ implements Response.Listener<String>, Response.ErrorListener
 			Log.d(TAG, e.getLocalizedMessage());
 		}
 		
-		Utils.CreateDefaultTool(this);
-		
 		// auto-login
 		m_server.AutoLogin(this);
 	}
@@ -350,12 +353,12 @@ implements Response.Listener<String>, Response.ErrorListener
 			finish();
 			return;
 		}
-
-		Utils.defaultTool.SetBaseActivity(this);
-		if (Utils.defaultTool.IsNetworkAvailable())
+		
+		MainApplication application = (MainApplication)getApplication();
+		application.IsNetworkAvailable();
+		if (application.IsNetworkAvailable())
 			UpdateSlideAd();
 		
-//		MoveSliderToStartPosition();
 		Handler handler = new Handler();
 		handler.postDelayed(new Runnable()
 		{			
@@ -377,12 +380,20 @@ implements Response.Listener<String>, Response.ErrorListener
 
 	private void ShowAdPage()
 	{
+		
 		if (null == this.currentNeoClick)
 		{
 			finish();
 		}
 		else
 		{
+			if (!ServerRequestManager.IsLogin)
+			{
+				Intent i = new Intent(getBaseContext(), LoginActivity.class);
+				startActivity(i);
+				return;
+			}
+
 			Intent i = new Intent(this, WebPageActivity.class);
 			i.putExtra(Globals.EXTRA_KEY_URL, currentNeoClick.TargetUrl);
 			startActivity(i);
@@ -390,7 +401,8 @@ implements Response.Listener<String>, Response.ErrorListener
 			
 			if (currentNeoClick.IsBillingAvailable())
 			{
-				// TODO: 광고 적립 루틴 구현
+				reqType = REQUEST_ACCUMULATE_VISIT;
+				m_server.AccumulateHeart(this, this, Globals.AD_TYPE_SLIDE, currentNeoClick.Sequence, Globals.AD_POINT_SLIDE_VISIT);
 			}
 			else
 			{
@@ -417,17 +429,19 @@ implements Response.Listener<String>, Response.ErrorListener
 			return;
 		}
 		
-		if (!Utils.defaultTool.IsGpsAvailable())
+		MainApplication app = (MainApplication)getApplication();
+		if (!app.IsGpsAvailable())
 		{
 			MoveSliderToStartPosition();
-			Utils.defaultTool.showGpsSettingWithDialog();
-			
-			
+			Utils.GetDefaultTool().ShowGpsSettingWithDialog(this);
 			return;
 		}
 		
 		if (!WalkService.IsStarted)
 		{
+			reqType = REQUEST_ACCUMULATE_START;
+			m_server.AccumulateHeart(this, this, Globals.AD_TYPE_SLIDE, "", Globals.AD_POINT_SLIDE_START);
+			
 			Intent i = new Intent(getApplicationContext(), WalkService.class);
 			startService(i);
 			finish();
@@ -466,6 +480,7 @@ implements Response.Listener<String>, Response.ErrorListener
 		
 		if (0 == LockService.NeoClickAds.Items.size())
 		{
+			reqType = REQUEST_NEOCLICK;
 			m_server.UpdateNeoClickItems(this, this);
 		}
 		else
@@ -526,16 +541,39 @@ implements Response.Listener<String>, Response.ErrorListener
 	@Override
 	public void onResponse(String response)
 	{
-		System.out.println(response);
-		
 		MyXmlParser parser = new MyXmlParser(response);
-		NeoClickItems items = parser.GetNeoClickItems();
-		
-		if (null == items) return;
-		LockService.NeoClickAds.SetItems(items.Items);
-		
-		this.currentNeoClick = LockService.NeoClickAds.GetNextItem();
-		UpdateControls();
+
+		if (REQUEST_NEOCLICK == reqType)
+		{
+			System.out.println(response);
+			
+			NeoClickItems items = parser.GetNeoClickItems();
+			
+			if (null == items) return;
+			LockService.NeoClickAds.SetItems(items.Items);
+			
+			this.currentNeoClick = LockService.NeoClickAds.GetNextItem();
+			UpdateControls();
+		}
+		else if (REQUEST_ACCUMULATE_VISIT == reqType ||
+				REQUEST_ACCUMULATE_START == reqType)
+		{
+			SWResponse result = parser.GetResponse();
+			if (null == result) return;
+			
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				if (REQUEST_ACCUMULATE_VISIT == reqType)
+					ServerRequestManager.LoginAccount.Hearts.addGreenPoint(Globals.AD_POINT_SLIDE_VISIT);
+				else if (REQUEST_ACCUMULATE_START == reqType)
+					ServerRequestManager.LoginAccount.Hearts.addGreenPoint(Globals.AD_POINT_SLIDE_START);
+			}
+			else
+			{
+				// TODO: 적립 실패할 경우 어떻게 처리하지?
+				System.out.println("하트 적립 실패");
+			}
+		}
 	}
 }
 

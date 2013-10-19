@@ -29,6 +29,7 @@ public class Globals
 	public static final String AROUNDERS_REQ_URL = "http://ad.arounders.co.kr/adRequest.skp";
 	public static final String AROUNDERS_API_KEY_TEST = "QNN6";
 	public static final String AROUNDERS_APP_KEY = "123";
+	public static final int AROUNDERS_AD_SIZE = 10;
 
 	public static final String EXTRA_KEY_URL = "url";
 	public static final String EXTRA_KEY_COMMUNITY_SEQUENCE = "communitySeq";
@@ -38,6 +39,7 @@ public class Globals
 	public static final String EXTRA_KEY_FILENAME = "filename";
 	public static final String EXTRA_KEY_POST_SEQUENCE = "postSeq";
 	public static final String EXTRA_KEY_WRITER_SEQUENCE = "writerSeq";
+	public static final String EXTRA_KEY_INTRO_AD_VISIT = "introAd";
 	
 
 	public static final String PREF_ENVIRNMENT = "ENV";
@@ -59,7 +61,19 @@ public class Globals
 	public static final int INTENT_REQ_POSTING = 1013;
 	public static final int INTENT_REQ_REFRESH = 1100;
 
-	public static final long INTRO_WAITING = 2000;
+	public static final long INTRO_WAITING = 5000;
+
+	public static final String AD_TYPE_SLIDE = "slide";
+	public static final String AD_TYPE_INTRO = "intro";
+	public static final String AD_TYPE_MAIN = "main";
+	public static final String AD_TYPE_WALK = "walk";
+	
+	public static final int AD_POINT_SLIDE_VISIT = 30;
+	public static final int AD_POINT_SLIDE_START = 5;
+	public static final int AD_POINT_AROUNDERS = 20;
+	public static final int AD_POINT_INTRO = 10;
+	public static final int AD_POINT_START = 10;
+	public static final int AD_POINT_WALK = 20;
 	
 	public static final int ERROR_NONE					= 0;
 	public static final int ERROR_NO_RESULT				= 1;

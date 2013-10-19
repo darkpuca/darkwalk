@@ -20,6 +20,7 @@ import com.socialwalk.MyXmlParser;
 import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.dataclass.AccountData;
 import com.socialwalk.dataclass.AccountHeart;
+import com.socialwalk.dataclass.WalkHistory;
 import com.socialwalk.MyXmlWriter;
 
 public class ServerRequestManager implements Response.Listener<String>, Response.ErrorListener
@@ -343,7 +344,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 	            params.put("k", Globals.AROUNDERS_API_KEY_TEST);
 	            params.put("mt", Double.toString(mt));
 	            params.put("mn", Double.toString(mn));
-	            params.put("n", "3");
+	            params.put("n", Integer.toString(Globals.AROUNDERS_AD_SIZE));
 				return params;
 			}			
 		};
@@ -352,14 +353,14 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 	}
 	
 	
-	public void AccumulateHeart(Response.Listener<String> listener, Response.ErrorListener errorListener, String adSeq)
+	public void AccumulateHeart(Response.Listener<String> listener, Response.ErrorListener errorListener, String adType, String adSequence, int point)
 	{
 		RequestQueue queue = RequestManager.getRequestQueue();
 		if (null == queue) return;
 		if (null == LoginAccount) return;
 		
-		String url = Globals.URL_SERVER_DOMAIN + "/api//ad_info/" + adSeq;
-		String xmlBody = MyXmlWriter.AccumulateHeart(LoginAccount.Sequence);
+		String url = Globals.URL_SERVER_DOMAIN + "/api/ad_info/" + adType;
+		String xmlBody = MyXmlWriter.AccumulateHeart(LoginAccount.Sequence, adSequence, point);
 		
 		SocialWalkRequest req = new SocialWalkRequest(Method.POST, url, listener, errorListener);
 		req.SetXMLBody(xmlBody);
@@ -367,6 +368,22 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		queue.add(req);
 	}
 	
+	public void WalkResult(Response.Listener<String> listener, Response.ErrorListener errorListener, WalkHistory history)
+	{
+		if (null == history) return;
+		
+		RequestQueue queue = RequestManager.getRequestQueue();
+		if (null == queue) return;
+		if (null == LoginAccount) return;
+		
+		String url = Globals.URL_SERVER_DOMAIN + "/api/benefit_history";
+		String xmlBody = MyXmlWriter.WalkResult(LoginAccount.Sequence, history);
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.POST, url, listener, errorListener);
+		req.SetXMLBody(xmlBody);
+		
+		queue.add(req);
+	}
 	
 	@Override
 	public void onErrorResponse(VolleyError error)

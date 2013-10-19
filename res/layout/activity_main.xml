@@ -21,7 +21,8 @@
             android:background="@color/TRANSPARENT"
             android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
             android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
-            android:layout_width="@dimen/TOPBAR_ICON_SIZE"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="@dimen/TOPBAR_ICON_SIZE" />
         
         <ImageButton
@@ -31,7 +32,8 @@
             android:background="@color/TRANSPARENT"
             android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
             android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
-            android:layout_width="@dimen/TOPBAR_ICON_SIZE"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="@dimen/TOPBAR_ICON_SIZE" />
         <ImageButton
             android:id="@+id/btnGroup"
@@ -40,7 +42,8 @@
             android:background="@color/TRANSPARENT"
             android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
             android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
-            android:layout_width="@dimen/TOPBAR_ICON_SIZE"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="@dimen/TOPBAR_ICON_SIZE" />
         <ImageButton
             android:id="@+id/btnHistory"
@@ -49,7 +52,8 @@
             android:background="@color/TRANSPARENT"
             android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
             android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
-            android:layout_width="@dimen/TOPBAR_ICON_SIZE"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="@dimen/TOPBAR_ICON_SIZE" />        
         <ImageButton
             android:id="@+id/btnMore"
@@ -58,7 +62,8 @@
             android:background="@color/TRANSPARENT"
             android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
             android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
-            android:layout_width="@dimen/TOPBAR_ICON_SIZE"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="@dimen/TOPBAR_ICON_SIZE" />
 	</LinearLayout>
 	

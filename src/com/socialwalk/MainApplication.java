@@ -1,7 +1,15 @@
 package com.socialwalk;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap.CompressFormat;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import com.socialwalk.request.ImageCacheManager;
 import com.socialwalk.request.ImageCacheManager.CacheType;
@@ -19,6 +27,9 @@ public class MainApplication extends Application {
 	private static CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = CompressFormat.PNG;
 	private static int DISK_IMAGECACHE_QUALITY = 100;  //PNG is lossless so quality is ignored but must be provided
 	
+	private ConnectivityManager connectivity;
+	private NetworkInfo wifiNetInfo, mobileNetInfo;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -45,4 +56,25 @@ public class MainApplication extends Application {
 				, DISK_IMAGECACHE_QUALITY
 				, CacheType.MEMORY);
 	}
+	
+	public boolean IsNetworkAvailable()
+	{
+		connectivity = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+		wifiNetInfo = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		mobileNetInfo = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		
+//		Toast.makeText(m_baseActivity, "wifi: " + wifiNetInfo.isConnected() + " mobile: " + mobileNetInfo.isConnected(), Toast.LENGTH_SHORT).show();
+		
+		if (false == wifiNetInfo.isAvailable() && false == mobileNetInfo.isAvailable())
+			return false;
+
+		return true;
+	}
+	
+	public boolean IsGpsAvailable()
+	{
+        LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+	}
+
 }

@@ -9,14 +9,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 
+import com.socialwalk.dataclass.AroundersItems.AroundersItem;
+import com.socialwalk.dataclass.AroundersItems;
 import com.socialwalk.dataclass.NeoClickItems;
 
 public class LockService extends Service
 {
 	public static boolean IsRegisted = false;
+	
 	public static NeoClickItems NeoClickAds = new NeoClickItems();
 	public static Date NeoClickUpdateTime;
-
+	
 	private BroadcastReceiver mReceiver;
 	
 	@Override

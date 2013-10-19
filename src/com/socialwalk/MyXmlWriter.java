@@ -179,7 +179,7 @@ public class MyXmlWriter
 		}
 	}
 	
-	public static String AccumulateHeart(String userSequence)
+	public static String AccumulateHeart(String userSequence, String adSequence, int point)
 	{
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
@@ -194,6 +194,12 @@ public class MyXmlWriter
 			serializer.startTag("", "user_seq");
 			serializer.text(userSequence);
 			serializer.endTag("", "user_seq");
+			serializer.startTag("", "ad_seq");
+			serializer.text(adSequence);
+			serializer.endTag("", "ad_seq");
+			serializer.startTag("", "heart");
+			serializer.text(Integer.toString(point));
+			serializer.endTag("", "heart");
 			serializer.endTag("", "ad_info");
 			serializer.endTag("", "request");
 			
@@ -206,7 +212,53 @@ public class MyXmlWriter
 			Log.e(TAG, e.getLocalizedMessage());
 			return "";
 		}
-
+	}
+	
+	public static String WalkResult(String userSequence, WalkHistory history)
+	{
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		
+		try
+		{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", true);
+			
+			serializer.startTag("", "request");
+			serializer.startTag("", "benefit_history");
+			serializer.startTag("", "user_seq");
+			serializer.text(userSequence);
+			serializer.endTag("", "user_seq");
+			serializer.startTag("", "benefit_point");
+			serializer.text(Long.toString(history.RedHearts()));
+			serializer.endTag("", "benefit_point");
+			serializer.startTag("", "benefit_info");
+			serializer.startTag("", "time");
+			serializer.text(history.TotalWalkingTimeString());
+			serializer.endTag("", "time");
+			serializer.startTag("", "distance");
+			serializer.text(history.TotalDistanceString());
+			serializer.endTag("", "distance");
+			serializer.startTag("", "calorie");
+			serializer.text(history.TotalCalories());
+			serializer.endTag("", "calorie");
+			serializer.endTag("", "benefit_info");
+			serializer.startTag("", "saving_type");
+			serializer.text(Integer.toString(0));
+			serializer.endTag("", "saving_type");
+			serializer.endTag("", "benefit_history");
+			serializer.endTag("", "request");
+			
+			serializer.endDocument();
+			
+			return writer.toString();
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.getLocalizedMessage());
+			return "";
+		}
+		
 	}
 
 	public static String GetWalkingDataXML(WalkHistory log)

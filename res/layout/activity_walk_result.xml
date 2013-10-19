@@ -172,13 +172,15 @@
 	    <ImageButton
 	        android:id="@+id/btnBanner"
 	        android:src="@drawable/logo"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:scaleType="fitCenter"
+	        android:layout_width="match_parent"
+	        android:layout_height="80dp"
 	        android:layout_below="@+id/caloriesLayout"
 	        android:layout_marginTop="16dp"
 	        android:layout_marginBottom="16dp"
 	        android:layout_centerHorizontal="true"
-	        android:visibility="invisible" />
+	        android:background="@color/TRANSPARENT"
+	        android:visibility="visible" />
 	    
 	   	<RelativeLayout
 	        android:id="@+id/messageLayout"

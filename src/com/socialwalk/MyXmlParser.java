@@ -17,6 +17,8 @@ import android.util.Log;
 
 import com.socialwalk.dataclass.AccountData;
 import com.socialwalk.dataclass.AccountHeart;
+import com.socialwalk.dataclass.AroundersItems;
+import com.socialwalk.dataclass.AroundersItems.AroundersItem;
 import com.socialwalk.dataclass.Beneficiaries;
 import com.socialwalk.dataclass.Beneficiary;
 import com.socialwalk.dataclass.Communities;
@@ -734,7 +736,7 @@ public class MyXmlParser
 		}
 	}
 	
-	public Vector<AroundersItem> GetArounders()
+	public AroundersItems GetArounders()
 	{
 		if (null == m_xml || 0 == m_xml.length()) return null;
 		
@@ -744,14 +746,13 @@ public class MyXmlParser
 			XmlPullParser parser = factory.newPullParser();
 			parser.setInput(new StringReader(m_xml));
 			
-			Vector<AroundersItem> aroundersItems = null;
-			AroundersItem aroundersItem = null;
+			AroundersItems items = null;
+			AroundersItem item = null;
 			
 			int eventType = parser.getEventType();
 			while (eventType != XmlPullParser.END_DOCUMENT)
 			{
 				String tagName = null;
-				
 				switch (eventType)
 				{
 				case XmlPullParser.START_DOCUMENT:
@@ -761,47 +762,45 @@ public class MyXmlParser
 				case XmlPullParser.START_TAG:
 					tagName = parser.getName();
 					if (tagName.equalsIgnoreCase("inventories"))
-						aroundersItems = new Vector<AroundersItem>();
+						items = new AroundersItems();
 					else if (tagName.equalsIgnoreCase("inventory"))
-						aroundersItem = new AroundersItem();
+						item = items.new AroundersItem();
 					else if (tagName.equalsIgnoreCase("company"))
-						aroundersItem.Company = parser.nextText();
+						item.Company = parser.nextText();
 					else if (tagName.equalsIgnoreCase("promotion"))
-						aroundersItem.Promotion = parser.nextText();
+						item.Promotion = parser.nextText();
 					else if (tagName.equalsIgnoreCase("icon"))
-						aroundersItem.IconURL = parser.nextText();
+						item.IconURL = parser.nextText();
 					else if (tagName.equalsIgnoreCase("banner"))
-						aroundersItem.BannerURL = parser.nextText();
+						item.BannerURL = parser.nextText();
 					else if (tagName.equalsIgnoreCase("url"))
-						aroundersItem.TargetURL = parser.nextText();
+						item.setTargetURL(parser.nextText());
 					else if (tagName.equalsIgnoreCase("distance"))
-						aroundersItem.Distance = Integer.parseInt(parser.nextText());
+						item.Distance = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("latitude"))
-						aroundersItem.Latitude = Double.parseDouble(parser.nextText());
+						item.Latitude = Double.parseDouble(parser.nextText());
 					else if (tagName.equalsIgnoreCase("longitude"))
-						aroundersItem.Longitude = Double.parseDouble(parser.nextText());
+						item.Longitude = Double.parseDouble(parser.nextText());
 					break;
 				case XmlPullParser.END_TAG:
 					tagName = parser.getName();
 					if (tagName.equalsIgnoreCase("inventory"))
 					{
-						if (null != aroundersItems && null != aroundersItem)
+						if (null != items && null != item)
 						{
-							aroundersItems.add(aroundersItem);
-							aroundersItem = null;
+							items.Items.add(item);
+							item = null;
 						}
 					}
 					else if (tagName.equalsIgnoreCase("inventories"))
 					{
-						
+						return items;
 					}
 					break;
 				}					
 				eventType = parser.next();
 			}
-			
-			return aroundersItems;
-			
+			return null;
 		} 
 		catch (Exception e)
 		{
@@ -933,30 +932,14 @@ public class MyXmlParser
 					tagName = parser.getName();
 					if (tagName.equalsIgnoreCase("users"))
 						hearts = new AccountHeart();
-					else if (tagName.equalsIgnoreCase("green_point"))
-					{
-						String text = parser.nextText();
-						if (0 == text.length())
-							hearts.setGreenPoint(0);
-						else
-							hearts.setGreenPoint(Integer.parseInt(text));
-					}
+					else if (tagName.equalsIgnoreCase("green_heart"))
+						hearts.setGreenPoint(Integer.parseInt(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("total"))
-					{
-						String text = parser.nextText();
-						if (0 == text.length())
-							hearts.setRedPointTotal(0);
-						else
-							hearts.setRedPointTotal(Integer.parseInt(text));
-					}
-					else if (tagName.equalsIgnoreCase("current"))
-					{
-						String text = parser.nextText();
-						if (0 == text.length())
-							hearts.setRedPoint(0);
-						else
-							hearts.setRedPoint(Integer.parseInt(text));
-					}
+						hearts.setRedPointTotal(Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("walk"))
+						hearts.setRedPointByWalk(Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("touch"))
+						hearts.setRedPointByTouch(Integer.parseInt(parser.nextText()));
 					break;
 				case XmlPullParser.END_TAG:
 					break;
@@ -986,15 +969,4 @@ public class MyXmlParser
 		}
 	}
 	
-	public class AroundersItem
-	{
-		public String Company;
-		public String Promotion;
-		public String IconURL;
-		public String BannerURL;
-		public String TargetURL;
-		public int Distance;
-		public double Latitude;
-		public double Longitude;
-	}
 }

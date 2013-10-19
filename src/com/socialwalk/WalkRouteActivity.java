@@ -50,7 +50,7 @@ public class WalkRouteActivity extends NMapActivity implements OnMapStateChangeL
 		mapOverlayManager = new NMapOverlayManager(this, walkMap, mapResProvider);
 		
 		String fileName = getIntent().getStringExtra(Globals.EXTRA_KEY_FILENAME);
-		WalkHistory history = Utils.defaultTool.WalkHistoryFromFile(fileName);
+		WalkHistory history = Utils.GetDefaultTool().WalkHistoryFromFile(this, fileName);
 		if(null != history)
 		{
 			// set path data points
