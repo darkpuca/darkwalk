@@ -33,7 +33,6 @@ public class WalkHistory
 	private static final float METs_WALK = 3.5f;
 	private static final float METs_RATIO_FOR_MINUTES = 1.0175f;
 	private static final float METs_RATIO_FOR_SECONDS = 0.016958f;
-	private static final int DEFAULT_WEIGHT = 70;
 	private static final int RED_HEART_WALK_POINT = 1;
 
 	public WalkHistory()
@@ -43,7 +42,7 @@ public class WalkHistory
 		this.TotalSpeed = 0;
 		this.StartTime = new Date();
 		this.IsWalking = true;
-		this.weight = DEFAULT_WEIGHT;
+		this.weight = Globals.DEFAULT_WEIGHT;
 		this.heartRatio = RED_HEART_WALK_POINT;
 		this.AdTouchCount = 0;
 	}
@@ -214,7 +213,7 @@ public class WalkHistory
 		}
 
 		if (0 == this.weight)
-			this.weight = DEFAULT_WEIGHT;
+			this.weight = Globals.DEFAULT_WEIGHT;
 		
 		if (0 == this.heartRatio)
 			this.heartRatio = RED_HEART_WALK_POINT;

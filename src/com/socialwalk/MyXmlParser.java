@@ -153,9 +153,9 @@ public class MyXmlParser
 					if (tagName.equalsIgnoreCase("walking"))
 						history = new WalkHistory();
 					else if (tagName.equalsIgnoreCase("startTime"))
-						history.StartTime = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_HISTORY);
+						history.StartTime = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_HISTORY);
 					else if (tagName.equalsIgnoreCase("endTime"))
-						history.EndTime = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_HISTORY);
+						history.EndTime = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_HISTORY);
 					else if (tagName.equalsIgnoreCase("weight"))
 						history.setWeight(Integer.parseInt(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("heartRatio"))
@@ -163,7 +163,7 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("location"))
 						logItem = history.new WalkLogItem();
 					else if (tagName.equalsIgnoreCase("date"))
-						logItem.LogTime = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_HISTORY);
+						logItem.LogTime = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_HISTORY);
 					else if (tagName.equalsIgnoreCase("isValid"))
 						logItem.IsValid = Boolean.parseBoolean(parser.nextText());
 					else if (tagName.equalsIgnoreCase("latitude"))
@@ -258,7 +258,7 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("gender"))
 						acc.Gender = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("birth_date"))
-						acc.Birthday = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						acc.Birthday = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("weight"))
 						acc.Weight = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("recommender_seq"))
@@ -274,9 +274,9 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("verified"))
 						acc.Verified = (1 == Integer.parseInt(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("reg_date"))
-						acc.RegDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						acc.RegDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("modify_date"))
-						acc.ModifyDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						acc.ModifyDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("first_name"))
 						acc.AreaName = parser.nextText();
 					else if (tagName.equalsIgnoreCase("second_name"))
@@ -355,9 +355,9 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("operator_name"))
 						item.MasterName = parser.nextText();
 					else if (tagName.equalsIgnoreCase("reg_date"))
-						item.RegDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						item.RegDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("modify_date"))
-						item.ModifyDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						item.ModifyDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					break;
 				case XmlPullParser.END_TAG:
 					tagName = parser.getName();
@@ -433,9 +433,9 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("community_member_count"))
 						detail.MemberCount = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("reg_date"))
-						detail.RegDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						detail.RegDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("modify_date"))
-						detail.ModifyDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						detail.ModifyDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					break;
 				case XmlPullParser.END_TAG:
 					break;
@@ -498,9 +498,9 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("verified"))
 						item.Verified = (boolean)(1 == Integer.parseInt(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("reg_date"))
-						item.RegDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						item.RegDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("modify_date"))
-						item.ModifyDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						item.ModifyDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("community_user_realname"))
 						item.Writer = parser.nextText();
 					break;
@@ -567,9 +567,9 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("reply_count"))
 						item.ReplyCount = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("reg_date"))
-						item.RegDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						item.RegDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("modify_date"))
-						item.ModifyDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						item.ModifyDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					break;
 				case XmlPullParser.END_TAG:
 					tagName = parser.getName();
@@ -629,7 +629,7 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("reply_data"))
 						item.Contents = parser.nextText();
 					else if (tagName.equalsIgnoreCase("reg_date"))
-						item.RegDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						item.RegDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					break;
 				case XmlPullParser.END_TAG:
 					tagName = parser.getName();
@@ -711,11 +711,11 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("participant"))
 						item.Participants = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("start_date"))
-						item.StartDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						item.StartDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("end_date"))
-						item.EndDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						item.EndDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("benefit_date"))
-						item.EndDate = dateFromString(parser.nextText(), Globals.DATE_FORMAT_FOR_SERVER);
+						item.EndDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("delivery_desc"))
 						item.ReviewsUrl = parser.nextText();
 					break;

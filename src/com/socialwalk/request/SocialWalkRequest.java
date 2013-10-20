@@ -101,6 +101,9 @@ public class SocialWalkRequest extends StringRequest
 		}
 		
 		System.out.println(encoded);
+		
+		// TODO: 로그인 세션 관리를 위한 코드 추가 예정
+		
 		super.deliverResponse(encoded);
 	}
 	

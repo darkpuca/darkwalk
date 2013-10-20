@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/MAIN_BG"
-    tools:context=".LoginActivity2" >
+    tools:context=".LoginActivity" >
     
     <ImageView
         android:id="@+id/imgLogo"
@@ -30,7 +30,6 @@
                 android:id="@+id/userIdLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
-                
 	            <TextView
 	                android:id="@+id/userIdLabel"
 	                android:layout_width="wrap_content"
@@ -41,7 +40,6 @@
 	                android:textStyle="bold"
 	                android:textColor="@color/DARK_GRAY"
 	                android:text="@string/USER_ID" />
-	            
 	            <RelativeLayout
 	                android:id="@+id/idFieldLayout"
 	                android:layout_width="match_parent"
@@ -50,7 +48,6 @@
 	                android:layout_marginTop="4sp"
 	                android:padding="8dp"
 	                android:background="@drawable/field_rounded_bg" >
-	                
 	                <ImageView
 	                    android:id="@+id/userIdFieldIcon"
 	                    android:layout_width="24dp"
@@ -58,7 +55,6 @@
 	                    android:layout_alignParentLeft="true"
 	                    android:layout_centerVertical="true"
 	                    android:src="@drawable/login_uid_icon" />
-
 				    <EditText 
 				        android:id="@+id/loginUid"
 				        android:inputType="textEmailAddress"

@@ -57,7 +57,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
         setContentView(R.layout.activity_main);
         
         m_server = new ServerRequestManager();
-        m_server.AutoLogin(this);
+//        m_server.AutoLogin(this);
         
         m_locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         m_locationListener = new MyLocationListener();
@@ -161,22 +161,12 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			}
 		});
         
-        
-		// show intro activity
-		Intent i = new Intent(this, IntroActivity.class);
-		startActivityForResult(i, Globals.INTENT_REQ_INTRO);
-
-		// delayed run start up proc
-//		Handler handler = new Handler();
-//		handler.postDelayed(new Runnable()
-//		{			
-//			@Override
-//			public void run()
-//			{
-//				StartupProc();
-//			}
-//		}, Globals.INTRO_WAITING);
-
+        if (!WalkService.IsStarted)
+        {
+        	// show intro activity
+			Intent i = new Intent(this, IntroActivity.class);
+			startActivityForResult(i, Globals.INTENT_REQ_INTRO);
+        }
     }
 
 
@@ -218,8 +208,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 	@Override
 	protected void onDestroy()
 	{
-		ServerRequestManager.IsLogin = false;
-		
     	if (null != m_locationManager && null != m_locationListener)
     		m_locationManager.removeUpdates(m_locationListener);
 		
@@ -502,7 +490,10 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			TextView areaName = (TextView)findViewById(R.id.areaName);
 			
 			userName.setText(ServerRequestManager.LoginAccount.Name);
-			groupName.setText(ServerRequestManager.LoginAccount.CommunityName);
+			if (null == ServerRequestManager.LoginAccount.CommunityName)
+				groupName.setText(R.string.NO_GROUP);
+			else
+				groupName.setText(ServerRequestManager.LoginAccount.CommunityName);
 			String areaNameVal = ServerRequestManager.LoginAccount.AreaName + " " + ServerRequestManager.LoginAccount.AreaSubName;
 			areaName.setText(areaNameVal);			
 

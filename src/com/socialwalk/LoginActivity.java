@@ -2,6 +2,8 @@ package com.socialwalk;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,6 +30,8 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 	Button btnLogin;
 	CheckBox chkAuto;
 	
+	private ProgressDialog progDlg;
+
 	private ServerRequestManager m_server = null;
 	private int reqType;
 	
@@ -52,9 +56,18 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 		btnLogin = (Button)findViewById(R.id.btnLogin);
 
 		// sample value
-		txtUid.setText("kms7610@gmail.com");
-		txtPwd.setText("jin0701");
+//		txtUid.setText("kms7610@gmail.com");
+//		txtPwd.setText("ms1215");
 		chkAuto.setChecked(false);
+		
+		SharedPreferences loginPrefs = this.getSharedPreferences(Globals.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
+		String uid = loginPrefs.getString(Globals.PREF_KEY_USER_ID, "");
+		if (0 < uid.length())
+		{
+			txtUid.setText(uid);
+			txtPwd.requestFocus();
+		}
+		
 		
 		Button btnSignUp = (Button)findViewById(R.id.btnSignUp);
 		Button btnForgot = (Button)findViewById(R.id.btnFindPwd);
@@ -86,6 +99,13 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 		btnForgot.setText(content);
 		
 		btnLogin.setOnClickListener(this);
+		
+		// prepare progress dialog
+		progDlg = new ProgressDialog(this);
+		progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progDlg.setCancelable(false);
+		progDlg.setMessage(getResources().getString(R.string.MSG_SEND_DATA));
+
 	}
 
 
@@ -94,18 +114,21 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 	{
 		if (0 == txtUid.getText().length())
 		{
-			new AlertDialog.Builder(this).setTitle(R.string.TITLE_INFORMATION).setMessage(R.string.MSG_EMPTY_USERID).setNeutralButton(R.string.CLOSE, null).show();
+			Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_EMPTY_USERID);
 			return;
 		}
 		
 		if (0 == txtPwd.getText().length())
 		{
-			new AlertDialog.Builder(this).setTitle(R.string.TITLE_INFORMATION).setMessage(R.string.MSG_EMPTY_USERID).setNeutralButton(R.string.CLOSE, null).show();
+			Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_EMPTY_PASSWORD);
+			return;
 		}
 		
 		String uid = txtUid.getText().toString();
 		String pwd = txtPwd.getText().toString();
 
+		if (!progDlg.isShowing()) progDlg.show();
+		
 		reqType = REQUEST_LOGIN;
 		m_server.Login(this, this, uid, pwd);
 	}
@@ -113,6 +136,8 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{
+		if (progDlg.isShowing()) progDlg.dismiss();
+		
 		Log.e(TAG, error.getLocalizedMessage());
 	}
 
@@ -139,6 +164,7 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 				
 				reqType = REQUEST_HEARTS;
 				m_server.UpdateHearts(this, this);
+				return;
 			}
 			else if (Globals.ERROR_NO_RESULT == result.Code)
 			{
@@ -148,6 +174,9 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 			{
 				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_PASSWORD_MISSMATCH);
 			}
+			
+			if (progDlg.isShowing()) progDlg.dismiss();
+
 		}
 		else if (REQUEST_HEARTS == reqType)
 		{
@@ -160,6 +189,8 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 					ServerRequestManager.LoginAccount.Hearts.Copy(hearts);
 			}
 			
+			if (progDlg.isShowing()) progDlg.dismiss();
+
 			setResult(RESULT_OK);
 			finish();
 		}

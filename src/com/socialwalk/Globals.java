@@ -50,8 +50,9 @@ public class Globals
 	public static final String PREF_KEY_USER_ID = "USER_ID";
 	public static final String PREF_KEY_PASSWORD = "PASSWORD";
 	
-	public static final String DATE_FORMAT_FOR_HISTORY = "yyyyMMddHHmmss";
-	public static final String DATE_FORMAT_FOR_SERVER = "yyyy-MM-dd HH:mm:ss";
+	public static final String DATETIME_FORMAT_FOR_HISTORY = "yyyyMMddHHmmss";
+	public static final String DATETIME_FORMAT_FOR_SERVER = "yyyy-MM-dd HH:mm:ss";
+	public static final String DATE_FORMAT_FOR_SERVER = "yyyy-MM-dd";
 	
 	public static final int NOTI_WALKING = 2000;
 	
@@ -75,6 +76,9 @@ public class Globals
 	public static final int AD_POINT_INTRO = 10;
 	public static final int AD_POINT_START = 10;
 	public static final int AD_POINT_WALK = 20;
+	
+	public static final int DEFAULT_WEIGHT = 70;
+
 	
 	public static final int ERROR_NONE					= 0;
 	public static final int ERROR_NO_RESULT				= 1;

@@ -100,7 +100,7 @@
 				android:layout_height="50dp"
 				android:layout_marginTop="@dimen/activity_vertical_margin"
 				android:layout_alignParentBottom="true"
-				android:background="@drawable/yellow_rounded_bg"
+				android:background="@drawable/yellow_bg_selector"
 				android:textSize="20sp"
 				android:textStyle="bold"
 				android:textColor="@color/WHITE"

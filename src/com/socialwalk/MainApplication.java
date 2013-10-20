@@ -1,16 +1,13 @@
 package com.socialwalk;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap.CompressFormat;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.socialwalk.dataclass.AccountData;
 import com.socialwalk.request.ImageCacheManager;
 import com.socialwalk.request.ImageCacheManager.CacheType;
 import com.socialwalk.request.RequestManager;
@@ -21,8 +18,8 @@ import com.socialwalk.request.RequestManager;
  * @author Trey Robinson
  *
  */
-public class MainApplication extends Application {
-	
+public class MainApplication extends Application
+{
 	private static int DISK_IMAGECACHE_SIZE = 1024*1024*10;
 	private static CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = CompressFormat.PNG;
 	private static int DISK_IMAGECACHE_QUALITY = 100;  //PNG is lossless so quality is ignored but must be provided

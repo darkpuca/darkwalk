@@ -16,12 +16,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.socialwalk.Globals;
+import com.socialwalk.MainApplication;
 import com.socialwalk.MyXmlParser;
 import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.MyXmlWriter;
 import com.socialwalk.dataclass.AccountData;
 import com.socialwalk.dataclass.AccountHeart;
 import com.socialwalk.dataclass.WalkHistory;
-import com.socialwalk.MyXmlWriter;
 
 public class ServerRequestManager implements Response.Listener<String>, Response.ErrorListener
 {
@@ -37,8 +38,6 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 
 	public ServerRequestManager()
 	{
-		if (null == LoginAccount)
-			LoginAccount = new AccountData();
 	}
 
 	public void Login(Response.Listener<String> listener, Response.ErrorListener errorListener, String userId, String password)
@@ -126,8 +125,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 			Log.e(TAG, e.getLocalizedMessage());
 			return;
 		}
-		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community/search/" + 
-		LoginAccount.Sequence + "/" + utfKeyword + "/page/" + pageIndex + "/" + pageSize;
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community/search/" + LoginAccount.Sequence + "/" + utfKeyword + "/page/" + pageIndex + "/" + pageSize;
 		
 		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
 		reqQueue.add(req);		
@@ -263,19 +261,13 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
 		if (null == reqQueue) return;
 		
-		final String xmlBody = MyXmlWriter.ChangePassword(LoginAccount.Password, newPassword);
-
 		String urlString = Globals.URL_SERVER_DOMAIN + "/users/" + LoginAccount.Sequence + "/user_pw";
+
+		final String xmlBody = MyXmlWriter.ChangePassword(LoginAccount.Password, newPassword);
 		
-		SocialWalkRequest req = new SocialWalkRequest(Method.PUT, urlString, listener, errorListener)
-		{
-			@Override
-			public byte[] getBody() throws AuthFailureError
-			{
-				return xmlBody.getBytes();
-			}			
-		};
-		
+		SocialWalkRequest req = new SocialWalkRequest(Method.PUT, urlString, listener, errorListener);
+		req.SetXMLBody(xmlBody);
+
 		reqQueue.add(req);
 	}
 	
@@ -385,6 +377,30 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		queue.add(req);
 	}
 	
+	public void getUserProfile(Response.Listener<String> listener, Response.ErrorListener errorListener)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/users/" + LoginAccount.Sequence;
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+
+	public void checkEmail(Response.Listener<String> listener, Response.ErrorListener errorListener, String email)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/users/" + LoginAccount.Sequence;
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{
@@ -400,16 +416,20 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		
 		if (REQUEST_TYPE_AUTOLOGIN == m_reqType)
 		{
+			m_reqType = 0;
+			
 			if (Globals.ERROR_NONE == result.Code)
 			{
 				IsLogin = true;
 				BuildLoginAccountFromSessionData();
 				
+				m_reqType = REQUEST_TYPE_HEARTS;
 				UpdateHearts(this, this);
 			}		
 		}
 		else if (REQUEST_TYPE_HEARTS == m_reqType)
 		{
+			m_reqType = 0;
 			if (Globals.ERROR_NONE == result.Code)
 			{
 				if (null == LoginAccount) return;

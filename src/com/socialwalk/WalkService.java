@@ -100,7 +100,7 @@ public class WalkService extends Service
 		notiIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, notiIntent, 0);
 		
-		Notification noti = new Notification(android.R.drawable.ic_dialog_map, "SOCIALWALK", System.currentTimeMillis());
+		Notification noti = new Notification(R.drawable.noti_icon, "SOCIALWALK", System.currentTimeMillis());
 		String appName = getResources().getString(R.string.APP_NAME);
 		String message = getResources().getString(R.string.MSG_NOTI_SOCIAL_WALKING);
 		noti.setLatestEventInfo(getApplicationContext(), appName, message, pi);
@@ -169,7 +169,7 @@ public class WalkService extends Service
 //		Log.d(TAG, strXml);
 		
 		// save log file
-		SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATE_FORMAT_FOR_HISTORY, Locale.US);
+		SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATETIME_FORMAT_FOR_HISTORY, Locale.US);
 		String filename = formatter.format(WalkingData.StartTime) + ".log";
 		
 		try

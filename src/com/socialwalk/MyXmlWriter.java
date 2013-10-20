@@ -268,7 +268,7 @@ public class MyXmlWriter
 		
 		try
 		{
-			SimpleDateFormat dateFormatter = new SimpleDateFormat(Globals.DATE_FORMAT_FOR_HISTORY, Locale.US);
+			SimpleDateFormat dateFormatter = new SimpleDateFormat(Globals.DATETIME_FORMAT_FOR_HISTORY, Locale.US);
 			
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", true);

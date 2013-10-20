@@ -56,8 +56,7 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 
 	private ServerRequestManager server = null;
 	private int reqType;
-	private static final int REQUEST_WALK_RESULT = 100;
-	private static final int REQUEST_ACCUMULATE = 101;
+	private static final int REQUEST_AD_ACCUMULATE = 101;
 	
 	private ImageView walkAni;
 	private Timer updateTimer;
@@ -146,10 +145,6 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 			}
 		});
 
-		
-		TextView userName = (TextView)findViewById(R.id.userName);
-		userName.setText("darkpuca");
-		
 		// 모드 버튼 동작 구현
 		Button btnMode = (Button)findViewById(R.id.btnMode);
 		btnMode.setOnClickListener(new OnClickListener()
@@ -257,7 +252,10 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 			TextView areaName = (TextView)findViewById(R.id.areaName);
 			
 			userName.setText(ServerRequestManager.LoginAccount.Name);
-			groupName.setText(ServerRequestManager.LoginAccount.CommunityName);
+			if (null == ServerRequestManager.LoginAccount.CommunityName)
+				groupName.setText(R.string.NO_GROUP);
+			else
+				groupName.setText(ServerRequestManager.LoginAccount.CommunityName);
 			String areaNameVal = ServerRequestManager.LoginAccount.AreaName + " " + ServerRequestManager.LoginAccount.AreaSubName;
 			areaName.setText(areaNameVal);			
 

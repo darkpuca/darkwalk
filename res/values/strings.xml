@@ -29,11 +29,14 @@
     <string name="TITLE_REPLY_POSTING">커뮤니티 댓글쓰기</string>
     <string name="TITLE_MORE">더보기</string>
     <string name="TITLE_PROFILE">프로필</string>
+    <string name="TITLE_CHANGE_EMAIL">이메일 변경</string>
     <string name="CLOSE">닫기</string>
+    <string name="CONFIRM">확인</string>
     <string name="LOGIN">로그인</string>
     <string name="LOGOUT">로그아웃</string>
     <string name="USER_ID">사용자 ID</string>
     <string name="PASSWORD">비밀번호</string>
+    <string name="PASSWORD_CONFIRM">비밀번호 확인</string>
     <string name="SIGN_UP">회원가입</string>
     <string name="FIND_PASSWORD"><u>비밀번호 찾기</u></string>
     <string name="AUTO_LOGIN">자동 로그인</string>
@@ -99,16 +102,38 @@
     <string name="WALK_START">걷기시작</string>
     <string name="WALK_STOP">걷기종료</string>
     <string name="HEART">하트</string>
+    <string name="NO_GROUP">그룹 미가입</string>
+    <string name="EMAIL">이메일</string>
+    <string name="NAME">이름</string>
+    <string name="CHANGE_PASSWORD">비밀번호 변경</string>
+    <string name="SEX">성별</string>
+    <string name="BIRTHDAY">생년월일</string>
+    <string name="WEIGHT">몸무게</string>
+    <string name="JOIN_GROUP">가입그룹</string>
+    <string name="SECESSION">회원탈퇴</string>
+    <string name="MAN">남성</string>
+    <string name="WOMAN">여성</string>
+    <string name="UNSET">미지정</string>
+    <string name="SET_NAME">이름 설정</string>
+    <string name="SET_WEIGHT">몸무게 설정</string>
+    <string name="SET_BIRTHDAY">생년월일 설정</string>
+    <string name="SET_GENDER">성별 설정</string>
+    <string name="SET_PASSWORD">비밀번호 설정</string>
+    
     <string name="FORMAT_DISTANCE">%.2f km</string>
     <string name="FORMAT_SPEED">%.1f km/h</string>
     <string name="FORMAT_TIME">HH:mm:ss</string>
     <string name="FORMAT_HEART">%d하트</string>
     <string name="FORMAT_CALORIES">###,### 칼로리</string>
+    
     <string name="MSG_EMPTY_USERID">사용자 ID를 입력해 주십시오.</string>
     <string name="MSG_EMPTY_PASSWORD">비밀번호를 입력해 주십시오.</string>
+    <string name="MSG_EMPTY_PASSWORD_CONFIRM">확인 비밀번호를 입력해 주십시오.</string>
     <string name="MSG_EMPTY_GROUP_NAME">그룹 이름을 입력해 주십시오.</string>
     <string name="MSG_EMPTY_SUBJECT">제목을 입력해 주십시요.</string>
     <string name="MSG_EMPTY_CONTENTS">내용을 입력해 주십시요.</string>
+    <string name="MSG_EMPTY_EMAIL">이메일 주소를 입력해 주십시요.</string>
+    <string name="MSG_EMPTY_NAME">이름을 입력해 주십시요.</string>
     <string name="MSG_DUPLICATE_GROUP_NAME">동일한 그룹 이름이 있습니다. 다시 입력해 주십시오.</string>
     <string name="MSG_EMPTY_KEYWORD">검색어를 입력해 주십시오.</string>
     <string name="MSG_NO_LOGIN_EXIT">소셜워크는 로그인이 필요한 서비스입니다. 앱을 종료합니다.</string>
@@ -135,6 +160,9 @@
     <string name="MSG_PASSWORD_MISSMATCH">비밀번호가 일치하지 않습니다.</string>
     <string name="MSG_SEND_WALK_DATA">걷기 정보를 전송중입니다.</string>
     <string name="MSG_NOTI_SOCIAL_WALKING">소셜워크 걷기가 진행중입니다.</string>
+    <string name="MSG_SEND_DATA">서버에 데이타를 전송중입니다.</string>
+    <string name="MSG_DUPLICATE_CHECK">중복확인을 해주십시요.</string>
+    <string name="MSG_DUPLICATE_EMAIL">이미 등록되어 있는 이메일 주소입니다.</string>
     
     <color name="WALK_INFO_PANEL_BG">#80000000</color>
     <color name="SLIDE_WALK_STATE">#80000000</color>

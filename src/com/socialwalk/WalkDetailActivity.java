@@ -69,7 +69,7 @@ public class WalkDetailActivity extends Activity
 		walkTime.setText(this.history.TotalWalkingTimeString());
 		walkSpeed.setText(this.history.AverageSpeed());
 
-		SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATE_FORMAT_FOR_SERVER, Locale.US);
+		SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATETIME_FORMAT_FOR_SERVER, Locale.US);
 		startTime.setText(formatter.format(this.history.StartTime));
 		endTime.setText(formatter.format(this.history.EndTime));
 		calories.setText(this.history.TotalCalories());

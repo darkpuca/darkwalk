@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 public class WebPageActivity extends Activity
 {
-	ProgressDialog progDlg;
+	private ProgressDialog progDlg;
 	
 	private static final String TAG = "SW-WEBLINK";
 	@Override

@@ -47,6 +47,7 @@
         <activity
             android:name="com.socialwalk.WebPageActivity"
             android:label="@string/TITLE_WEB_PAGE"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme" >
         </activity>
         <activity

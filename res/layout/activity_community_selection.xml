@@ -65,7 +65,7 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="56dp"
 	        android:layout_alignParentBottom="true"
-	        android:background="@drawable/yellow_rounded_bg"
+	        android:background="@drawable/yellow_bg_selector"
 	        android:textSize="20sp"
 	        android:textStyle="bold"
 	        android:textColor="@color/WHITE"

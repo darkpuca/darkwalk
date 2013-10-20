@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/WHITE" >
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="8dp"
+        android:background="@color/MAIN_BG" >
+        <TextView
+            android:id="@+id/titleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="24sp"
+            android:textColor="@color/WHITE"
+            android:textStyle="bold"
+            android:text="@string/TITLE_CHANGE_EMAIL" />
+    </RelativeLayout>
+    
+	<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp" >
+	    <RelativeLayout 
+	        android:id="@+id/emailLayout"
+	        android:layout_width="match_parent"
+	        android:layout_height="40dp" >
+	        <Button
+	            android:id="@+id/checkButton"
+	            android:layout_width="100dp"
+	            android:layout_height="match_parent"
+	            android:layout_alignParentRight="true"
+	            android:layout_centerVertical="true"
+	            android:layout_marginLeft="4dp"
+	            android:background="@drawable/gray_bg_selector"
+	            android:textSize="16sp"
+	            android:textColor="@color/WHITE"
+	            android:textStyle="bold"
+	            android:text="@string/CHECK_DUPLICATE" />
+	        <EditText
+	            android:id="@+id/email"
+	            android:inputType="textEmailAddress"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_toLeftOf="@+id/checkButton"
+	            android:layout_centerHorizontal="true"
+	            android:ems="10"
+	            android:background="@drawable/field_rounded_bg"
+	            android:hint="@string/EMAIL" >
+	        </EditText>
+	    </RelativeLayout>
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="6dp" >
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/gray_bg_selector"
+            android:layout_marginRight="6dp"
+            android:textSize="18sp"
+            android:textColor="@color/WHITE"
+            android:text="@string/CANCEL" />
+        <Button
+            android:id="@+id/okButton"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/yellow_bg_selector"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/WHITE"
+            android:text="@string/CONFIRM" />
+	</LinearLayout>
+    
+</LinearLayout>
