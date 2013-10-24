@@ -23,7 +23,8 @@
             android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="@dimen/TOPBAR_ICON_SIZE" />
+            android:layout_height="@dimen/TOPBAR_ICON_SIZE" 
+            android:visibility="gone" />
         
         <ImageButton
             android:id="@+id/btnSponsor"
@@ -70,63 +71,60 @@
 	<RelativeLayout
         android:id="@+id/nameLayout"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="64dp"
 		android:layout_below="@+id/tabsLayout"
 		android:paddingLeft="16dp" >
 		
 	    <RelativeLayout
 	        android:id="@+id/layoutUserName"
-	        android:layout_width="120dp"
+	        android:layout_width="wrap_content"
 	        android:layout_height="match_parent"
+	        android:minWidth="90dp"
 	        android:layout_alignParentLeft="true"
-	        android:layout_alignParentTop="true" >
+	        android:layout_alignParentTop="true"
+	        android:layout_marginRight="12dp" >
 	        
 	        <ImageView
 				android:id="@+id/imgUserName"
-				android:layout_width="36dp"
-				android:layout_height="36dp"
+				android:layout_width="28dp"
+				android:layout_height="28dp"
 				android:src="@drawable/main_user_name"
 				android:layout_alignParentLeft="true"
 				android:layout_centerVertical="true" />
-
 	        <TextView
+	            android:id="@+id/userNameLabel"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_alignTop="@+id/imgUserName"
 	            android:layout_toRightOf="@+id/imgUserName"
 	            android:layout_marginLeft="6dp"
 	            android:textSize="14sp"
-	            android:textStyle="bold"
 	            android:textColor="@color/WHITE"
 	            android:text="@string/USER_UPPER" />
-	        	        	        	        
 			<TextView
 			    android:id="@+id/userName"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_alignBottom="@+id/imgUserName"
-				android:layout_toRightOf="@+id/imgUserName"
-				android:layout_marginLeft="6dp"
+				android:layout_below="@+id/userNameLabel"
+				android:layout_alignLeft="@+id/userNameLabel"
 				android:textSize="16sp"
 				android:textStyle="bold"
 				android:textColor="@color/DARK_GRAY" />
-	        
 		</RelativeLayout>
 	    
 	    <RelativeLayout
 	        android:id="@+id/layoutUserGroup"
-	        android:layout_width="match_parent"
+	        android:layout_width="wrap_content"
 	        android:layout_height="match_parent"
 	        android:layout_toRightOf="@+id/layoutUserName" >
 			
 	        <ImageView
 				android:id="@+id/imgUserGroup"
-				android:layout_width="36dp"
-				android:layout_height="36dp"
+				android:layout_width="28dp"
+				android:layout_height="28dp"
 				android:src="@drawable/main_user_group"
 				android:layout_alignParentLeft="true"
 				android:layout_centerVertical="true" />
-
 	        <TextView
 	            android:id="@+id/areaName"
 	            android:layout_width="wrap_content"
@@ -135,25 +133,20 @@
 	            android:layout_toRightOf="@+id/imgUserGroup"
 	            android:layout_marginLeft="6dp"
 	            android:textSize="14sp"
-	            android:textStyle="bold"
 	            android:textColor="@color/WHITE"
 	            android:text="@string/GROUP_UPPER" />
-	        	        
 			<TextView
 				android:id="@+id/groupName"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_alignBottom="@+id/imgUserGroup"
-				android:layout_toRightOf="@+id/imgUserGroup"
-				android:layout_marginLeft="6dp"
+				android:layout_below="@+id/areaName"
+				android:layout_alignLeft="@+id/areaName"
 				android:textSize="16sp"
 				android:textStyle="bold"
 				android:textColor="@color/DARK_GRAY" />
-	        	        
 	    </RelativeLayout>
-         
 	</RelativeLayout>
-    
+		
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -163,159 +156,178 @@
        	android:layout_marginBottom="@dimen/activity_vertical_margin"
        	android:clipChildren="true"
         android:background="@drawable/innerframe_shape" >
+        <RelativeLayout
+            android:id="@+id/layoutReady"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/layoutStartButton" >
+            <ImageView
+                android:id="@+id/mainBgImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/main_character_bg"
+                android:scaleType="centerCrop" />
+			<ImageView
+	            android:id="@+id/imgReady"
+	            android:src="@drawable/character_ani3"
+	            android:layout_width="240dp"
+	            android:layout_height="240dp"
+	            android:layout_centerHorizontal="true"
+	            android:layout_alignParentBottom="true" />
+        </RelativeLayout>
         
         <RelativeLayout
             android:id="@+id/heartLayout"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
            	android:layout_alignParentTop="true"
            	android:padding="8dp"
-           	android:background="@color/LIGHT_GRAY" >
-           	
-            <RelativeLayout
-                android:id="@+id/supportLayout"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
+           	android:background="@color/TRANSPARENT" >
+            <ImageView
+                android:id="@+id/imgRed"
+                android:src="@drawable/main_red_heart"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true" />
+            <TextView
+                android:id="@+id/redHeart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imgRed"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                android:textSize="20sp"
+                android:textColor="@color/LIGHT_RED"
+                android:textStyle="bold"
+                android:text="X,XXX" />
+            <TextView
+                android:id="@+id/redBrace1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/redHeart"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                android:textSize="16sp"
+                android:textColor="@color/LIGHT_RED"
+                android:text="(" />
+            <ImageView
+                android:id="@+id/walkRedIcon"
+                android:src="@drawable/main_walk_heart_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_toRightOf="@+id/redBrace1"
+                android:layout_centerVertical="true" />
+            <TextView
+                android:id="@+id/redHeartWalk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/walkRedIcon"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                android:textSize="16sp"
+                android:textColor="@color/LIGHT_RED"
+                android:text="X,XXX" />
+            <ImageView
+                android:id="@+id/touchRedIcon"
+                android:src="@drawable/main_touch_heart_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_toRightOf="@+id/redHeartWalk"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp" />
+            <TextView
+                android:id="@+id/redHeartTouch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/touchRedIcon"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                android:textSize="16sp"
+                android:textColor="@color/LIGHT_RED"
+                android:text="X,XXX" />
+            <TextView
+                android:id="@+id/redBrace2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/redHeartTouch"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"
+                android:textColor="@color/LIGHT_RED"
+                android:text=")" />
+            <TextView
+                android:id="@+id/greenHeart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/main_sponsor_bg_selector" >
-                <ImageView
-                    android:id="@+id/supportIcon"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/main_white_heart"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true" />
-				<TextView
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:layout_toRightOf="@+id/supportIcon"
-				    android:layout_centerVertical="true"
-				    android:layout_marginLeft="4dp"
-				    android:textSize="14sp"
-	                android:textStyle="bold"
-	                android:textColor="@color/WHITE"
-	                android:text="@string/SUPPORT" />                
-            </RelativeLayout>
-            
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_toLeftOf="@+id/supportLayout"
-                android:orientation="vertical" >
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-		            <ImageView
-		                android:id="@+id/imgGreen"
-		                android:src="@drawable/main_green_heart"
-		                android:layout_width="22dp"
-		                android:layout_height="22dp"
-		                android:layout_alignParentLeft="true"
-		                android:layout_centerVertical="true" />
-		            <TextView
-		                android:id="@+id/greenHeart"
-		                android:layout_width="wrap_content"
-		                android:layout_height="wrap_content"
-		                android:layout_toRightOf="@+id/imgGreen"
-		                android:layout_centerVertical="true"
-		                android:layout_marginLeft="4dp"
-		                android:textSize="20sp"
-		                android:textStyle="bold"
-		                android:textColor="@color/LIGHT_GREEN" />		            
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-		            <ImageView
-		                android:id="@+id/imgRed"
-		                android:src="@drawable/main_red_heart"
-		                android:layout_width="22dp"
-		                android:layout_height="22dp"
-		                android:layout_alignParentLeft="true"
-		                android:layout_centerVertical="true" />
-		            <TextView
-		                android:id="@+id/redHeart"
-		                android:layout_width="wrap_content"
-		                android:layout_height="wrap_content"
-		                android:layout_toRightOf="@+id/imgRed"
-		                android:layout_centerVertical="true"
-		                android:layout_marginLeft="4dp"
-		                android:textSize="20sp"
-		                android:textColor="@color/LIGHT_RED"
-		                android:textStyle="bold" />
-		            <TextView
-		                android:id="@+id/redHeartTotal"
-		                android:layout_width="wrap_content"
-		                android:layout_height="wrap_content"
-		                android:layout_toRightOf="@+id/redHeart"
-		                android:layout_centerVertical="true"
-		                android:layout_marginLeft="4dp"
-		                android:textSize="17sp"
-		                android:textStyle="bold"
-		                android:textColor="@color/LIGHT_RED" />
-                </RelativeLayout>
-            </LinearLayout>
-        </RelativeLayout>
-        
-        
+                android:layout_marginLeft="4dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/LIGHT_GREEN"
+                android:text="X,XXX" />		            
+            <ImageView
+                android:id="@+id/imgGreen"
+                android:src="@drawable/main_green_heart"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_toLeftOf="@+id/greenHeart"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp" />
+        </RelativeLayout>    
+
 		<RelativeLayout
 			android:id="@+id/layoutArounders"
 			android:layout_width="240dp"
 			android:layout_height="80dp"
 			android:layout_alignParentLeft="true"
 			android:layout_above="@+id/layoutStartButton"			
-			android:layout_marginBottom="160dp"
+			android:layout_marginBottom="180dp"
 			android:layout_marginLeft="16dp"
 			android:padding="4dp"
 			android:background="@drawable/arounders_bg" >
-            
             <com.android.volley.toolbox.NetworkImageView
-                android:id="@+id/adIcon"
+                android:id="@+id/advIcon"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:background="@drawable/image_border" />
-            
             <TextView
                 android:id="@+id/adCompany"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/adIcon"
+                android:layout_toRightOf="@+id/advIcon"
                 android:layout_toLeftOf="@+id/layoutDistance"
                 android:layout_marginLeft="4dp"
                 android:textStyle="bold"
                 android:textSize="14sp" 
                 android:textColor="@color/BLACK"
                 android:text="COMPANY" />
-            
             <TextView
                 android:id="@+id/adPromo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/adIcon"
+                android:layout_toRightOf="@+id/advIcon"
                 android:layout_below="@+id/adCompany"
                 android:layout_marginLeft="4dp"
                 android:textSize="13sp"
                 android:textColor="@color/GRAY"
                 android:text="PROMOTION" />
-            
             <RelativeLayout
                 android:id="@+id/layoutDistance"
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true" >
-                
 				<ImageView
 				    android:src="@drawable/arounders_anno"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:layout_alignTop="@+id/adDistance"
 				    android:layout_alignBottom="@+id/adDistance" />
-					            
 				<TextView
 	                android:id="@+id/adDistance"
 	                android:layout_width="match_parent"
@@ -326,27 +338,8 @@
 	                android:gravity="right"
 	                android:textSize="12sp"
 	                android:text="xxxm" />
-				
             </RelativeLayout>
-           
        	</RelativeLayout>
-        
-        <RelativeLayout
-            android:id="@+id/layoutReady"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/redHeartLayout"
-            android:layout_above="@+id/layoutStartButton" >
-            
-			<ImageView
-	            android:id="@+id/imgReady"
-	            android:src="@drawable/character_ani3"
-	            android:layout_width="240dp"
-	            android:layout_height="240dp"
-	            android:layout_centerHorizontal="true"
-	            android:layout_alignParentBottom="true" />
-	            
-        </RelativeLayout>
         
 	    <RelativeLayout
 	        android:id="@+id/layoutStartButton"
@@ -379,11 +372,41 @@
 		            android:textStyle="bold"
 		            android:text="@string/WALK_START" />
 			</RelativeLayout>
-			
-	        
          </RelativeLayout>
-        
     </RelativeLayout>
     
-
+	<RelativeLayout
+		android:id="@+id/supportLayout"
+		android:layout_width="60dp"
+		android:layout_height="60dp"
+		android:layout_below="@+id/tabsLayout"
+		android:layout_alignParentRight="true"
+		android:layout_marginTop="6dp"
+		android:layout_marginRight="6dp"
+		android:background="@drawable/main_sponsor_selector2" >
+		<RelativeLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerInParent="true" >
+			<ImageView
+				android:id="@+id/supportIcon"
+				android:layout_width="16dp"
+				android:layout_height="16dp"
+				android:src="@drawable/main_white_heart"
+				android:layout_alignParentTop="true"
+				android:layout_centerHorizontal="true" />
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@+id/supportIcon"
+				android:layout_centerHorizontal="true"
+				android:layout_marginLeft="4dp"
+				android:textSize="12sp"
+				android:textStyle="bold"
+				android:textColor="@color/WHITE"
+				android:text="@string/SUPPORT" />                
+		    			    
+		</RelativeLayout>
+	</RelativeLayout>
+    
 </RelativeLayout>

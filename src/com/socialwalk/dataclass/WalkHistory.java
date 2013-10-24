@@ -21,19 +21,20 @@ public class WalkHistory
 	public static final int WALK_SPEED_UNIT_KMH = 2;
 	
 	public float TotalDistance, TotalSpeed;
+	public float ValidDistance;
 	public Vector<WalkLogItem> LogItems;
 	public boolean IsUploaded = false, IsWalking = false;
 	public Date StartTime, EndTime;
 	public String FileName;
 	private int AdTouchCount;
 	private int weight;
-	private int heartRatio;
+	private long heartRatio;
 	
 	private static final String TAG = "SW-WALK";
 	private static final float METs_WALK = 3.5f;
 	private static final float METs_RATIO_FOR_MINUTES = 1.0175f;
 	private static final float METs_RATIO_FOR_SECONDS = 0.016958f;
-	private static final int RED_HEART_WALK_POINT = 1;
+	private static final long RED_HEART_WALK_POINT = (long)0.5;
 
 	public WalkHistory()
 	{
@@ -73,7 +74,6 @@ public class WalkHistory
 					(prevLog.LogLocation.getAltitude() != newLog.LogLocation.getAltitude()))
 			{
 				newLog.DistanceFromPrevious = newLog.LogLocation.distanceTo(prevLog.LogLocation);
-				this.TotalDistance += newLog.DistanceFromPrevious;
 
 				long diffInMs = newLog.LogTime.getTime() - prevLog.LogTime.getTime();
 				float speed = (float)(newLog.DistanceFromPrevious / diffInMs *1000L);
@@ -82,8 +82,17 @@ public class WalkHistory
 				newLog.CurrentSpeed = speed * 3.6f;
 				
 				// 걷기 속도 제한
-//				if (newLog.CurrentSpeed > 20)
-//					newLog.IsValid = false;
+				if (newLog.CurrentSpeed > 10)
+				{
+					newLog.IsValid = false;
+					this.TotalDistance += newLog.DistanceFromPrevious;
+				}
+				else
+				{
+					newLog.IsValid = true;
+					this.TotalDistance += newLog.DistanceFromPrevious;
+					this.ValidDistance += newLog.DistanceFromPrevious;
+				}
 			}
 			else
 			{
@@ -208,7 +217,17 @@ public class WalkHistory
 		for (int i = 1; i < this.LogItems.size(); i++)
 		{
 			WalkLogItem log = this.LogItems.get(i);
-			this.TotalDistance += log.LogLocation.distanceTo(prevLog.LogLocation);
+			
+			float distance = log.LogLocation.distanceTo(prevLog.LogLocation);
+			if (false == log.IsValid)
+			{
+				this.TotalDistance += distance;
+			}
+			else
+			{
+				this.TotalDistance += distance;
+				this.TotalDistance += distance;
+			}
 			prevLog = log;
 		}
 
@@ -249,8 +268,8 @@ public class WalkHistory
 	
 	private long RedHeartByWalk()
 	{
-		long distance = (long)(this.TotalDistance / 10);
-		return distance * RED_HEART_WALK_POINT;
+		long distance = (long)(this.ValidDistance / 10);
+		return  distance * RED_HEART_WALK_POINT;
 	}
 	
 	private long RedHeartByTouch()
@@ -291,16 +310,13 @@ public class WalkHistory
 		this.weight = weight;
 	}
 	
-	public int getHeartRatio()
-	{
-		return this.heartRatio;
+	public long getHeartRatio() {
+		return heartRatio;
 	}
 
-	public void setHeartRatio(int heartRatio)
-	{
+	public void setHeartRatio(long heartRatio) {
 		this.heartRatio = heartRatio;
 	}
-	
 
 	public String GetXML()
 	{

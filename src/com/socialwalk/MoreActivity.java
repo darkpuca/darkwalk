@@ -1,5 +1,7 @@
 package com.socialwalk;
 
+import com.socialwalk.request.ServerRequestManager;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,7 +36,7 @@ public class MoreActivity extends Activity
 			public void onClick(View v)
 			{
 				Intent i = new Intent(getBaseContext(), ProfileActivity.class);
-				startActivity(i);
+				startActivityForResult(i, Globals.INTENT_REQ_PROFILE);
 			}
 		});
 		
@@ -93,7 +95,7 @@ public class MoreActivity extends Activity
 			public void onClick(View v)
 			{
 				Intent i = new Intent(getBaseContext(), SettingsActivity.class);
-				startActivity(i);
+				startActivityForResult(i, Globals.INTENT_REQ_SETTING);
 			}
 		});
 
@@ -110,6 +112,17 @@ public class MoreActivity extends Activity
 			}
 		});
 
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (Globals.INTENT_REQ_SETTING == requestCode || Globals.INTENT_REQ_PROFILE == requestCode)
+		{
+			if (false == ServerRequestManager.IsLogin)
+				finish();
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 }

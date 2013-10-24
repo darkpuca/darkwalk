@@ -2,21 +2,16 @@ package com.socialwalk;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.Date;
 
-import com.socialwalk.dataclass.WalkHistory;
-
-import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Build;
-import android.os.Environment;
-import android.widget.Toast;
+
+import com.socialwalk.dataclass.WalkHistory;
 
 public class Utils
 {
@@ -117,10 +112,46 @@ public class Utils
 		return null;
 	}
 	
+	public String DecimalNumberString(double value)
+	{
+		DecimalFormat format = new DecimalFormat("###,###,###");
+        String strVal = format.format(value);
+        return strVal;
+	}
+
 	public String DecimalNumberString(long value)
 	{
 		DecimalFormat format = new DecimalFormat("###,###");
         String strVal = format.format(value);
         return strVal;
+	}
+
+	public String DecimalNumberString(int value)
+	{
+		DecimalFormat format = new DecimalFormat("###,###");
+        String strVal = format.format(value);
+        return strVal;
+	}
+	
+	public void FinishApp(Context context)
+	{
+		ActivityManager exit = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+		exit.restartPackage(context.getPackageName());
+	}
+	
+	public boolean IsBillingArounders(String adCode)
+	{
+		if (null == adCode || 0 == adCode.length()) return false;
+		
+		Date now = new Date();
+		if (LockService.AroundersDate.getDate() != now.getDate())
+		{
+			LockService.AroundersVisitCodes.clear();
+			LockService.AroundersDate = new Date();
+		}
+		
+		boolean isVisited = LockService.AroundersVisitCodes.contains(adCode);
+		
+		return !isVisited;
 	}
 }

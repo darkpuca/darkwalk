@@ -65,6 +65,8 @@
     <string name="GROUP_DESCRIPTION">그룹 설명</string>
     <string name="GROUP_MESSAGE">그룹 안내글</string>
     <string name="CHECK_DUPLICATE">중복 확인</string>
+    <string name="GROUP_SIGNUP">가입 신청</string>
+    <string name="GROUP_SECESSION">그룹 탈퇴</string>
     <string name="START">시작</string>
     <string name="STOP">중지</string>
     <string name="SUPPORT">후원하기</string>
@@ -113,12 +115,26 @@
     <string name="SECESSION">회원탈퇴</string>
     <string name="MAN">남성</string>
     <string name="WOMAN">여성</string>
+    <string name="MAP_MODE">지도모드</string>
+    <string name="DATA_WARNING">데이터모드 경고</string>
+    <string name="SLIDE_OPTION">슬라이드 화면 사용</string>
+    <string name="SOCIALWALK_COPYTITLE">공공을 위한 사회적 걸음</string>
+    <string name="JOIN_REQUEST_MESSAGE">가입 신청 메세지</string>
+    <string name="ORGANIZAION">단체</string>
+    <string name="MEMBER">소속</string>
+    <string name="LOCAL1">지역1</string>
+    <string name="LOCAL2">지역2</string>
+    <string name="APPLY">적용</string>
     <string name="UNSET">미지정</string>
     <string name="SET_NAME">이름 설정</string>
     <string name="SET_WEIGHT">몸무게 설정</string>
     <string name="SET_BIRTHDAY">생년월일 설정</string>
     <string name="SET_GENDER">성별 설정</string>
-    <string name="SET_PASSWORD">비밀번호 설정</string>
+    <string name="SET_PASSWORD">비밀번호 입력</string>
+    <string name="SET_ORGANIZATION">단체 설정</string>
+    <string name="SET_LOCAL">지역 설정</string>
+    <string name="BENEFIT_DATE">후원일</string>
+    <string name="BENEFIT_MONEY">후원금액</string>
     
     <string name="FORMAT_DISTANCE">%.2f km</string>
     <string name="FORMAT_SPEED">%.1f km/h</string>
@@ -134,6 +150,7 @@
     <string name="MSG_EMPTY_CONTENTS">내용을 입력해 주십시요.</string>
     <string name="MSG_EMPTY_EMAIL">이메일 주소를 입력해 주십시요.</string>
     <string name="MSG_EMPTY_NAME">이름을 입력해 주십시요.</string>
+    <string name="MSG_CHECK_DUPLICATE">먼저 중복 확인을 해주십시요.</string>
     <string name="MSG_DUPLICATE_GROUP_NAME">동일한 그룹 이름이 있습니다. 다시 입력해 주십시오.</string>
     <string name="MSG_EMPTY_KEYWORD">검색어를 입력해 주십시오.</string>
     <string name="MSG_NO_LOGIN_EXIT">소셜워크는 로그인이 필요한 서비스입니다. 앱을 종료합니다.</string>
@@ -144,7 +161,7 @@
     <string name="MSG_EXIT_CONFIRM">소셜워크 앱을 종료하시겠습니까?</string>
     <string name="MSG_STOP_WALKING_CONFIRM">걷기를 종료하시겠습니까?</string>
     <string name="MSG_CLEAR_HISTORY_CONFIRM">모든 히스토리를 삭제하시겠습니까?</string>
-    <string name="MSG_LOGOUT_CONFIRM">로그아웃 하시겠습니까?</string>
+    <string name="MSG_LOGOUT_CONFIRM">로그아웃 하시겠습니까?\n로그아웃한 후에는 프로그램이 종료합니다.</string>
     <string name="MSG_COMMUNITY_SIGNUP_CONFIRM">커뮤니티에 가입하지 않았습니다.\n커뮤니티 검색 화면으로 이동하시겠습니까?</string>
     <string name="MSG_NO_SEARCH_RESULT">검색결과가 없습니다.</string>
     <string name="MSG_NO_COMMUNITY_POST">커뮤니티 글이 없습니다.</string>
@@ -163,6 +180,9 @@
     <string name="MSG_SEND_DATA">서버에 데이타를 전송중입니다.</string>
     <string name="MSG_DUPLICATE_CHECK">중복확인을 해주십시요.</string>
     <string name="MSG_DUPLICATE_EMAIL">이미 등록되어 있는 이메일 주소입니다.</string>
+    <string name="MSG_INVALID_AREA">단체/지역 정보를 확인해 주십시요.</string>
+    <string name="MSG_SECESSION_CONFIRM">회원탈퇴를 진행하시겠습니까?\n등록되었던 이메일로는 재가입이 불가능합니다.</string>
+    <string name="MSG_API_FAIL">명령 전송이 실패했습니다.</string>
     
     <color name="WALK_INFO_PANEL_BG">#80000000</color>
     <color name="SLIDE_WALK_STATE">#80000000</color>

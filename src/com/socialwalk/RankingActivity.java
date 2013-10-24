@@ -9,11 +9,12 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 public class RankingActivity extends Activity implements OnClickListener
 {
 	private boolean IsTotalRanking = false;
-	private Button m_btnByGroup, m_btnTotal;
+	private RelativeLayout memberButtonLayout, globalButtonLayout;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -21,10 +22,10 @@ public class RankingActivity extends Activity implements OnClickListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ranking);
 		
-		m_btnByGroup = (Button)findViewById(R.id.btnByGroup);
-		m_btnTotal = (Button)findViewById(R.id.btnTotal);
-		m_btnByGroup.setOnClickListener(this);
-		m_btnTotal.setOnClickListener(this);
+		this.memberButtonLayout = (RelativeLayout)findViewById(R.id.memberButtonLayout);
+		this.globalButtonLayout = (RelativeLayout)findViewById(R.id.globalButtonLayout);
+		memberButtonLayout.setOnClickListener(this);
+		globalButtonLayout.setOnClickListener(this);
 		
 		UpdateTypeButtons();
 		
@@ -35,16 +36,16 @@ public class RankingActivity extends Activity implements OnClickListener
 	
 	private void UpdateTypeButtons()
 	{
-		if (null == m_btnByGroup || null == m_btnTotal) return;
+		if (null == memberButtonLayout || null == globalButtonLayout) return;
 		
-		m_btnByGroup.setSelected(!IsTotalRanking);
-		m_btnTotal.setSelected(IsTotalRanking);
+		memberButtonLayout.setSelected(!IsTotalRanking);
+		globalButtonLayout.setSelected(IsTotalRanking);
 	}
 
 	@Override
 	public void onClick(View v)
 	{
-		IsTotalRanking = m_btnTotal.equals(v);
+		IsTotalRanking = globalButtonLayout.equals(v);
 		UpdateTypeButtons();
 	}
 

@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.dataclass.CommunityDetail;
 import com.socialwalk.dataclass.CommunityPosts;
 import com.socialwalk.dataclass.CommunityPosts.CommunityPostItem;
 import com.socialwalk.request.ServerRequestManager;

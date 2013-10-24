@@ -2,6 +2,7 @@ package com.socialwalk;
 
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import org.xmlpull.v1.XmlSerializer;
@@ -9,12 +10,14 @@ import org.xmlpull.v1.XmlSerializer;
 import android.util.Log;
 import android.util.Xml;
 
+import com.socialwalk.dataclass.AccountData;
 import com.socialwalk.dataclass.WalkHistory;
 import com.socialwalk.dataclass.WalkHistory.WalkLogItem;
 
 public class MyXmlWriter
 {
 	private static final String TAG = "SW-XML";
+	
 	
 	public static String Login(String userId, String password)
 	{
@@ -147,6 +150,37 @@ public class MyXmlWriter
 		}
 	}
 
+	public static String CommunityJoin(String userSequence, String message)
+	{
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		
+		try
+		{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", true);
+			
+			serializer.startTag("", "request");
+			serializer.startTag("", "community_member");
+			serializer.startTag("", "user_seq");
+			serializer.text(userSequence);
+			serializer.endTag("", "user_seq");
+			serializer.startTag("", "req_message");
+			serializer.text(message);
+			serializer.endTag("", "req_message");
+			serializer.endTag("", "community_member");
+			serializer.endTag("", "request");
+			
+			serializer.endDocument();
+			
+			return writer.toString();
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.getLocalizedMessage());
+			return "";
+		}
+	}
 	
 
 	public static String ChangePassword(String oldPassword, String newPassword)
@@ -167,6 +201,51 @@ public class MyXmlWriter
 			serializer.text(newPassword);
 			serializer.endTag("", "new_password");
 			serializer.endTag("", "users");
+			
+			serializer.endDocument();
+			
+			return writer.toString();
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.getLocalizedMessage());
+			return "";
+		}
+	}
+	
+	public static String UpdateProfile(AccountData profile)
+	{
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		
+		try
+		{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", true);
+			
+			serializer.startTag("", "request");
+			serializer.startTag("", "users");
+			serializer.startTag("", "realname");
+			serializer.text(profile.Name);
+			serializer.endTag("", "realname");
+			serializer.startTag("", "first_code");
+			serializer.text(Integer.toString(profile.AreaCode));
+			serializer.endTag("", "first_code");
+			serializer.startTag("", "second_code");
+			serializer.text(Integer.toString(profile.AreaSubCode));
+			serializer.endTag("", "second_code");
+			serializer.startTag("", "gender");
+			serializer.text(Integer.toString(profile.Gender));
+			serializer.endTag("", "gender");
+			serializer.startTag("", "birth_date");
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+			serializer.text(formatter.format(profile.Birthday));
+			serializer.endTag("", "birth_date");
+			serializer.startTag("", "weight");
+			serializer.text(Integer.toString(profile.Weight));
+			serializer.endTag("", "weight");
+			serializer.endTag("", "users");
+			serializer.endTag("", "request");
 			
 			serializer.endDocument();
 			
@@ -288,7 +367,7 @@ public class MyXmlWriter
 			serializer.endTag("", "weight");
 
 			serializer.startTag("", "heartRatio");
-			serializer.text(Integer.toString(log.getHeartRatio()));
+			serializer.text(Long.toString(log.getHeartRatio()));
 			serializer.endTag("", "heartRatio");
 
 			serializer.startTag("", "locations");

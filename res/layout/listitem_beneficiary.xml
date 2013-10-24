@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:minHeight="80dp"
+    android:padding="@dimen/activity_horizontal_margin" >
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/DARK_GRAY"
+        android:text="가나다" />
+    <TextView
+        android:id="@+id/areaName"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/name"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="4dp"
+        android:textSize="16sp"
+        android:textColor="@color/DARK_GRAY"
+        android:text="지역명" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/areaName"
+        android:layout_centerVertical="true" >
+        <RelativeLayout
+            android:id="@+id/dateLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp" >
+            <TextView
+                android:id="@+id/benefitDateLabel"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/GRAY"
+                android:text="@string/BENEFIT_DATE" />
+            <TextView
+                android:id="@+id/benefitDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/benefitDateLabel"
+                android:gravity="right"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="@color/GRAY"
+                android:text="XXXX-XX-XX" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+			android:layout_below="@+id/dateLayout"            
+            android:padding="6dp" >
+            <TextView
+                android:id="@+id/benefitMoneyLabel"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/GRAY"
+                android:text="@string/BENEFIT_MONEY" />
+            <TextView
+                android:id="@+id/benefitMoney"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/benefitMoneyLabel"
+                android:gravity="right"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/GRAY"
+                android:text="X,XXX,XXX" />
+        </RelativeLayout>
+	</RelativeLayout>
+</RelativeLayout>

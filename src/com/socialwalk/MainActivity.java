@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
+import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
 import com.socialwalk.MyXmlParser.SWResponse;
@@ -57,7 +58,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
         setContentView(R.layout.activity_main);
         
         m_server = new ServerRequestManager();
-//        m_server.AutoLogin(this);
+        m_server.AutoLogin(this);
         
         m_locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         m_locationListener = new MyLocationListener();
@@ -147,7 +148,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			public void onClick(View v)
 			{
 				Intent i = new Intent(getBaseContext(), MoreActivity.class);
-				startActivity(i);
+				startActivityForResult(i, Globals.INTENT_REQ_SETTING);
 			}
 		});
         
@@ -190,7 +191,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
-				MainActivity.this.finish();
+				System.exit(0);
 			}
 		});
 		exitDlg.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
@@ -225,7 +226,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
         }
         else
         {
-        	UpdateUserInformation();
+        	updateUserInformation();
         	
         	// 저장된 어라운더스 광고 정보가 있을 경우 이를 이용하여 위치 기반 광고를 표시한다.
         	m_aroundersLayout.setVisibility(View.INVISIBLE);
@@ -264,7 +265,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		{ 
 			if (RESULT_OK == resultCode)
 			{
-				UpdateUserInformation();
+				updateUserInformation();
 				
 				if (this.isIntroAdVisit)
 				{
@@ -281,7 +282,13 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		{
 			if (RESULT_OK == resultCode)
 			{
+				if (null == ServerRequestManager.LoginAccount) return;
 				
+				int commSeq = data.getIntExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, 0);
+				String name = data.getStringExtra(Globals.EXTRA_KEY_COMMUNITY_NAME);
+				ServerRequestManager.LoginAccount.CommunitySeq = commSeq;
+				ServerRequestManager.LoginAccount.CommunityName = name;
+				updateUserInformation();
 
 			
 			}
@@ -295,6 +302,11 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 				
 				StartupProc();
 			}
+		}
+		else if (Globals.INTENT_REQ_SETTING == requestCode)
+		{
+			if (false == ServerRequestManager.IsLogin)
+				finish();
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
@@ -318,7 +330,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
         }
         else
         {
-        	UpdateUserInformation();
+        	updateUserInformation();
         }
 	}
 
@@ -358,8 +370,9 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			
 			if (Globals.ERROR_NONE == result.Code)
 			{
+				LockService.AroundersVisitCodes.add(this.currentArounders.getSequence());
 				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(Globals.AD_POINT_AROUNDERS);
-				UpdateUserInformation();
+				updateUserInformation();
 			}
 			else
 			{
@@ -375,7 +388,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			if (Globals.ERROR_NONE == result.Code)
 			{
 				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(Globals.AD_POINT_INTRO);
-				UpdateUserInformation();
+				updateUserInformation();
 			}
 			
 		}
@@ -386,7 +399,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		RelativeLayout layoutArounders = (RelativeLayout)findViewById(R.id.layoutArounders);
 		layoutArounders.setVisibility(View.VISIBLE);
 		
-		NetworkImageView adIcon = (NetworkImageView)findViewById(R.id.adIcon);
+		NetworkImageView adIcon = (NetworkImageView)findViewById(R.id.advIcon);
 		TextView adCompany = (TextView)findViewById(R.id.adCompany);
 		TextView adPromotion = (TextView)findViewById(R.id.adPromo);
 		TextView adDistance = (TextView)findViewById(R.id.adDistance);
@@ -450,9 +463,16 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		{
 			if (null == currentArounders) return;
 			
-			reqType = REQUEST_MAIN_ACCUMULATE;
-			m_server.AccumulateHeart(this, this, Globals.AD_TYPE_MAIN, currentArounders.getSequence(), Globals.AD_POINT_AROUNDERS);
-			
+			if (Utils.GetDefaultTool().IsBillingArounders(currentArounders.getSequence()))
+			{
+				reqType = REQUEST_MAIN_ACCUMULATE;
+				m_server.AccumulateHeart(this, this, Globals.AD_TYPE_MAIN, currentArounders.getSequence(), Globals.AD_POINT_AROUNDERS);
+			}
+			else
+			{
+				// TODO: 적립되는 광고가 아닐 경우에는 어떻게 표시하
+			}
+
 			this.currentArounders.SetAccessStamp();
 			Intent i = new Intent(getBaseContext(), WebPageActivity.class);
 			i.putExtra(Globals.EXTRA_KEY_URL, currentArounders.getTargetURL());
@@ -478,7 +498,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		}
 	}
 	
-	private void UpdateUserInformation()
+	private void updateUserInformation()
 	{
 		if (false == ServerRequestManager.IsLogin) return;
 		if (null == ServerRequestManager.LoginAccount) return;
@@ -501,15 +521,13 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			{
 				TextView greenHearts = (TextView)findViewById(R.id.greenHeart);
 				TextView redHearts = (TextView)findViewById(R.id.redHeart);
-				TextView totalRedHearts = (TextView)findViewById(R.id.redHeartTotal);
+				TextView redHeartsWalk = (TextView)findViewById(R.id.redHeartWalk);
+				TextView redHeartsTouch = (TextView)findViewById(R.id.redHeartTouch);
 				
-				String strGreenHearts = ServerRequestManager.LoginAccount.Hearts.getGreenPoint() + getResources().getString(R.string.HEART);
-				String strRedHearts = ServerRequestManager.LoginAccount.Hearts.getRedPoint() + getResources().getString(R.string.HEART);
-				String strTotalRedHearts = "(" + ServerRequestManager.LoginAccount.Hearts.getRedPointTotal() + getResources().getString(R.string.HEART) + ")";
-				
-				greenHearts.setText(strGreenHearts);
-				redHearts.setText(strRedHearts);
-				totalRedHearts.setText(strTotalRedHearts);			
+				redHearts.setText(Utils.GetDefaultTool().DecimalNumberString(ServerRequestManager.LoginAccount.Hearts.getRedPoint()));
+				redHeartsWalk.setText(Utils.GetDefaultTool().DecimalNumberString(ServerRequestManager.LoginAccount.Hearts.getRedPointByWalk()));
+				redHeartsTouch.setText(Utils.GetDefaultTool().DecimalNumberString(ServerRequestManager.LoginAccount.Hearts.getRedPointByTouch()));
+				greenHearts.setText(Utils.GetDefaultTool().DecimalNumberString(ServerRequestManager.LoginAccount.Hearts.getGreenPoint()));
 			}
 		}
 		catch (Exception e)

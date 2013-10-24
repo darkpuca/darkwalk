@@ -24,6 +24,7 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 	private static int RequestTypeCheck = 1;
 	private static int RequestTypeCreate = 2;
 	private int RequestType = 0;
+	private boolean isValidName = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -40,7 +41,6 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 		
 		btnCheck.setOnClickListener(this);
 		btnCreate.setOnClickListener(this);
-		btnCreate.setEnabled(false);
 		
 		if (getIntent().hasExtra(Globals.EXTRA_KEY_COMMUNITY_NAME))
 		{
@@ -57,12 +57,7 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 		{
 			if (0 == groupName.getText().length())
 			{
-				new AlertDialog.Builder(getBaseContext())
-				.setTitle(R.string.TITLE_INFORMATION)
-				.setMessage(R.string.MSG_EMPTY_GROUP_NAME)
-				.setNeutralButton(R.string.CLOSE, null)
-				.show();
-				
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_EMPTY_GROUP_NAME);
 				return;
 			}
 			
@@ -72,6 +67,12 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 		}
 		else if (btnCreate.equals(v))
 		{
+			if (false == isValidName)
+			{
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_CHECK_DUPLICATE);
+				return;
+			}
+			
 			String name = groupName.getText().toString();
 			String desc = groupDesc.getText().toString();
 			
@@ -104,23 +105,12 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 		{			
 			if (Globals.ERROR_NO_RESULT == result.Code)
 			{
-				new AlertDialog.Builder(getBaseContext())
-				.setTitle(R.string.TITLE_INFORMATION)
-				.setMessage(R.string.MSG_NAME_AVAILABLE)
-				.setNeutralButton(R.string.CLOSE, null)
-				.show();
-				
-				btnCreate.setEnabled(true);
-				groupDesc.setFocusable(true);
+				isValidName = true;
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_NAME_AVAILABLE);
 			}
 			else
 			{
-				new AlertDialog.Builder(getBaseContext())
-				.setTitle(R.string.TITLE_INFORMATION)
-				.setMessage(R.string.MSG_DUPLICATE_GROUP_NAME)
-				.setNeutralButton(R.string.CLOSE, null)
-				.show();
-				
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_DUPLICATE_GROUP_NAME);
 				return;
 			}
 			
@@ -134,6 +124,7 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, newSeq);
 				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, groupName.getText().toString());
 				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_DESC, groupDesc.getText().toString());
+				
 				setResult(RESULT_OK, i);
 				finish();
 			}

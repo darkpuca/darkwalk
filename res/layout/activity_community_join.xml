@@ -1,0 +1,103 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CommunityJoinActivity" >
+
+    <RelativeLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="8dp"
+        android:background="@color/MAIN_BG" >
+        <TextView
+            android:id="@+id/titleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="24sp"
+            android:textColor="@color/WHITE"
+            android:textStyle="bold"
+            android:text="GROUP_NAME" />
+    </RelativeLayout>
+    
+        
+    <RelativeLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/activity_horizontal_margin" >
+	    <Button
+	        android:id="@+id/btnJoin"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_alignParentBottom="true"
+	        android:background="@drawable/yellow_bg_selector"
+	        android:textSize="20sp"
+	        android:textStyle="bold"
+	        android:textColor="@color/WHITE"
+	        android:text="@string/JOIN_REQUEST" />
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleLayout"
+        android:layout_above="@+id/buttonLayout"
+        android:padding="@dimen/activity_horizontal_margin" >
+	    <LinearLayout
+	        android:id="@+id/descLayout"
+	        android:layout_width="match_parent"
+	        android:layout_height="80dp"
+	        android:layout_marginBottom="6dp"
+	        android:orientation="vertical"
+	        android:layout_alignParentTop="true" >
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginBottom="4dp"
+	            android:textSize="16sp"
+	            android:textStyle="bold"
+	            android:textColor="@color/DARK_GRAY"
+	            android:text="@string/GROUP_DESCRIPTION" />
+	        <TextView
+	            android:id="@+id/groupDesc"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_gravity="top"
+		        android:maxLines="3"
+		        android:ellipsize="end"
+	            android:textSize="15sp"
+	            android:textColor="@color/GRAY"
+	            android:text="GROUP_DESC" />
+	    </LinearLayout>
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_below="@+id/descLayout"
+	        android:orientation="vertical" >
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginBottom="4dp"
+	            android:textSize="16sp"
+	            android:textStyle="bold"
+	            android:textColor="@color/DARK_GRAY"
+	            android:text="@string/JOIN_REQUEST_MESSAGE" />
+			<EditText
+			    android:id="@+id/reqMessage"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:padding="4dp"
+			    android:background="@drawable/field_rounded_bg"
+			     />
+	        
+	    </LinearLayout>
+    </RelativeLayout>
+    
+    
+    
+</RelativeLayout>

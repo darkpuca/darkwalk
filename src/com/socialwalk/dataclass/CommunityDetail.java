@@ -1,4 +1,4 @@
-package com.socialwalk;
+package com.socialwalk.dataclass;
 
 import java.util.Date;
 

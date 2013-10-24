@@ -28,58 +28,115 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/titleLayout"
         android:padding="@dimen/activity_horizontal_margin"
-        android:background="@color/WHITE" >
+        android:background="@color/MAIN_BG" >
         
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/layoutProfile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/titleLayout" >
-        
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/imgProfile"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:background="#000000" />
-        
-        <TextView
-            android:id="@+id/userId"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/imgProfile"
-            android:layout_toRightOf="@+id/imgProfile"
-            android:layout_marginLeft="8dp"
-            android:text="USER_ID" />
-        
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/userId"
-            android:layout_below="@+id/userId"
-            android:text="@string/LOGIN" />
-        
+            android:layout_height="match_parent"
+            android:background="@color/WHITE" >
+            <RelativeLayout
+                android:id="@+id/autologinLayout"
+                android:layout_width="match_parent"
+                android:layout_height="56sp"
+                android:padding="10dp"
+                android:background="@drawable/result_line_bg" >
+                <ImageView
+                    android:id="@+id/autologinIcon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/setting_autologin_icon" />
+                <CheckBox
+                    android:id="@+id/autologinCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" 
+                    android:button="@drawable/check_selector"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/autologinIcon"
+                    android:layout_toLeftOf="@+id/autologinCheck"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginRight="6dp"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/DARK_GRAY"
+                    android:text="@string/AUTO_LOGIN" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/slideLayout"
+                android:layout_width="match_parent"
+                android:layout_height="56sp"
+                android:layout_below="@+id/autologinLayout"
+                android:padding="10dp"
+                android:visibility="invisible"
+                android:background="@drawable/result_line_bg" >
+                <ImageView
+                    android:id="@+id/slideIcon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/setting_slide_icon" />
+                <CheckBox
+                    android:id="@+id/slideCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" 
+                    android:button="@drawable/check_selector"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/slideIcon"
+                    android:layout_toLeftOf="@+id/slideCheck"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginRight="6dp"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/DARK_GRAY"
+                    android:text="@string/SLIDE_OPTION" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_alignParentBottom="true"
+                android:padding="@dimen/activity_horizontal_margin" >
+                <RelativeLayout
+	                android:id="@+id/logoutLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/gray_bg_selector" >
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" >
+                        <ImageView
+                            android:id="@+id/logoutIcon"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/setting_logout_icon" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/logoutIcon"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="6dp"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/WHITE"
+                            android:text="@string/LOGOUT" />
+                    </RelativeLayout>
+                </RelativeLayout>
+                
+            </RelativeLayout>
+        </RelativeLayout>
     </RelativeLayout>
-    
-    <Button
-        android:id="@+id/btnProfile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layoutProfile"
-        android:layout_marginTop="4dp"
-        android:text="@string/EDIT_PROFILE" />
-    
-    <ScrollView
-        android:id="@+id/settingScroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="4dp"
-        android:layout_below="@+id/btnProfile">
-        
-    </ScrollView>
-
 </RelativeLayout>

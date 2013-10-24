@@ -17,12 +17,14 @@ import android.util.Log;
 
 import com.socialwalk.dataclass.AccountData;
 import com.socialwalk.dataclass.AccountHeart;
+import com.socialwalk.dataclass.AreaItem;
 import com.socialwalk.dataclass.AroundersItems;
 import com.socialwalk.dataclass.AroundersItems.AroundersItem;
 import com.socialwalk.dataclass.Beneficiaries;
 import com.socialwalk.dataclass.Beneficiary;
 import com.socialwalk.dataclass.Communities;
 import com.socialwalk.dataclass.Community;
+import com.socialwalk.dataclass.CommunityDetail;
 import com.socialwalk.dataclass.CommunityPostReplies;
 import com.socialwalk.dataclass.CommunityPostReplies.CommunityPostReply;
 import com.socialwalk.dataclass.CommunityPosts;
@@ -64,6 +66,85 @@ public class MyXmlParser
 		{
 			Log.d(TAG, e.getLocalizedMessage() + ", " + xmlFile.getPath());
 		}
+	}
+	
+	public Vector<AreaItem> GetAreaItems()
+	{
+		if (null == m_xml || 0 == m_xml.length()) return null;
+		
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(m_xml));
+			
+			Vector<AreaItem> items = null;
+			AreaItem item = null;
+			
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT)
+			{
+				String tagName = null;
+				switch (eventType)
+				{
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.END_DOCUMENT:						
+					break;
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("items"))
+						items = new Vector<AreaItem>();
+					else if (tagName.equalsIgnoreCase("item"))
+						item = new AreaItem();
+					else if (tagName.equalsIgnoreCase("first_code"))
+						item.ParentCode = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("second_code"))
+						item.Code = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("status_code"))
+						item.Status = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("first_name"))
+						item.Name = parser.nextText();
+					else if (tagName.equalsIgnoreCase("second_name"))
+						item.Name = parser.nextText();
+					else if (tagName.equalsIgnoreCase("reg_date"))
+						item.RegDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("modify_date"))
+						item.ModifyDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
+					
+					break;
+				case XmlPullParser.END_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("item"))
+					{
+						if (null != items && null != item)
+						{
+							if (0 < item.ParentCode && 0 == item.Code)
+							{
+								item.Code = item.ParentCode;
+								item.ParentCode = 0;
+							}
+							
+							items.add(item);
+							item = null;
+						}
+					}
+					else if (tagName.equalsIgnoreCase("items"))
+					{
+						return items;
+					}
+					break;
+				}					
+				eventType = parser.next();
+			}
+			return null;
+		} 
+		catch (Exception e)
+		{
+			Log.d(TAG, e.getLocalizedMessage());
+			return null;
+		}
+		
 	}
 	
 	public NeoClickItems GetNeoClickItems()
@@ -686,19 +767,23 @@ public class MyXmlParser
 						item = new Beneficiary();
 					else if (tagName.equalsIgnoreCase("benefit_seq"))
 						item.Sequence = parser.nextText();
+					else if (tagName.equalsIgnoreCase("benefit_group_seq"))
+						item.GroupSequence = parser.nextText();
+					else if (tagName.equalsIgnoreCase("benefit_type"))
+						item.Type = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("first_code"))
 						item.AreaCode = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("first_name"))
 						item.AreaName = parser.nextText();
 					else if (tagName.equalsIgnoreCase("second_code"))
-						item.OrganizationCode = Integer.parseInt(parser.nextText());
+						item.AreaSubCode = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("second_name"))
-						item.OrganizationName = parser.nextText();
-					else if (tagName.equalsIgnoreCase("name"))
+						item.AreaSubName = parser.nextText();
+					else if (tagName.equalsIgnoreCase("benefit_name"))
 						item.Name = parser.nextText();
-					else if (tagName.equalsIgnoreCase("age"))
+					else if (tagName.equalsIgnoreCase("benefit_age"))
 						item.Age = Integer.parseInt(parser.nextText());
-					else if (tagName.equalsIgnoreCase("gender"))
+					else if (tagName.equalsIgnoreCase("benefit_gender"))
 						item.Gender = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("profile_image"))
 						item.ProfileUrl = parser.nextText();
@@ -723,11 +808,13 @@ public class MyXmlParser
 					tagName = parser.getName();
 					if (tagName.equalsIgnoreCase("item"))
 						beneficiaries.Items.add(item);
+					else if (tagName.equalsIgnoreCase("benefit"))
+						return beneficiaries;
 					break;
 				}					
 				eventType = parser.next();
 			}			
-			return beneficiaries;			
+			return null;			
 		} 
 		catch (Exception e)
 		{
@@ -807,7 +894,7 @@ public class MyXmlParser
 			Log.d(TAG, e.getLocalizedMessage());
 			return null;
 		}
-	}	
+	}
 	
 	public SWResponse GetResponse()
 	{
@@ -933,7 +1020,13 @@ public class MyXmlParser
 					if (tagName.equalsIgnoreCase("users"))
 						hearts = new AccountHeart();
 					else if (tagName.equalsIgnoreCase("green_heart"))
-						hearts.setGreenPoint(Integer.parseInt(parser.nextText()));
+					{
+						String points = parser.nextText();
+						if (0 == points.length())
+							hearts.setGreenPoint(0);
+						else
+							hearts.setGreenPoint(Integer.parseInt(points));
+					}
 					else if (tagName.equalsIgnoreCase("total"))
 						hearts.setRedPointTotal(Integer.parseInt(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("walk"))

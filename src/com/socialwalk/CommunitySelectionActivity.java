@@ -93,7 +93,7 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		Toast.makeText(this, "list item selected. idx: " + position, Toast.LENGTH_SHORT).show();
 		
 		int groupId = 12345;
-		Intent i = new Intent(this, CommunityDetailActivity.class);
+		Intent i = new Intent(this, CommunityJoinActivity.class);
 		i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, groupId);
 		startActivityForResult(i, INTENT_REQ_COMMUNITY_JOIN);
 	}
@@ -112,11 +112,12 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 				
 				Toast.makeText(getBaseContext(), "id:" + commSeq + ", name:" + name + ", desc:" + desc, Toast.LENGTH_SHORT).show();
 				
-//				Intent i = new Intent();
-//				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_ID, groupId);
-//				setResult(RESULT_OK, i);
-//				
-//				finish();
+				Intent i = new Intent();
+				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, commSeq);
+				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, name);
+				setResult(RESULT_OK, i);
+				
+				finish();
 			}
 		}
 		else if (INTENT_REQ_COMMUNITY_JOIN == requestCode)
@@ -231,7 +232,7 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{
-		System.out.println(error.getLocalizedMessage());
+		error.printStackTrace();
 	}
 
 	@Override

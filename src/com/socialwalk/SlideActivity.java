@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
+import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
 import com.socialwalk.MyXmlParser.SWResponse;
@@ -48,7 +49,7 @@ implements Response.Listener<String>, Response.ErrorListener
 //	private static final int SLIDER_IN_HOME = 2;
 	private static final int SLIDER_IN_START = 3;
 	private static final int SLIDER_IN_STOP = 4;
-	private static final int SLIDER_AREA_OFFSET = 32;
+	private static final int SLIDER_AREA_OFFSET = 40;
 	
 	private static final int REQUEST_NEOCLICK = 100;
 	private static final int REQUEST_ACCUMULATE_VISIT = 101;
@@ -64,7 +65,7 @@ implements Response.Listener<String>, Response.ErrorListener
 	private int m_windowWidth, m_windowHeight;
 	private int m_sliderWidth, m_sliderHeight, m_layoutH, m_marginBottom, m_startHeight;
 	ImageView imgCenter, imgAd, imgStart, imgStop;  // imgHome
-	RelativeLayout sliderLayout;
+	RelativeLayout sliderLayout, heartsLayout;
 	
 	private ServerRequestManager m_server = null;
 	private NetworkImageView m_adImage;
@@ -85,17 +86,20 @@ implements Response.Listener<String>, Response.ErrorListener
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-				
+		
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | 
 				WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
 				WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
 		getWindow().addFlags(flags);
 		
-		DisableKeyguard();
+//		EnableKeyGuard(false);
 		
 		setContentView(R.layout.activity_slide);
 		
 		m_server = new ServerRequestManager();
+		
+		heartsLayout = (RelativeLayout)findViewById(R.id.heartsLayout);
+		heartsLayout.setVisibility(View.INVISIBLE);
 		
 		m_adImage = (NetworkImageView)findViewById(R.id.imgAd);
 		
@@ -122,7 +126,7 @@ implements Response.Listener<String>, Response.ErrorListener
 
 		MoveSliderToStartPosition();
 		
-		DisableKeyguard();
+		EnableKeyGuard(false);
 		
 		if (getIntent() != null && getIntent().hasExtra("kill") && getIntent().getExtras().getInt("kill") == 1)
 			finish();
@@ -197,9 +201,10 @@ implements Response.Listener<String>, Response.ErrorListener
 						{
 							Log.d(TAG, "slider in STOP area.");
 //							StopWalking();
-							DisableKeyguard();
+							EnableKeyGuard(true);
 							SlideActivity.this.moveTaskToBack(true);
 							finish();
+							LockReceiver.UpdateAccessTime();
 							break;
 						}
 						default:
@@ -270,7 +275,7 @@ implements Response.Listener<String>, Response.ErrorListener
 		if (posX >= (posAd[0] - SLIDER_AREA_OFFSET) && 
 				posX <= (posAd[0] + adW + SLIDER_AREA_OFFSET) && 
 				posY >= (posAd[1] - SLIDER_AREA_OFFSET) &&
-				posY <= (posAd[1] + adH + SLIDER_AREA_OFFSET))
+				posY <= (posAd[1] + adH))
 			return SLIDER_IN_AD;
 //		else if (posX >= (posHome[0] - SLIDER_AREA_OFFSET) && 
 //				posX <= (posHome[0] + homeW + SLIDER_AREA_OFFSET) && 
@@ -354,15 +359,19 @@ implements Response.Listener<String>, Response.ErrorListener
 	@Override
 	protected void onResume()
 	{
+		if (!LockService.IsActive) finish();
+		
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | 
 				WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
 				WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
 		
 		getWindow().addFlags(flags);
 
-		DisableKeyguard();
+		EnableKeyGuard(false);
 		
 		UpdateWalkingState();
+		
+		updateHeartsState();
 		
 		if (true == IsPhoneCalling)
 		{
@@ -455,7 +464,8 @@ implements Response.Listener<String>, Response.ErrorListener
 			}
 				
 			currentNeoClick.SetAccessStamp();
-			
+			LockReceiver.UpdateAccessTime();
+			EnableKeyGuard(true);
 		}		
 	}
 	
@@ -495,6 +505,7 @@ implements Response.Listener<String>, Response.ErrorListener
 			finish();
 		}
 
+		LockReceiver.UpdateAccessTime();
 	}
 	
 	private void StopWalking()
@@ -507,15 +518,15 @@ implements Response.Listener<String>, Response.ErrorListener
 		finish();
 	}
 	
-	private void DisableKeyguard()
+	private void EnableKeyGuard(boolean enable)
 	{
-//		KeyguardManager km = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
-//		KeyguardManager.KeyguardLock kl = km.newKeyguardLock("IN");
-//		kl.disableKeyguard();
-		
 		KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
 		KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
-		lock.disableKeyguard();
+		
+		if (true == enable)
+			lock.reenableKeyguard();
+		else
+			lock.disableKeyguard();
 	}
 
 	
@@ -584,6 +595,27 @@ implements Response.Listener<String>, Response.ErrorListener
             }
 		}
 	}
+	
+	private void updateHeartsState()
+	{
+		if (ServerRequestManager.IsLogin)
+		{
+			this.heartsLayout.setVisibility(View.VISIBLE);
+			
+			if (null != ServerRequestManager.LoginAccount)
+			{
+				TextView redHearts = (TextView)findViewById(R.id.redHearts);
+				TextView greenHearts = (TextView)findViewById(R.id.greenHearts);
+				redHearts.setText(Utils.GetDefaultTool().DecimalNumberString(ServerRequestManager.LoginAccount.Hearts.getRedPoint()));
+				greenHearts.setText(Utils.GetDefaultTool().DecimalNumberString(ServerRequestManager.LoginAccount.Hearts.getGreenPoint()));
+			}
+		}
+		else
+		{
+			this.heartsLayout.setVisibility(View.INVISIBLE);
+		}
+	}
+	
 
 	@Override
 	public void onErrorResponse(VolleyError error)

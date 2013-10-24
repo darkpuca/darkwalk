@@ -2,6 +2,7 @@ package com.socialwalk;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +22,7 @@ public class TextInputDialog extends DialogFragment
 	
 	private String title, hint;
 	private EditText inputText;
+	private boolean isPassword = false;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -72,6 +74,9 @@ public class TextInputDialog extends DialogFragment
 			this.inputText.setHint(this.hint);
 		}
 		
+		if (this.isPassword)
+			this.inputText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+		
 		return view;
 	}
 	
@@ -85,4 +90,8 @@ public class TextInputDialog extends DialogFragment
 		this.hint = hint;
 	}
 
+	public void setIsPassword(boolean isPassword)
+	{
+		this.isPassword = isPassword;
+	}
 }

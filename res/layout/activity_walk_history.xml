@@ -29,7 +29,7 @@
 	        android:layout_centerVertical="true"
 	        android:layout_alignParentRight="true"
 	        android:padding="6dp"
-	        android:background="@drawable/darkgray_rounded_bg" >
+	        android:background="@drawable/gray_bg_selector" >
 	        
 	        <ImageView
 	            android:id="@+id/rankIcon"

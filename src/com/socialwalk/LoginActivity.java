@@ -138,7 +138,7 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 	{
 		if (progDlg.isShowing()) progDlg.dismiss();
 		
-		Log.e(TAG, error.getLocalizedMessage());
+		error.printStackTrace();
 	}
 
 	@Override
@@ -181,7 +181,6 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 		else if (REQUEST_HEARTS == reqType)
 		{
 			reqType = 0;
-			
 			if (Globals.ERROR_NONE == result.Code)
 			{
 				AccountHeart hearts = parser.GetHearts();

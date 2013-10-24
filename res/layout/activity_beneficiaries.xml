@@ -21,76 +21,6 @@
             android:textColor="@color/WHITE"
             android:textStyle="bold"
             android:text="@string/TITLE_SPONSOR" />        
-        <ImageButton
-            android:id="@+id/btnSponsor"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:scaleType="fitCenter"
-            android:src="@drawable/sponsor_icon"
-            android:background="@drawable/darkgray_rounded_bg" />
-        
-        <LinearLayout 
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_toRightOf="@+id/titleLabel"
-            android:layout_toLeftOf="@+id/btnSponsor"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="8dp" >
-            <RelativeLayout
-                android:id="@+id/typeAllLayout"
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="match_parent"
-                android:padding="6dp"
-                android:background="@drawable/darkgray_left_bg" >
-                <ImageView
-                    android:id="@+id/typeAllIcon"
-                    android:src="@drawable/benefit_type_all"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentLeft="true" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/typeAllIcon"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="4dp"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/LIGHT_GRAY"
-                    android:text="@string/NATIONAL" />                
-            </RelativeLayout>
-            
-            <RelativeLayout
-                android:id="@+id/typeLocalLayout"
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="match_parent"
-                android:padding="6dp"
-                android:background="@drawable/white_right_bg" >
-                <ImageView
-                    android:id="@+id/typeLocalIcon"
-                    android:src="@drawable/benefit_type_local"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentLeft="true" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/typeLocalIcon"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="4dp"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/DARK_GRAY"
-                    android:text="@string/LOCAL" />                
-            </RelativeLayout>
-        </LinearLayout>
     </RelativeLayout>
     
 	<RelativeLayout
@@ -98,11 +28,106 @@
 	    android:layout_height="match_parent"
 	    android:layout_below="@+id/titleLayout"
 	    android:padding="@dimen/activity_horizontal_margin"
-	    android:background="@color/LIGHT_GRAY" >
+	    android:background="@color/MAIN_BG" >
+        
+	    <RelativeLayout
+	        android:id="@+id/currentProjectLayout"
+	        android:layout_width="match_parent"
+	        android:layout_height="100dp"
+	        android:background="@drawable/innerframe_shape" >
+	        
+	    </RelativeLayout>
+	    
+	    <RelativeLayout
+	        android:id="@+id/buttonsLayout"
+	        android:layout_width="match_parent"
+	        android:layout_height="60dp"
+	        android:layout_below="@+id/currentProjectLayout" >
+	        <ImageButton
+	            android:id="@+id/btnSponsor"
+	            android:layout_width="36dp"
+	            android:layout_height="36dp"
+	            android:layout_alignParentRight="true"
+	            android:layout_centerVertical="true"
+	            android:layout_marginRight="4dp"
+	            android:scaleType="fitCenter"
+	            android:src="@drawable/sponsor_icon"
+	            android:background="@drawable/darkgray_rounded_bg" />
+        
+        <LinearLayout 
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true" >
+            <RelativeLayout
+                android:id="@+id/localButtonLayout"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent"
+                android:padding="6dp"
+                android:background="@drawable/rank_left_selector" >
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" >
+	                <ImageView
+	                    android:id="@+id/typeLocalIcon"
+	                    android:src="@drawable/benefit_type_local_selector"
+	                    android:layout_width="20dp"
+	                    android:layout_height="20dp"
+	                    android:layout_centerVertical="true"
+	                    android:layout_alignParentLeft="true" />
+	                <TextView
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_toRightOf="@+id/typeLocalIcon"
+	                    android:layout_centerVertical="true"
+	                    android:layout_marginLeft="4dp"
+	                    android:textSize="16sp"
+	                    android:textStyle="bold"
+	                    android:textColor="@color/GRAY"
+	                    android:text="@string/LOCAL" />                
+                </RelativeLayout>
+            </RelativeLayout>
+            
+            <RelativeLayout
+                android:id="@+id/totalButtonLayout"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent"
+                android:padding="6dp"
+                android:background="@drawable/rank_right_selector" >
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" >
+	                <ImageView
+	                    android:id="@+id/typeAllIcon"
+	                    android:src="@drawable/benefit_type_all_selector"
+	                    android:layout_width="20dp"
+	                    android:layout_height="20dp"
+	                    android:layout_centerVertical="true"
+	                    android:layout_alignParentLeft="true" />
+	                <TextView
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_toRightOf="@+id/typeAllIcon"
+	                    android:layout_centerVertical="true"
+	                    android:layout_marginLeft="4dp"
+	                    android:textSize="16sp"
+	                    android:textStyle="bold"
+	                    android:textColor="@color/GRAY"
+	                    android:text="@string/NATIONAL" />                
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+	        	        
+	    </RelativeLayout>
+	    
 	    <ListView
 	        android:id="@+id/itemList"
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
+	        android:layout_below="@+id/buttonsLayout"
 	        android:background="@drawable/innerframe_shape" />
 	</RelativeLayout>    
 

@@ -8,7 +8,7 @@
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="100dp"
         android:layout_alignParentTop="true"
         android:scaleType="fitCenter"
         android:src="@drawable/login_logo" />
@@ -58,6 +58,7 @@
 				    <EditText 
 				        android:id="@+id/loginUid"
 				        android:inputType="textEmailAddress"
+				        android:imeOptions="flagNoExtractUi"
 				        android:layout_width="match_parent" 
 				        android:layout_height="wrap_content"
 				        android:layout_centerVertical="true"
@@ -109,6 +110,7 @@
 				    <EditText 
 				        android:id="@+id/loginPwd"
 				        android:inputType="textPassword"
+				        android:imeOptions="flagNoExtractUi"
 				        android:layout_width="match_parent" 
 				        android:layout_height="wrap_content"
 				        android:layout_centerVertical="true"

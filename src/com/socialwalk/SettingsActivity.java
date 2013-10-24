@@ -2,12 +2,17 @@ package com.socialwalk;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -18,8 +23,14 @@ import com.socialwalk.request.SocialWalkRequest;
 public class SettingsActivity extends Activity 
 implements OnClickListener, Response.Listener<String>, Response.ErrorListener 
 {
-	private Button m_btnLogin, m_btnEditProfile;
-	private ServerRequestManager m_server = null;
+	private ServerRequestManager server = null;
+	private int reqType;
+	private static final int REQUEST_TYPE_LOGOUT = 400;
+	
+	private ProgressDialog progDlg;
+
+	private CheckBox autoLoginCheck, slideCheck;
+	private RelativeLayout logoutLayout;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -27,103 +38,131 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 		
-		m_server = new ServerRequestManager();
+		this.server = new ServerRequestManager();
 		
-		m_btnLogin = (Button)findViewById(R.id.btnLogin);
-		m_btnLogin.setOnClickListener(this);
+		this.autoLoginCheck = (CheckBox)findViewById(R.id.autologinCheck);
+		this.autoLoginCheck.setOnClickListener(this);
 		
-		m_btnEditProfile = (Button)findViewById(R.id.btnProfile);
-		m_btnEditProfile.setOnClickListener(this);
+		this.slideCheck = (CheckBox)findViewById(R.id.slideCheck);
+		this.slideCheck.setOnClickListener(this);
 		
-		UpdateProfiles();
-	}
+		this.logoutLayout = (RelativeLayout)findViewById(R.id.logoutLayout);
+		this.logoutLayout.setOnClickListener(this);
+		
+		updateOptions();
 
-	private void UpdateProfiles()
+		// prepare progress dialog
+		progDlg = new ProgressDialog(this);
+		progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progDlg.setCancelable(false);
+		progDlg.setMessage(getResources().getString(R.string.MSG_SEND_DATA));
+	}
+	
+	private void setAutologinOption()
 	{
-		if (ServerRequestManager.IsLogin)
-			m_btnLogin.setText(R.string.LOGOUT);
-		else
-			m_btnLogin.setText(R.string.LOGIN);
+		SharedPreferences loginPrefs = this.getSharedPreferences(Globals.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = loginPrefs.edit();
+		editor.putBoolean(Globals.PREF_KEY_AUTOLOGIN, this.autoLoginCheck.isChecked());
+		editor.commit();
+	}
+	
+	private void setSlideOption()
+	{
+		LockService.IsActive = slideCheck.isChecked();
 		
-		m_btnEditProfile.setEnabled(ServerRequestManager.IsLogin);
+		SharedPreferences loginPrefs = this.getSharedPreferences(Globals.PREF_NAME_SLIDE, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = loginPrefs.edit();
+		editor.putBoolean(Globals.PREF_KEY_SLIDE, this.slideCheck.isChecked());
+		editor.commit();
+	}
+	
+	private void logout()
+	{
+		AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+		dlg.setCancelable(true);
+		dlg.setTitle(R.string.TITLE_INFORMATION);
+		dlg.setMessage(R.string.MSG_LOGOUT_CONFIRM);
+		dlg.setPositiveButton(R.string.LOGOUT, new DialogInterface.OnClickListener()
+		{			
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				if (!progDlg.isShowing()) progDlg.show();
+				
+				reqType = REQUEST_TYPE_LOGOUT;
+				server.Logout(SettingsActivity.this, SettingsActivity.this);
+			}
+		});
+		dlg.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
+		{			
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				dialog.dismiss();
+			}
+		});
+		dlg.show();
+	}
+	
+	private void updateOptions()
+	{
+		SharedPreferences loginPrefs = this.getSharedPreferences(Globals.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
+		this.autoLoginCheck.setChecked(loginPrefs.getBoolean(Globals.PREF_KEY_AUTOLOGIN, false));
+
+		SharedPreferences slidePrefs = this.getSharedPreferences(Globals.PREF_NAME_SLIDE, Context.MODE_PRIVATE);
+		this.slideCheck.setChecked(slidePrefs.getBoolean(Globals.PREF_KEY_SLIDE, true));
 	}
 
 	
 	@Override
 	public void onClick(View v)
 	{
-		if (m_btnLogin.equals(v))
-		{
-			if (ServerRequestManager.IsLogin)
-			{
-				AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-				dlg.setCancelable(true);
-				dlg.setTitle(R.string.TITLE_INFORMATION);
-				dlg.setMessage(R.string.MSG_LOGOUT_CONFIRM);
-				dlg.setPositiveButton(R.string.CONTINUE, new DialogInterface.OnClickListener()
-				{					
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						m_server.Logout(SettingsActivity.this, SettingsActivity.this);
-					}
-				});
-				dlg.setNegativeButton(R.string.CANCEL, new DialogInterface.OnClickListener()
-				{					
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						dialog.dismiss();
-					}
-				});
-				dlg.show();
-			}
-			else
-			{
-	            Intent loginIntent = new Intent(this, LoginActivity.class);
-	            startActivityForResult(loginIntent, Globals.INTENT_REQ_LOGIN);
-			}
-		}	
-		else if (m_btnEditProfile.equals(v))
-		{
-			Intent i = new Intent(this, ProfileActivity.class);
-			startActivity(i);
-		}
+		if (autoLoginCheck.equals(v))
+			setAutologinOption();
+		else if (slideCheck.equals(v))
+			setSlideOption();
+		else if (logoutLayout.equals(v))
+			logout();
 	}
 	
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		if (Globals.INTENT_REQ_LOGIN == requestCode)
-		{
-			if (RESULT_OK == resultCode)
-			{
-				UpdateProfiles();
-			}
-		}
 		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override
-	public void onErrorResponse(VolleyError error)
+	public void onErrorResponse(VolleyError e)
 	{
-
+		if (progDlg.isShowing()) progDlg.dismiss();
+		e.printStackTrace();
 	}
 
 	@Override
 	public void onResponse(String response)
 	{
+		if (progDlg.isShowing()) progDlg.dismiss();
+		
+		if (0 == response.length()) return;
 		SWResponse result = new MyXmlParser(response).GetResponse();
 		if (null == result) return;
 		
-		if (0 == result.Code)
+		if (REQUEST_TYPE_LOGOUT == this.reqType)
 		{
-			ServerRequestManager.IsLogin = false;
-			SocialWalkRequest.ClearSessionInformation();
-			
-			UpdateProfiles();
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				ServerRequestManager.IsLogin = false;
+				SocialWalkRequest.ClearSessionInformation();
+				
+				SharedPreferences loginPrefs = this.getSharedPreferences(Globals.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
+				SharedPreferences.Editor editor = loginPrefs.edit();
+				editor.putBoolean(Globals.PREF_KEY_AUTOLOGIN, false);
+				editor.commit();
+				
+				finish();
+			}
 		}
 	}
 

@@ -21,22 +21,36 @@
             android:textColor="@color/WHITE"
             android:textStyle="bold"
             android:text="@string/TITLE_PROFILE" />
+        <Button
+            android:id="@+id/applyButton"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/gray_bg_selector"
+            android:visibility="visible"
+            android:textSize="16sp"
+            android:textColor="@color/WHITE"
+            android:text="@string/APPLY" />
     </RelativeLayout>
-    <RelativeLayout
+    
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/titleLayout"
         android:padding="@dimen/TOPBAR_ICON_SIDE_MARGIN"
         android:background="@color/MAIN_BG" >
-        <RelativeLayout
+        
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             android:background="@color/WHITE" >
+            
             <RelativeLayout
 	            android:id="@+id/emailLayout"
 	            android:layout_width="match_parent"
 	            android:layout_height="48dp"
-	            android:layout_alignParentTop="true"
 	            android:padding="10dp"
 	            android:background="@drawable/result_line_bg" >
 	            <TextView
@@ -69,11 +83,11 @@
 	                android:textColor="@color/DARK_GRAY"
 	                android:textStyle="bold" />
 	        </RelativeLayout>
+	        
             <RelativeLayout
 	            android:id="@+id/nameLayout"
 	            android:layout_width="match_parent"
 	            android:layout_height="48dp"
-	            android:layout_below="@+id/emailLayout"
 	            android:padding="10dp"
 	            android:background="@drawable/result_line_bg" >
 	            <TextView
@@ -105,11 +119,11 @@
 	                android:textColor="@color/DARK_GRAY"
 	                android:textStyle="bold" />
 	        </RelativeLayout>
+	        
             <RelativeLayout
 	            android:id="@+id/passwordLayout"
 	            android:layout_width="match_parent"
 	            android:layout_height="64dp"
-	            android:layout_below="@+id/nameLayout"
 	            android:padding="10dp"
 	            android:background="@drawable/result_line_bg" >
 	            <RelativeLayout
@@ -140,11 +154,83 @@
 					</RelativeLayout>
 	            </RelativeLayout>
 	        </RelativeLayout>
+	        
+            <RelativeLayout
+	            android:id="@+id/areaLayout"
+	            android:layout_width="match_parent"
+	            android:layout_height="48dp"
+	            android:padding="10dp"
+	            android:background="@drawable/result_line_bg" >
+	            <TextView
+	                android:id="@+id/areaLabel"
+	                android:layout_width="90dp"
+	                android:layout_height="wrap_content"
+	                android:layout_alignParentLeft="true"
+	                android:layout_centerVertical="true"
+	                android:textSize="18sp"
+	                android:textColor="@color/GRAY"
+	                android:text="@string/ORGANIZAION" />
+	            <ImageView
+	                android:id="@+id/areaArrow"
+	                android:layout_width="24dp"
+	                android:layout_height="24dp"
+	                android:layout_alignParentRight="true"
+	                android:layout_centerVertical="true"
+	                android:src="@drawable/profile_arrow" />
+	            <TextView
+	                android:id="@+id/areaName"
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_toRightOf="@+id/areaLabel"
+	                android:layout_toLeftOf="@+id/areaArrow"
+	                android:layout_centerVertical="true"
+	                android:layout_marginLeft="6dp"
+	                android:ellipsize="end"
+	                android:textSize="18sp"
+	                android:textColor="@color/DARK_GRAY"
+	                android:textStyle="bold" />
+	        </RelativeLayout>
+            	        
+            <RelativeLayout
+	            android:id="@+id/subAreaLayout"
+	            android:layout_width="match_parent"
+	            android:layout_height="48dp"
+	            android:padding="10dp"
+	            android:background="@drawable/result_line_bg" >
+	            <TextView
+	                android:id="@+id/subAreaLabel"
+	                android:layout_width="90dp"
+	                android:layout_height="wrap_content"
+	                android:layout_alignParentLeft="true"
+	                android:layout_centerVertical="true"
+	                android:textSize="18sp"
+	                android:textColor="@color/GRAY"
+	                android:text="@string/MEMBER" />
+	            <ImageView
+	                android:id="@+id/subAreaArrow"
+	                android:layout_width="24dp"
+	                android:layout_height="24dp"
+	                android:layout_alignParentRight="true"
+	                android:layout_centerVertical="true"
+	                android:src="@drawable/profile_arrow" />
+	            <TextView
+	                android:id="@+id/subAreaName"
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_toRightOf="@+id/subAreaLabel"
+	                android:layout_toLeftOf="@+id/subAreaArrow"
+	                android:layout_centerVertical="true"
+	                android:layout_marginLeft="6dp"
+	                android:ellipsize="end"
+	                android:textSize="18sp"
+	                android:textColor="@color/DARK_GRAY"
+	                android:textStyle="bold" />
+	        </RelativeLayout>
+            
             <RelativeLayout
 	            android:id="@+id/sexLayout"
 	            android:layout_width="match_parent"
 	            android:layout_height="48dp"
-	            android:layout_below="@+id/passwordLayout"
 	            android:padding="10dp"
 	            android:background="@drawable/result_line_bg" >
 	            <TextView
@@ -180,7 +266,6 @@
 	            android:id="@+id/birthdayLayout"
 	            android:layout_width="match_parent"
 	            android:layout_height="48dp"
-	            android:layout_below="@+id/sexLayout"
 	            android:padding="10dp"
 	            android:background="@drawable/result_line_bg" >
 	            <TextView
@@ -216,7 +301,6 @@
 	            android:id="@+id/weightLayout"
 	            android:layout_width="match_parent"
 	            android:layout_height="48dp"
-	            android:layout_below="@+id/birthdayLayout"
 	            android:padding="10dp"
 	            android:background="@drawable/result_line_bg" >
 	            <TextView
@@ -252,7 +336,6 @@
 	            android:id="@+id/groupLayout"
 	            android:layout_width="match_parent"
 	            android:layout_height="48dp"
-	            android:layout_below="@+id/weightLayout"
 	            android:padding="10dp"
 	            android:background="@drawable/result_line_bg" >
 	            <TextView
@@ -284,11 +367,15 @@
 	                android:textColor="@color/DARK_GRAY"
 	                android:textStyle="bold" />
 	        </RelativeLayout>
+	        
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp" >                
+            </RelativeLayout>
             <RelativeLayout
 	            android:id="@+id/secessionLayout"
 	            android:layout_width="match_parent"
 	            android:layout_height="64dp"
-	            android:layout_alignParentBottom="true"
 	            android:padding="10dp"
 	            android:background="@drawable/result_line_bg" >
 	            <RelativeLayout
@@ -319,6 +406,6 @@
 					</RelativeLayout>
 	            </RelativeLayout>
 	        </RelativeLayout>
-	    </RelativeLayout>
-	</RelativeLayout>
+	    </LinearLayout>
+	</ScrollView>
 </RelativeLayout>

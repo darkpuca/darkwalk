@@ -1,12 +1,15 @@
 package com.socialwalk;
 
 import java.util.Date;
+import java.util.Vector;
 
 import android.app.KeyguardManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 
 import com.socialwalk.dataclass.AroundersItems.AroundersItem;
@@ -16,9 +19,13 @@ import com.socialwalk.dataclass.NeoClickItems;
 public class LockService extends Service
 {
 	public static boolean IsRegisted = false;
+	public static boolean IsActive = true;
 	
 	public static NeoClickItems NeoClickAds = new NeoClickItems();
 	public static Date NeoClickUpdateTime;
+	
+	public static Vector<String> AroundersVisitCodes = new Vector<String>();
+	public static Date AroundersDate = new Date();
 	
 	private BroadcastReceiver mReceiver;
 	
@@ -41,12 +48,10 @@ public class LockService extends Service
 		mReceiver = new LockReceiver();
 		registerReceiver(mReceiver, filter);
 		
+//		getSlideActive();
+		
 		// 슬라이더 등록 상태 저장
-		this.IsRegisted = true;
-//		SharedPreferences envPrefs = getSharedPreferences(Globals.PREFS_ENVIRNMENT, MODE_PRIVATE);
-//		SharedPreferences.Editor prefsEditor = envPrefs.edit();
-//		prefsEditor.putBoolean(Globals.PREF_KEY_SLIDER_REGIST, true);
-//		prefsEditor.commit();
+		IsRegisted = true;
 		
 		super.onCreate();
 	}
@@ -55,6 +60,13 @@ public class LockService extends Service
 	public void onStart(Intent intent, int startId)
 	{
 		super.onStart(intent, startId);
-	}	
+	}
+	
+	private void getSlideActive()
+	{
+		SharedPreferences slidePrefs = this.getSharedPreferences(Globals.PREF_NAME_SLIDE, Context.MODE_PRIVATE);
+		IsActive = slidePrefs.getBoolean(Globals.PREF_KEY_SLIDE, true);
+	}
+	
 }
 

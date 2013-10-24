@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.socialwalk.Globals;
+import com.socialwalk.LoginActivity;
 import com.socialwalk.MainApplication;
 import com.socialwalk.MyXmlParser;
 import com.socialwalk.MyXmlParser.SWResponse;
@@ -115,7 +116,6 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		
 		int pageSize = 10;
 		String utfKeyword = null;
-		
 		try
 		{
 			utfKeyword = URLEncoder.encode(new String(keyword.getBytes("UTF-8")));
@@ -237,10 +237,10 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		if (null == LoginAccount) return;
 		
 		int pageSize = 10;
-		String target = isGlobal ? "ALL" : "LOCAL";
-		String urlString = Globals.URL_SERVER_DOMAIN + "/api/benefit/" + target + "/page/" + pageIndex +pageIndex + "/" + pageSize;
+		String target = isGlobal ? "all" : "local";
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/benefit/" + target + "/page/" + pageIndex + "/" + pageSize;
 		
-		SocialWalkRequest req = new SocialWalkRequest(Method.POST, urlString, listener, errorListener);
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
 		reqQueue.add(req);		
 	}
 	
@@ -272,9 +272,18 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 	}
 	
 	
-	public boolean GroupJoin(String user_id, int group_id)
+	public void CommunityJoin(Response.Listener<String> listener, Response.ErrorListener errorListener, int communitySeq, String message)
 	{
-		return true;
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community_member/" + communitySeq;
+		String xmlBody = MyXmlWriter.CommunityJoin(LoginAccount.Sequence, message);
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.POST, urlString, listener, errorListener);
+		req.SetXMLBody(xmlBody);
+		reqQueue.add(req);		
 	}
 	
 	public void IsExistGroupName(Response.Listener<String> listener, Response.ErrorListener errorListener, String groupName)
@@ -282,7 +291,18 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		RequestQueue queue = RequestManager.getRequestQueue();
 		if (null == queue) return;
 		
-		String url = Globals.URL_SERVER_DOMAIN + "/api/check/community/community_name/" + groupName;
+		String utfVal = null;
+		try
+		{
+			utfVal = URLEncoder.encode(new String(groupName.getBytes("UTF-8")));
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.getLocalizedMessage());
+			return;
+		}
+
+		String url = Globals.URL_SERVER_DOMAIN + "/api/check/community/community_name/" + utfVal;
 
 		SocialWalkRequest req = new SocialWalkRequest(Method.GET, url, listener, errorListener);
 		queue.add(req);
@@ -400,7 +420,65 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
 		reqQueue.add(req);		
 	}
+	
+	public void AreaItems(Response.Listener<String> listener, Response.ErrorListener errorListener, int parentCode)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		
+		String urlString;
+		if (0 == parentCode)
+			urlString = Globals.URL_SERVER_DOMAIN + "/api/first_code/" + (LoginAccount.IsGroupUser ? 1:0);
+		else
+			urlString = Globals.URL_SERVER_DOMAIN + "/api/second_code/" + (LoginAccount.IsGroupUser ? 1:0) + "/" + parentCode;
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+	
+	public void UpdateProfile(Response.Listener<String> listener, Response.ErrorListener errorListener, AccountData profile)
+	{
+		if (null == profile) return;
+		
+		RequestQueue queue = RequestManager.getRequestQueue();
+		if (null == queue) return;
+		if (null == LoginAccount) return;
+		
+		String url = Globals.URL_SERVER_DOMAIN + "/api/users/" + LoginAccount.Sequence;
+		String xmlBody = MyXmlWriter.UpdateProfile(profile);
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.PUT, url, listener, errorListener);
+		req.SetXMLBody(xmlBody);
+		
+		queue.add(req);
+	}
+	
+	public void UserSecessionPassword(Response.Listener<String> listener, Response.ErrorListener errorListener, String password)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/check/users/" + LoginAccount.Sequence + "/user_pw/" + password; 
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
 
+	public void UserSecession(Response.Listener<String> listener, Response.ErrorListener errorListener)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/users/" + LoginAccount.Sequence; 
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.DELETE, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+
+	
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{

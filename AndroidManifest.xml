@@ -63,7 +63,7 @@
             android:theme="@style/AppTheme" >
         </activity>
         <activity
-            android:name="com.socialwalk.CommunityDetailActivity"
+            android:name="com.socialwalk.CommunityJoinActivity"
             android:label="@string/TITLE_GROUP_DETAIL"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >

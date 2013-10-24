@@ -43,12 +43,13 @@ public class Globals
 	
 
 	public static final String PREF_ENVIRNMENT = "ENV";
-	public static final String PREF_NAME_SLIDER = "SLIDER";
+	public static final String PREF_NAME_SLIDE = "SLIDE";
 	public static final String PREF_NAME_LOGIN = "LOGIN";
 	
 	public static final String PREF_KEY_AUTOLOGIN = "AUTO_LOGIN";
 	public static final String PREF_KEY_USER_ID = "USER_ID";
 	public static final String PREF_KEY_PASSWORD = "PASSWORD";
+	public static final String PREF_KEY_SLIDE = "SLIDE";
 	
 	public static final String DATETIME_FORMAT_FOR_HISTORY = "yyyyMMddHHmmss";
 	public static final String DATETIME_FORMAT_FOR_SERVER = "yyyy-MM-dd HH:mm:ss";
@@ -62,6 +63,8 @@ public class Globals
 	public static final int INTENT_REQ_POSTING = 1013;
 	public static final int INTENT_REQ_REFRESH = 1100;
 	public static final int INTENT_REQ_WEBVIEW = 1101;
+	public static final int INTENT_REQ_PROFILE = 1102;
+	public static final int INTENT_REQ_SETTING = 1103;
 
 	public static final long INTRO_WAITING = 2000;
 
@@ -70,12 +73,12 @@ public class Globals
 	public static final String AD_TYPE_MAIN = "main";
 	public static final String AD_TYPE_WALK = "walk";
 	
-	public static final int AD_POINT_SLIDE_VISIT = 30;
-	public static final int AD_POINT_SLIDE_START = 5;
-	public static final int AD_POINT_AROUNDERS = 20;
+	public static final int AD_POINT_SLIDE_VISIT = 5;
+	public static final int AD_POINT_SLIDE_START = 0;
+	public static final int AD_POINT_AROUNDERS = 10;
 	public static final int AD_POINT_INTRO = 10;
-	public static final int AD_POINT_START = 10;
-	public static final int AD_POINT_WALK = 20;
+//	public static final int AD_POINT_START = 10;
+	public static final int AD_POINT_WALK = 10;
 	
 	public static final int DEFAULT_WEIGHT = 70;
 

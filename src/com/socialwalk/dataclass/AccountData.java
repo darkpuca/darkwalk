@@ -9,7 +9,7 @@ public class AccountData
 	public String OrganizationKey, RecommendedUserId, CommunityName, AreaName, AreaSubName;
 	public int Gender, Weight, CommunitySeq;
 	public Date Birthday, RegDate, ModifyDate;
-	public boolean Verified;
+	public boolean Verified, IsGroupUser;
 	public AccountHeart Hearts;
 	
 	public AccountData()
