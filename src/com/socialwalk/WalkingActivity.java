@@ -1,17 +1,19 @@
 package com.socialwalk;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.NetworkImageView;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapLocationManager;
@@ -36,14 +39,18 @@ import com.nhn.android.mapviewer.overlay.NMapMyLocationOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPathDataOverlay;
 import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.dataclass.AroundersItems;
+import com.socialwalk.dataclass.AroundersItems.AroundersItem;
 import com.socialwalk.dataclass.WalkHistory;
 import com.socialwalk.dataclass.WalkHistory.WalkLogItem;
 import com.socialwalk.dataclass.WalkHistoryManager;
+import com.socialwalk.request.ImageCacheManager;
 import com.socialwalk.request.ServerRequestManager;
 
 public class WalkingActivity extends NMapActivity 
 implements OnMapStateChangeListener, OnMapViewTouchEventListener
-, OnPageChangeListener, View.OnClickListener
+, OnPageChangeListener, View.OnClickListener,
+Response.Listener<String>, Response.ErrorListener
 {
 	static final String NAVER_MAP_KEY = "91325246f9eb73ab763580a53e90a23b";
 	private NMapView walkMap;
@@ -56,13 +63,19 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 
 	private ServerRequestManager server = null;
 	private int reqType;
+	private static final int REQUEST_AROUNDERS = 100;
 	private static final int REQUEST_AD_ACCUMULATE = 101;
 	
+	private AroundersItems aroundersAds = new AroundersItems();
+	private AroundersItem currentArounders = null;
+	private Date aroundersUpdateTime = null;
+
 	private ImageView walkAni;
 	private Timer updateTimer;
 	private Handler updateHandler;
 	private TimerTask updateTask;
 	private boolean IsMapMode = false;
+	private RelativeLayout animodeLayout, mapmodeLayout, stopLayout, aroundersLayout;
 	
 
 	@Override
@@ -73,11 +86,15 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 		
 		this.server = new ServerRequestManager();
 		
-		RelativeLayout layoutStop = (RelativeLayout)findViewById(R.id.layoutStop);
-		layoutStop.setOnClickListener(this);
+        this.aroundersLayout = (RelativeLayout)findViewById(R.id.layoutArounders);
+//        this.aroundersLayout.setVisibility(View.INVISIBLE);
+        this.aroundersLayout.setOnClickListener(this);
+
+		
+		this.stopLayout = (RelativeLayout)findViewById(R.id.layoutStop);
+		this.stopLayout.setOnClickListener(this);
 		
 		walkAni = (ImageView)findViewById(R.id.walkAniImage);
-		
 		walkAni.setBackgroundResource(R.drawable.charactor_walk_animation);
 		walkAni.post(new Runnable()
 		{
@@ -106,17 +123,14 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 		mapLocationManager.setOnLocationChangeListener(onMyLocationChangeListener);
 		mapMyLocationOverlay = mapOverlayManager.createMyLocationOverlay(mapLocationManager, null);
 
-		if (IsMapMode)
-		{
-			walkAni.setVisibility(View.INVISIBLE);
-			walkMap.setVisibility(View.VISIBLE);
+		this.animodeLayout = (RelativeLayout)findViewById(R.id.animodeLayout);
+		this.mapmodeLayout = (RelativeLayout)findViewById(R.id.mapmodeLayout);
+		
+		updateModeLayout();
+		
+		if (true == this.IsMapMode)
 			mapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 13);
-		}
-		else
-		{
-			walkMap.setVisibility(View.INVISIBLE);
-			walkAni.setVisibility(View.VISIBLE);
-		}
+
 		
 		ImageButton btnMyLocation = (ImageButton)findViewById(R.id.btnMyLocation);
 		btnMyLocation.setVisibility(walkMap.getVisibility());
@@ -134,12 +148,8 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 					boolean isMyLocationEnabled = mapLocationManager.enableMyLocation(true);
 					if (!isMyLocationEnabled)
 					{
-//						Toast.makeText(WalkingActivity.this, "Please enable a My Location source in system settings", Toast.LENGTH_LONG).show();
-
 						Intent goToSettings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 						startActivity(goToSettings);
-
-						return;
 					}
 				}
 			}
@@ -151,21 +161,11 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 		{			
 			@Override
 			public void onClick(View v)
-			{
+			{	
 				IsMapMode = !IsMapMode;
-				if (IsMapMode)
-				{
-					walkAni.setVisibility(View.INVISIBLE);
-					walkMap.setVisibility(View.VISIBLE);
-				}
-				else
-				{
-					walkMap.setVisibility(View.INVISIBLE);
-					walkAni.setVisibility(View.VISIBLE);
-				}				
+				updateModeLayout();
 			}
 		});
-		
 		
 		updateHandler = new Handler();
 		updateTask = new TimerTask()
@@ -180,38 +180,86 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 					{
 						WalkHistory currentWalk = WalkHistoryManager.LastWalking();
 						if(null != currentWalk)
-						{							
-							TextView walkDistance = (TextView)findViewById(R.id.walkDistance);
-							walkDistance.setText(currentWalk.TotalDistanceString());
-
-							TextView walkSpeed = (TextView)findViewById(R.id.walkSpeed);
-							WalkLogItem lastItem = currentWalk.GetLastValidItem();
-							String speed;
-							if (null != lastItem)
-								speed = String.format(getResources().getString(R.string.FORMAT_SPEED), lastItem.CurrentSpeed);
-							else
-								speed = String.format(getResources().getString(R.string.FORMAT_SPEED), 0.0f);
-
-							walkSpeed.setText(speed);
-
-							TextView walkTime = (TextView)findViewById(R.id.walkTime);
-							walkTime.setText(currentWalk.TotalWalkingTimeStringFromNow());
-							
-							TextView walkHearts = (TextView)findViewById(R.id.walkHearts);
-							walkHearts.setText(currentWalk.RedHeartStringByWalk() + getResources().getString(R.string.HEART));
-							
-							TextView touchHearts = (TextView)findViewById(R.id.touchHearts);
-							touchHearts.setText(currentWalk.RedHeartStringByTouch() + getResources().getString(R.string.HEART));
-						}
+							updateWalkInfos(currentWalk);
 					}
 				});
 			}
 		};
+		
 		updateTimer = new Timer();
 		updateTimer.scheduleAtFixedRate(updateTask, 1000, 1000);
 
-		UpdateUserInformation();
+//		UpdateUserInformation();
 	}
+
+	private void updateModeLayout()
+	{
+		if (IsMapMode)
+		{
+			this.animodeLayout.setVisibility(View.INVISIBLE);
+			this.mapmodeLayout.setVisibility(View.VISIBLE);
+		}
+		else
+		{
+			this.animodeLayout.setVisibility(View.VISIBLE);
+			this.mapmodeLayout.setVisibility(View.INVISIBLE);
+		}
+	}
+	
+	private void updateWalkInfos(WalkHistory currentWalk)
+	{
+		TextView walkDistance = (TextView)findViewById(R.id.walkDistance);
+		TextView walkSpeed = (TextView)findViewById(R.id.walkSpeed);
+		TextView altitude = (TextView)findViewById(R.id.altitude);
+
+		walkDistance.setText(currentWalk.TotalDistanceString());
+
+		WalkLogItem lastItem = currentWalk.GetLastValidItem();
+		if (null != lastItem)
+		{
+			walkSpeed.setText(String.format(getResources().getString(R.string.FORMAT_SPEED), lastItem.CurrentSpeed));
+			altitude.setText(String.format(getResources().getString(R.string.FORMAT_ALTITUDE), lastItem.LogLocation.getAltitude()));
+			
+			if (null == this.aroundersUpdateTime)
+			{
+				requestArounders(lastItem.LogLocation);
+			}
+			else
+			{
+				// 어라운더스 정보가 10분 이내의 정보이면 갱신하지 않는다
+				Date now = new Date();
+				long diffInMs = now.getTime() - aroundersUpdateTime.getTime();
+				long diffInMinutes= TimeUnit.MILLISECONDS.toMinutes(diffInMs);
+				if (10 > diffInMinutes) return;
+				
+				requestArounders(lastItem.LogLocation);
+			}
+		}
+		else
+		{
+			walkSpeed.setText(String.format(getResources().getString(R.string.FORMAT_SPEED), 0.0f));
+			altitude.setText(String.format(getResources().getString(R.string.FORMAT_ALTITUDE), 0.0f));
+		}
+
+		TextView walkTime = (TextView)findViewById(R.id.walkTime);
+		walkTime.setText(currentWalk.TotalWalkingTimeStringFromNow());
+		
+		TextView walkHearts = (TextView)findViewById(R.id.walkHearts);
+		TextView touchHearts = (TextView)findViewById(R.id.touchHearts);
+		TextView calories = (TextView)findViewById(R.id.calories);
+		
+		walkHearts.setText(currentWalk.RedHeartStringByWalk() + getResources().getString(R.string.HEART));
+		touchHearts.setText(currentWalk.RedHeartStringByTouch() + getResources().getString(R.string.HEART));
+		calories.setText(currentWalk.WalkingCaloriesStringFromNow());
+	}
+	
+	private void requestArounders(Location loc)
+	{
+		this.reqType = REQUEST_AROUNDERS;
+        this.server.AroundersItems(this, this, loc.getLatitude(), loc.getLongitude());
+	}
+	
+	
 
 	@Override
 	protected void onDestroy()
@@ -232,15 +280,7 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 //		super.onBackPressed();
 	}
 
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.walk, menu);
-		return true;
-	}
-
-	private void UpdateUserInformation()
+	private void updateUserInformation()
 	{
 		if (false == ServerRequestManager.IsLogin) return;
 		if (null == ServerRequestManager.LoginAccount) return;
@@ -258,13 +298,6 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 				groupName.setText(ServerRequestManager.LoginAccount.CommunityName);
 			String areaNameVal = ServerRequestManager.LoginAccount.AreaName + " " + ServerRequestManager.LoginAccount.AreaSubName;
 			areaName.setText(areaNameVal);			
-
-			if (null != ServerRequestManager.LoginAccount.Hearts)
-			{
-				TextView totalHearts = (TextView)findViewById(R.id.totalHearts);
-				String strTotalHearts = ServerRequestManager.LoginAccount.Hearts.getRedPointTotal() + getResources().getString(R.string.HEART);
-				totalHearts.setText(strTotalHearts);
-			}
 		}
 		catch (Exception e)
 		{
@@ -359,7 +392,7 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 	@Override
 	public void onClick(View v)
 	{
-		if (R.id.layoutStop == v.getId())
+		if (this.stopLayout.equals(v))
 		{
 			AlertDialog.Builder dlg = new AlertDialog.Builder(this);
 			dlg.setCancelable(true);
@@ -396,7 +429,26 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 				}
 			});
 			dlg.show();
-		}		
+		}
+		else if (this.aroundersLayout.equals(v))
+		{
+			if (null == currentArounders) return;
+			
+			if (Utils.GetDefaultTool().IsBillingArounders(currentArounders.getSequence()))
+			{
+				reqType = REQUEST_AD_ACCUMULATE;
+				this.server.AccumulateHeart(this, this, Globals.AD_TYPE_WALK, currentArounders.getSequence(), Globals.AD_POINT_WALK);
+			}
+			else
+			{
+				// TODO: 적립되는 광고가 아닐 경우에는 어떻게 표시하
+			}
+
+			this.currentArounders.SetAccessStamp();
+			Intent i = new Intent(getBaseContext(), WebPageActivity.class);
+			i.putExtra(Globals.EXTRA_KEY_URL, currentArounders.getTargetURL());
+			startActivity(i);
+		}
 	}
 	
 	
@@ -442,4 +494,72 @@ implements OnMapStateChangeListener, OnMapViewTouchEventListener
 		}
 
 	};
+
+
+	private void updateArounders()
+	{
+		RelativeLayout layoutArounders = (RelativeLayout)findViewById(R.id.layoutArounders);
+		layoutArounders.setVisibility(View.VISIBLE);
+		
+		NetworkImageView adIcon = (NetworkImageView)findViewById(R.id.advIcon);
+		TextView adCompany = (TextView)findViewById(R.id.adCompany);
+		TextView adPromotion = (TextView)findViewById(R.id.adPromo);
+		TextView adDistance = (TextView)findViewById(R.id.adDistance);
+		
+		adIcon.setImageUrl(currentArounders.IconURL, ImageCacheManager.getInstance().getImageLoader());
+		adCompany.setText(currentArounders.Company);
+		adPromotion.setText(currentArounders.Promotion);
+		adDistance.setText(Integer.toString(currentArounders.Distance) + "m");
+	}
+
+	
+
+	@Override
+	public void onErrorResponse(VolleyError error)
+	{
+		error.printStackTrace();
+	}
+
+	@Override
+	public void onResponse(String response)
+	{
+		if (0 == response.length()) return;
+		MyXmlParser parser = new MyXmlParser(response);
+		SWResponse result = parser.GetResponse();
+		if (null == result) return;
+		
+		if (REQUEST_AROUNDERS == this.reqType)
+		{
+			System.out.println(response);
+			
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				AroundersItems items = parser.GetArounders();
+				if (null == items) return;
+				if (0 == items.Items.size()) return;
+				
+				this.aroundersUpdateTime = new Date();
+				this.aroundersAds.Items.clear();
+				this.aroundersAds.Items.addAll(items.Items);
+				
+				this.currentArounders = this.aroundersAds.GetItem();
+				
+				updateArounders();
+			}
+		}
+		else if (REQUEST_AD_ACCUMULATE == this.reqType)
+		{
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				LockService.AroundersVisitCodes.add(this.currentArounders.getSequence());
+				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(Globals.AD_POINT_AROUNDERS);
+				updateUserInformation();
+			}
+			else
+			{
+				// TODO: 적립 실패할 경우 어떻게 처리하지?
+				System.out.println("하트 적립 실패");
+			}
+		}
+	}
 }

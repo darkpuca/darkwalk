@@ -1,20 +1,29 @@
 package com.socialwalk;
 
-import android.os.Bundle;
-import android.R.anim;
+import java.util.Vector;
+
 import android.app.Activity;
-import android.view.Menu;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.socialwalk.dataclass.Beneficiary;
+import com.socialwalk.dataclass.RankingItem;
 
 public class RankingActivity extends Activity implements OnClickListener
 {
 	private boolean IsTotalRanking = false;
 	private RelativeLayout memberButtonLayout, globalButtonLayout;
+	
+	private RankingItemAdapter adapter;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -48,6 +57,77 @@ public class RankingActivity extends Activity implements OnClickListener
 		IsTotalRanking = globalButtonLayout.equals(v);
 		UpdateTypeButtons();
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	private class RankingItemContainer
+	{
+		public TextView Name, GroupName, Hearts;
+	}
+
+	private class RankingItemAdapter extends ArrayAdapter<RankingItem>
+	{
+		private Vector<RankingItem> m_items;
+		private Activity m_context;
+		
+		public RankingItemAdapter(Activity context, Vector<RankingItem> items)
+		{
+			super(context, R.layout.listitem_ranking, items);
+
+			this.m_context = context;
+			this.m_items = items;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent)
+		{
+			RankingItemContainer container;
+			View rowView = convertView;
+			
+			if (null == rowView)
+			{
+				try {
+					LayoutInflater inflater = m_context.getLayoutInflater();
+					rowView = inflater.inflate(R.layout.listitem_beneficiary, null, true);					
+				} catch (Exception e) {
+					Log.d("SW", e.getLocalizedMessage());
+					return null;
+				}
+
+				container = new RankingItemContainer();
+				container.Name = (TextView)rowView.findViewById(R.id.name);
+				container.GroupName = (TextView)rowView.findViewById(R.id.groupName);
+				container.Hearts = (TextView)rowView.findViewById(R.id.hearts);
+				
+				rowView.setTag(container);
+			}
+			else
+			{
+				container = (RankingItemContainer)rowView.getTag();
+			}
+			
+			RankingItem item = m_items.get(position);
+			
+			container.Name.setText(item.Name);
+			container.GroupName.setText(item.GroupName);
+			
+			container.Hearts.setText(Utils.GetDefaultTool().DecimalNumberString(item.Hearts));
+			
+			return rowView;
+		}		
+	}	
+	
+	
+	
 
 
 }

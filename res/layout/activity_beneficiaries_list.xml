@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BeneficiariesListActivity" >
+
+    <RelativeLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="8dp"
+        android:background="@color/MAIN_BG" >
+        <TextView
+            android:id="@+id/titleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="24sp"
+            android:textColor="@color/WHITE"
+            android:textStyle="bold"
+            android:text="@string/TITLE_SPONSOR" />       
+    </RelativeLayout>
+    
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_below="@+id/titleLayout"
+	    android:padding="@dimen/activity_horizontal_margin"
+	    android:background="@color/MAIN_BG" >
+	    <ListView
+	        android:id="@+id/itemList"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:background="@drawable/innerframe_shape" />
+	</RelativeLayout>    
+
+</RelativeLayout>

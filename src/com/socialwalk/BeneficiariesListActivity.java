@@ -11,81 +11,68 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.socialwalk.MyXmlParser.BenefitSummary;
 import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.dataclass.Beneficiaries;
 import com.socialwalk.dataclass.Beneficiary;
-import com.socialwalk.dataclass.CommunityPosts.CommunityPostItem;
 import com.socialwalk.request.ServerRequestManager;
 
-public class BeneficiariesActivity extends Activity
-implements Response.Listener<String>, Response.ErrorListener, OnClickListener
+public class BeneficiariesListActivity extends Activity
+implements Response.Listener<String>, Response.ErrorListener
 {
-	private RelativeLayout localButtonLayout, totalButtonLayout;
-	private ListView benefitList;
-	private boolean isGlobal = false;
-	
 	private ServerRequestManager server;
-	private int reqType;
-	private static final int REQUEST_BENEFIT_SUMMARY = 99;
-	private static final int REQUEST_BENEFICIARIES = 100;
-	private static final int REQUEST_CURRENT_BENEFICIARIES = 101;
+	private int reqType, pageIndex, totalCount;
+	private static int REQUEST_BENEFICIARIES;
+	private boolean isGlobal = false, isHistory = false;
 	
+	private ListView benefitList;
 	private BeneficiariesAdapter adapter;
-	
 	private ProgressDialog progDlg;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_beneficiaries);
+		setContentView(R.layout.activity_beneficiaries_list);
 		
 		this.server = new ServerRequestManager();
+		
+		this.isGlobal = getIntent().getBooleanExtra(Globals.EXTRA_KEY_IS_GLOBAL_PROJECT, false);
+		this.isHistory = getIntent().getBooleanExtra(Globals.EXTRA_KEY_IS_HISTORY_PROJECT, false);
 		
 		this.adapter = new BeneficiariesAdapter(this, new Vector<Beneficiary>());
 		this.benefitList = (ListView)findViewById(R.id.itemList);
 		this.benefitList.setAdapter(adapter);
-		
-		localButtonLayout = (RelativeLayout)findViewById(R.id.localButtonLayout);
-		totalButtonLayout = (RelativeLayout)findViewById(R.id.totalButtonLayout);
-		localButtonLayout.setSelected(true);
-		
-		localButtonLayout.setOnClickListener(this);
-		totalButtonLayout.setOnClickListener(this);
-		
-		Button globalButton = (Button)findViewById(R.id.globalButton);
-		globalButton.setOnClickListener(new OnClickListener()
-		{			
-			@Override
-			public void onClick(View v)
-			{
-				Intent i = new Intent(getBaseContext(), BeneficiariesListActivity.class);
-				i.putExtra(Globals.EXTRA_KEY_IS_GLOBAL_PROJECT, true);
-				startActivity(i);
-			}
-		});
-		
+
 		// prepare progress dialog
 		progDlg = new ProgressDialog(this);
 		progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progDlg.setCancelable(false);
 		progDlg.setMessage(getResources().getString(R.string.MSG_LOADING));
 
-		updateBeneficiaries();
+		if (true == isGlobal)
+		{
+			TextView titleLabel = (TextView)findViewById(R.id.titleLabel);
+			titleLabel.setText(R.string.TITLE_GLOBAL_BENEFICIARIES);
+			
+			progDlg.show();
+			this.pageIndex = 0;
+			this.server.Beneficiaries(this, this, this.isGlobal, pageIndex);
+		}
+		else if (true == isHistory)
+		{
+			TextView titleLabel = (TextView)findViewById(R.id.titleLabel);
+			titleLabel.setText(R.string.TITLE_HISTORY_BENEFICIARIES);
+		}
 		
 		this.benefitList.setOnItemClickListener(new OnItemClickListener()
 		{
@@ -100,41 +87,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 				startActivity(i);
 			}
 		});
-	}
 
-	@Override
-	public void onClick(View v)
-	{
-		boolean isGlobal = totalButtonLayout.equals(v);
-		if (this.isGlobal == isGlobal) return;
-		
-		this.isGlobal = isGlobal;
-		updateButtonState();
-		refreshBeneficiaries();
 	}
-
-	private void updateButtonState()
-	{
-		localButtonLayout.setSelected(!isGlobal);
-		totalButtonLayout.setSelected(isGlobal);
-	}
-	
-	private void updateBeneficiaries()
-	{
-		if (!progDlg.isShowing()) progDlg.show();
-		
-		this.reqType = REQUEST_BENEFIT_SUMMARY;
-		this.server.BenefitSummary(this, this);
-	}
-	
-	private void refreshBeneficiaries()
-	{
-		if (!progDlg.isShowing()) progDlg.show();
-
-		this.reqType = REQUEST_CURRENT_BENEFICIARIES;
-		this.server.CurrentBeneficiaries(this, this);
-	}
-	
 
 	@Override
 	public void onErrorResponse(VolleyError error)
@@ -154,52 +108,37 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		SWResponse result = parser.GetResponse();
 		if (null == result) return;
 		
-		if (REQUEST_BENEFIT_SUMMARY == this.reqType)
+		if (REQUEST_BENEFICIARIES == this.reqType)
 		{
 			if (Globals.ERROR_NONE == result.Code)
 			{
-				BenefitSummary summary = parser.GetBenefitSummry();
-				if (null == summary) return;
-				
-				updateCurrentItem(summary);
-			}
-			refreshBeneficiaries();
-		}		
-		else if (REQUEST_CURRENT_BENEFICIARIES == this.reqType)
-		{
-			if (Globals.ERROR_NONE == result.Code)
-			{
-				Beneficiaries items = parser.GetBeneficiaries();
-				if (null == items) return;
-				
-				for (Beneficiary item : items.Items)
-					this.adapter.add(item);
+				if (Globals.ERROR_NONE == result.Code)
+				{
+					Beneficiaries items = parser.GetBeneficiaries();
+					if (null == items) return;
+					
+					if (0 == pageIndex)
+						this.adapter.clear();
+					
+					this.totalCount = items.TotalCount;
+					
+					for (Beneficiary item : items.Items)
+						this.adapter.add(item);
+				}
 			}
 			else if (Globals.ERROR_NO_RESULT == result.Code)
 			{
-				this.adapter.clear();
 				Toast.makeText(this, "후원프로젝트 없음", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
-	
-	private void updateCurrentItem(BenefitSummary summary)
-	{
-		if (null == summary) return;
-		
-		TextView tvTargetMoney = (TextView)findViewById(R.id.targetMoney);
-		TextView tvCurrentMoney = (TextView)findViewById(R.id.currentMoney);
-		
-		tvTargetMoney.setText(Double.toString(summary.TargetMoney));
-		tvCurrentMoney.setText(Double.toString(summary.CurrentMoney));
-	}
 
-	
 	
 	private class BeneficiaryContainer
 	{
 		public TextView Name, AreaName, BenefitDate, BenefitMoney;
 	}
+
 
 	private class BeneficiariesAdapter extends ArrayAdapter<Beneficiary>
 	{
@@ -255,8 +194,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			return rowView;
 		}		
 	}	
-	
-	
 	
 	
 	

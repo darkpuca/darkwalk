@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:padding="4dp" 
+    android:minHeight="60dp" >
+    
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:textSize="18sp"
+        android:textColor="@color/DARK_GRAY"
+        android:textStyle="bold"
+        android:text="NAME" />
+    <TextView
+        android:id="@+id/hearts"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+		android:gravity="right"
+        android:textSize="16sp"
+        android:textColor="@color/DARK_GRAY"
+        android:textStyle="bold"
+        android:text="HEARTS" />
+    <TextView
+        android:id="@+id/groupName"
+        android:layout_width="80sp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/name"
+        android:layout_toLeftOf="@+id/hearts"
+        android:layout_marginRight="8dp"
+        android:layout_centerVertical="true"
+        android:gravity="right"
+        android:textSize="16sp"
+        android:textColor="@color/GRAY"
+        android:text="GROUP_NAME" />
+    
+    <TextView
+        android:id="@+id/logDate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/distance"
+        android:layout_centerVertical="true"
+        android:textSize="18sp"
+        android:textColor="@color/GRAY" />
+
+</RelativeLayout>

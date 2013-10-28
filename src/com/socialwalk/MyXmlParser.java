@@ -732,6 +732,89 @@ public class MyXmlParser
 		}
 	}
 
+	public Beneficiary GetBeneficiary()
+	{
+		if (null == m_xml || 0 == m_xml.length()) return null;
+		
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(m_xml));
+			
+			Beneficiary item = null;
+			
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT)
+			{
+				String tagName = null;
+				
+				switch (eventType)
+				{
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.END_DOCUMENT:						
+					break;
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("benefit"))
+						item = new Beneficiary();
+					else if (tagName.equalsIgnoreCase("benefit_seq"))
+						item.Sequence = parser.nextText();
+					else if (tagName.equalsIgnoreCase("benefit_group_seq"))
+						item.GroupSequence = parser.nextText();
+					else if (tagName.equalsIgnoreCase("benefit_type"))
+						item.Type = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("first_code"))
+						item.AreaCode = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("first_name"))
+						item.AreaName = parser.nextText();
+					else if (tagName.equalsIgnoreCase("second_code"))
+						item.AreaSubCode = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("second_name"))
+						item.AreaSubName = parser.nextText();
+					else if (tagName.equalsIgnoreCase("benefit_name"))
+						item.Name = parser.nextText();
+					else if (tagName.equalsIgnoreCase("benefit_age"))
+						item.Age = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("benefit_gender"))
+						item.Gender = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("profile_image"))
+						item.ProfileUrl = parser.nextText();
+					else if (tagName.equalsIgnoreCase("benefit_desc"))
+						item.DescriptionUrl = parser.nextText();
+					else if (tagName.equalsIgnoreCase("target_price"))
+						item.TargetMoney = Double.parseDouble(parser.nextText());
+					else if (tagName.equalsIgnoreCase("current_price"))
+						item.CurrentMoney = Double.parseDouble(parser.nextText());
+					else if (tagName.equalsIgnoreCase("participant"))
+						item.Participants = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("start_date"))
+						item.StartDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("end_date"))
+						item.EndDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("benefit_date"))
+						item.EndDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("delivery_desc"))
+						item.ReviewsUrl = parser.nextText();
+					break;
+				case XmlPullParser.END_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("benefit"))
+						return item;
+					break;
+				}					
+				eventType = parser.next();
+			}			
+			return null;			
+		} 
+		catch (Exception e)
+		{
+			Log.d(TAG, e.getLocalizedMessage());
+			return null;
+		}
+	}
+
 	
 	public Beneficiaries GetBeneficiaries()
 	{
@@ -895,6 +978,68 @@ public class MyXmlParser
 			return null;
 		}
 	}
+	
+	public BenefitSummary GetBenefitSummry()
+	{
+		if (null == m_xml || 0 == m_xml.length()) return null;
+		
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(m_xml));
+			
+			BenefitSummary summary = null;
+			
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT)
+			{
+				String tagName = null;
+				switch (eventType)
+				{
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.END_DOCUMENT:						
+					break;
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("benefit_group"))
+						summary = new BenefitSummary();
+					else if (tagName.equalsIgnoreCase("benefit_group_seq"))
+						summary.Sequence = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("benefit_type"))
+						summary.Type = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("first_code"))
+						summary.AreaCode = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("second_code"))
+						summary.AreaSubCode = Integer.parseInt(parser.nextText());
+					else if (tagName.equalsIgnoreCase("start_date"))
+						summary.StartDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("end_date"))
+						summary.EndDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
+					else if (tagName.equalsIgnoreCase("benefit_price"))
+						summary.TargetMoney = Double.parseDouble(parser.nextText());
+					else if (tagName.equalsIgnoreCase("accumuler_price"))
+						summary.CurrentMoney = Double.parseDouble(parser.nextText());
+					break;
+				case XmlPullParser.END_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("benefit_group"))
+						return summary;
+
+					break;
+				}					
+				eventType = parser.next();
+			}
+			return null;
+		} 
+		catch (Exception e)
+		{
+			Log.d(TAG, e.getLocalizedMessage());
+			return null;
+		}
+	}
+
 	
 	public SWResponse GetResponse()
 	{
@@ -1060,6 +1205,13 @@ public class MyXmlParser
 		{
 			this.Code = -1;
 		}
+	}
+	
+	public class BenefitSummary
+	{
+		public int Sequence, Type, AreaCode, AreaSubCode;
+		public double TargetMoney, CurrentMoney;
+		public Date StartDate, EndDate;
 	}
 	
 }

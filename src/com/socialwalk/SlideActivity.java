@@ -65,10 +65,11 @@ implements Response.Listener<String>, Response.ErrorListener
 	private int m_windowWidth, m_windowHeight;
 	private int m_sliderWidth, m_sliderHeight, m_layoutH, m_marginBottom, m_startHeight;
 	ImageView imgCenter, imgAd, imgStart, imgStop;  // imgHome
-	RelativeLayout sliderLayout, heartsLayout;
+	RelativeLayout sliderLayout;
 	
 	private ServerRequestManager m_server = null;
 	private NetworkImageView m_adImage;
+	private TextView heartPoint;
 	
 	private int loginReqType;
 	private static final int LOGIN_REQ_START = 300;
@@ -98,9 +99,6 @@ implements Response.Listener<String>, Response.ErrorListener
 		
 		m_server = new ServerRequestManager();
 		
-		heartsLayout = (RelativeLayout)findViewById(R.id.heartsLayout);
-		heartsLayout.setVisibility(View.INVISIBLE);
-		
 		m_adImage = (NetworkImageView)findViewById(R.id.imgAd);
 		
 		sliderLayout = (RelativeLayout)findViewById(R.id.sliderLayout);
@@ -109,6 +107,10 @@ implements Response.Listener<String>, Response.ErrorListener
 //		imgHome = (ImageView)findViewById(R.id.imgSlideHome);
 		imgStart = (ImageView)findViewById(R.id.imgSlideStart);
 		imgStop = (ImageView)findViewById(R.id.imgSlideStop);
+		
+		this.heartPoint = (TextView)findViewById(R.id.heartPoint);
+		this.heartPoint.setText(Integer.toString(Globals.AD_POINT_SLIDE_VISIT));
+		this.heartPoint.setVisibility(View.INVISIBLE);
 		
 		m_layoutH = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, this.getResources().getDisplayMetrics());
 		m_marginBottom = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, this.getResources().getDisplayMetrics());
@@ -121,9 +123,6 @@ implements Response.Listener<String>, Response.ErrorListener
 		m_windowWidth = getWindowManager().getDefaultDisplay().getWidth();
 		m_windowHeight = getWindowManager().getDefaultDisplay().getHeight();
 		
-
-		Log.d(TAG, "window w:" + m_windowWidth +", h:" + m_windowHeight);
-
 		MoveSliderToStartPosition();
 		
 		EnableKeyGuard(false);
@@ -371,8 +370,6 @@ implements Response.Listener<String>, Response.ErrorListener
 		
 		UpdateWalkingState();
 		
-		updateHeartsState();
-		
 		if (true == IsPhoneCalling)
 		{
 			finish();
@@ -538,7 +535,7 @@ implements Response.Listener<String>, Response.ErrorListener
 			Date now = new Date();
 			long diffInMs = now.getTime() - LockService.NeoClickUpdateTime.getTime();
 			long diffInSeconds = TimeUnit.MILLISECONDS.toSeconds(diffInMs);
-			if (1 > diffInSeconds) return;
+			if (5 > diffInSeconds) return;
 		}
 		
 		if (0 == LockService.NeoClickAds.Items.size())
@@ -559,6 +556,13 @@ implements Response.Listener<String>, Response.ErrorListener
 	{
 		if (null == currentNeoClick) return;
 		
+		
+		if (currentNeoClick.IsBillingAvailable())
+			this.heartPoint.setVisibility(View.VISIBLE);
+		else
+			this.heartPoint.setVisibility(View.INVISIBLE);
+			
+
 		m_adImage.setImageUrl(null, null);
 		m_adImage.setImageUrl(currentNeoClick.ThumbnailUrl, ImageCacheManager.getInstance().getImageLoader());
 	}
@@ -595,27 +599,6 @@ implements Response.Listener<String>, Response.ErrorListener
             }
 		}
 	}
-	
-	private void updateHeartsState()
-	{
-		if (ServerRequestManager.IsLogin)
-		{
-			this.heartsLayout.setVisibility(View.VISIBLE);
-			
-			if (null != ServerRequestManager.LoginAccount)
-			{
-				TextView redHearts = (TextView)findViewById(R.id.redHearts);
-				TextView greenHearts = (TextView)findViewById(R.id.greenHearts);
-				redHearts.setText(Utils.GetDefaultTool().DecimalNumberString(ServerRequestManager.LoginAccount.Hearts.getRedPoint()));
-				greenHearts.setText(Utils.GetDefaultTool().DecimalNumberString(ServerRequestManager.LoginAccount.Hearts.getGreenPoint()));
-			}
-		}
-		else
-		{
-			this.heartsLayout.setVisibility(View.INVISIBLE);
-		}
-	}
-	
 
 	@Override
 	public void onErrorResponse(VolleyError error)

@@ -13,47 +13,6 @@
         android:layout_centerHorizontal="true"
         android:scaleType="fitCenter" />
     
-    <RelativeLayout
-        android:id="@+id/heartsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin" >
-        <ImageView
-            android:id="@+id/redHeartsIcon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/main_red_heart" />
-        <TextView
-            android:id="@+id/redHearts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/redHeartsIcon"
-            android:layout_centerVertical="true"
-            android:textSize="26sp" 
-            android:textStyle="bold"
-            android:textColor="@color/LIGHT_RED"
-            android:text="X,XXX" />
-        <TextView
-            android:id="@+id/greenHearts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:textSize="26sp" 
-            android:textStyle="bold"
-            android:textColor="@color/LIGHT_GREEN"
-            android:text="X,XXX" />
-        <ImageView
-            android:id="@+id/greedHeartsIcon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_toLeftOf="@+id/greenHearts"
-            android:layout_centerVertical="true"
-            android:src="@drawable/main_green_heart" />
-    </RelativeLayout>
-    
     <TextView
         android:id="@+id/tvWalkingState"
         android:layout_width="wrap_content"
@@ -97,6 +56,16 @@
             android:layout_height="64dp"
             android:layout_alignParentTop="true" 
             android:layout_centerHorizontal="true" />
+        <TextView 
+            android:id="@+id/heartPoint"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="bottom|center_horizontal"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="@color/LIGHT_GREEN" />
 
         <ImageView
             android:src="@drawable/slideline_horizontal"

@@ -1,0 +1,148 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BeneficiaryDetailActivity" >
+
+    <RelativeLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="8dp"
+        android:background="@color/MAIN_BG" >
+        <TextView
+            android:id="@+id/titleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="24sp"
+            android:textColor="@color/WHITE"
+            android:textStyle="bold"
+            android:text="@string/TITLE_BENEFICIARY_DETAIL" />       
+    </RelativeLayout>
+
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_below="@+id/titleLayout"
+	    android:padding="@dimen/activity_horizontal_margin"
+	    android:background="@color/MAIN_BG" >
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/innerframe_shape" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:id="@+id/detailLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:padding="@dimen/activity_horizontal_margin" >
+
+                    <com.android.volley.toolbox.NetworkImageView
+                        android:id="@+id/profileImage"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:background="@color/LIGHT_GRAY" />
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/profileImage"
+                        android:layout_toRightOf="@+id/profileImage"
+                        android:layout_marginLeft="6dp"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/DARK_GRAY"
+                        android:text="NAME" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/name"
+                        android:layout_alignLeft="@+id/name" >
+	                    <TextView
+	                        android:id="@+id/age"
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:textSize="16sp"
+	                        android:textStyle="bold"
+	                        android:textColor="@color/GRAY"
+	                        android:text="AGE" />
+						<TextView 
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:layout_marginLeft="3dp"
+						    android:layout_marginRight="3dp"
+	                        android:textSize="16sp"
+	                        android:textStyle="bold"
+	                        android:textColor="@color/GRAY"
+	                        android:text="/" />
+	                    <TextView
+	                        android:id="@+id/gender"
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:textSize="16sp"
+	                        android:textStyle="bold"
+	                        android:textColor="@color/GRAY"
+	                        android:text="GENDER" />
+                    </LinearLayout>
+                </RelativeLayout>
+                
+                <RelativeLayout
+                    android:id="@+id/moneyLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:padding="@dimen/activity_horizontal_margin" >
+			        <TextView
+			            android:id="@+id/targetMoney"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+						android:layout_alignParentTop="true"
+						android:textSize="20sp"
+						android:textStyle="bold"
+			            android:text="x,xxx,xxx" />
+			        <TextView
+			            android:id="@+id/currentMoney"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+						android:layout_below="@+id/targetMoney"
+						android:textSize="20sp"
+						android:textStyle="bold"
+			            android:text="x,xxx,xxx" />
+                </RelativeLayout>
+
+				<com.android.volley.toolbox.NetworkImageView
+				    android:id="@+id/descriptionImage"
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:minHeight="80dp"
+				    android:padding="@dimen/activity_horizontal_margin"
+				    android:adjustViewBounds="true"
+					android:scaleType="centerCrop"
+				    android:background="@color/LIGHT_GRAY" />
+				<com.android.volley.toolbox.NetworkImageView
+				    android:id="@+id/reviewImage"
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:minHeight="80dp"
+				    android:adjustViewBounds="true"
+					android:scaleType="centerInside"
+				    android:padding="@dimen/activity_horizontal_margin"
+				    android:background="@color/LIGHT_GRAY" />
+				
+            </LinearLayout>
+        </ScrollView>
+	    
+	</RelativeLayout>    
+    
+</RelativeLayout>

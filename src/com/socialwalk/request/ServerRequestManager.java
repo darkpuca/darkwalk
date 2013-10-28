@@ -228,7 +228,17 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		reqQueue.add(req);		
 	}
 
-
+	public void BenefitSummary(Response.Listener<String> listener, Response.ErrorListener errorListener)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/benefit_group";
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
 	
 	public void Beneficiaries(Response.Listener<String> listener, Response.ErrorListener errorListener, boolean isGlobal, int pageIndex)
 	{
@@ -239,6 +249,30 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		int pageSize = 10;
 		String target = isGlobal ? "all" : "local";
 		String urlString = Globals.URL_SERVER_DOMAIN + "/api/benefit/" + target + "/page/" + pageIndex + "/" + pageSize;
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+	
+	public void CurrentBeneficiaries(Response.Listener<String> listener, Response.ErrorListener errorListener)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/benefit";
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+	
+	public void BeneficiaryDetail(Response.Listener<String> listener, Response.ErrorListener errorListener, String sequence)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/benefit/" + sequence;
 		
 		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
 		reqQueue.add(req);		

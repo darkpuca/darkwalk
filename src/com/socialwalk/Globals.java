@@ -40,6 +40,9 @@ public class Globals
 	public static final String EXTRA_KEY_POST_SEQUENCE = "postSeq";
 	public static final String EXTRA_KEY_WRITER_SEQUENCE = "writerSeq";
 	public static final String EXTRA_KEY_INTRO_AD_VISIT = "introAd";
+	public static final String EXTRA_KEY_IS_GLOBAL_PROJECT = "isGlobal"; 
+	public static final String EXTRA_KEY_IS_HISTORY_PROJECT = "isHistory"; 
+	public static final String EXTRA_KEY_SEQUENCE = "seq"; 
 	
 
 	public static final String PREF_ENVIRNMENT = "ENV";

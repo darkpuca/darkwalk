@@ -14,7 +14,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
 import com.socialwalk.MyXmlParser.SWResponse;
@@ -289,8 +287,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 				ServerRequestManager.LoginAccount.CommunitySeq = commSeq;
 				ServerRequestManager.LoginAccount.CommunityName = name;
 				updateUserInformation();
-
-			
 			}
 		}
 		else if (Globals.INTENT_REQ_INTRO == requestCode)
@@ -338,6 +334,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{
+		error.printStackTrace();
 	}
 
 

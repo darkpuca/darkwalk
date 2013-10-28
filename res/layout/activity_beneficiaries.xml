@@ -20,7 +20,18 @@
             android:textSize="24sp"
             android:textColor="@color/WHITE"
             android:textStyle="bold"
-            android:text="@string/TITLE_SPONSOR" />        
+            android:text="@string/TITLE_SPONSOR" />       
+		<Button
+		    android:id="@+id/globalButton"
+		    android:layout_width="70dp"
+		    android:layout_height="38dp"
+		    android:layout_alignParentRight="true"
+			android:layout_centerVertical="true"
+		    android:background="@drawable/gray_bg_selector"
+		    android:textSize="16sp"
+		    android:textStyle="bold"
+		    android:textColor="@color/WHITE"
+		    android:text="@string/TOTAL" /> 
     </RelativeLayout>
     
 	<RelativeLayout
@@ -33,16 +44,34 @@
 	    <RelativeLayout
 	        android:id="@+id/currentProjectLayout"
 	        android:layout_width="match_parent"
-	        android:layout_height="100dp"
-	        android:background="@drawable/innerframe_shape" >
-	        
-	    </RelativeLayout>
+	        android:layout_height="70dp"
+	        android:padding="6dp"
+	        android:background="@drawable/innerframe_shape"
+	        android:layout_marginBottom="8dp" >
+	        <TextView
+	            android:id="@+id/targetMoney"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:textSize="20sp"
+				android:textStyle="bold"
+	            android:text="x,xxx,xxx" />
+	        <TextView
+	            android:id="@+id/currentMoney"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+				android:layout_below="@+id/targetMoney"
+				android:textSize="20sp"
+				android:textStyle="bold"
+	            android:text="x,xxx,xxx" />
+		</RelativeLayout>
 	    
 	    <RelativeLayout
 	        android:id="@+id/buttonsLayout"
 	        android:layout_width="match_parent"
 	        android:layout_height="60dp"
-	        android:layout_below="@+id/currentProjectLayout" >
+	        android:layout_below="@+id/currentProjectLayout"
+	        android:visibility="gone" >
 	        <ImageButton
 	            android:id="@+id/btnSponsor"
 	            android:layout_width="36dp"

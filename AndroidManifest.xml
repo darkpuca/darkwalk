@@ -21,7 +21,7 @@
     <application
         android:name="com.socialwalk.MainApplication"
         android:allowBackup="true"
-        android:icon="@drawable/app_logo"
+        android:icon="@drawable/main_icon"
         android:label="@string/APP_NAME"
         android:theme="@style/AppTheme" >
         <activity
@@ -164,6 +164,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
+        <activity
+            android:name="com.socialwalk.BeneficiariesListActivity"
+            android:label="@string/TITLE_GLOBAL_BENEFICIARIES"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.BeneficiaryDetailActivity"
+            android:label="@string/TITLE_BENEFICIARY_DETAIL"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
+        </activity>
         
         <service android:name="com.socialwalk.LockService" >
         </service>
@@ -179,6 +191,7 @@
         </receiver>
         <receiver android:name="com.socialwalk.WalkLocationReceiver" >
         </receiver>
+
     </application>
 
 </manifest>

@@ -22,7 +22,7 @@
     <string name="TITLE_WALK_HISTORY">소셜워크 히스토리</string>
     <string name="TITLE_RANKING">랭킹</string>
     <string name="TITLE_SETTINGS">설정</string>
-    <string name="TITLE_SPONSOR">후원 목록</string>
+    <string name="TITLE_SPONSOR">현재 후원 프로젝트</string>
     <string name="TITLE_COMMUNITY">그룹 커뮤니티</string>
     <string name="TITLE_COMMUNITY_POSTING">커뮤니티 글쓰기</string>
     <string name="TITLE_COMMUNITY_POST_DETAIL">커뮤니티 글상세</string>
@@ -30,6 +30,9 @@
     <string name="TITLE_MORE">더보기</string>
     <string name="TITLE_PROFILE">프로필</string>
     <string name="TITLE_CHANGE_EMAIL">이메일 변경</string>
+    <string name="TITLE_GLOBAL_BENEFICIARIES">전체 후원 프로젝트</string>
+    <string name="TITLE_HISTORY_BENEFICIARIES">이전 후원 프로젝트</string>
+    <string name="TITLE_BENEFICIARY_DETAIL">후원프로젝트 상세</string>
     <string name="CLOSE">닫기</string>
     <string name="CONFIRM">확인</string>
     <string name="LOGIN">로그인</string>
@@ -125,6 +128,9 @@
     <string name="LOCAL1">지역1</string>
     <string name="LOCAL2">지역2</string>
     <string name="APPLY">적용</string>
+    <string name="AGE_UNIT">살</string>
+    <string name="MONEY_UNIT">원</string>
+    <string name="ALTITUDE">고도</string>
     <string name="UNSET">미지정</string>
     <string name="SET_NAME">이름 설정</string>
     <string name="SET_WEIGHT">몸무게 설정</string>
@@ -135,13 +141,12 @@
     <string name="SET_LOCAL">지역 설정</string>
     <string name="BENEFIT_DATE">후원일</string>
     <string name="BENEFIT_MONEY">후원금액</string>
-    
     <string name="FORMAT_DISTANCE">%.2f km</string>
     <string name="FORMAT_SPEED">%.1f km/h</string>
     <string name="FORMAT_TIME">HH:mm:ss</string>
     <string name="FORMAT_HEART">%d하트</string>
+    <string name="FORMAT_ALTITUDE">%.1fm</string>
     <string name="FORMAT_CALORIES">###,### 칼로리</string>
-    
     <string name="MSG_EMPTY_USERID">사용자 ID를 입력해 주십시오.</string>
     <string name="MSG_EMPTY_PASSWORD">비밀번호를 입력해 주십시오.</string>
     <string name="MSG_EMPTY_PASSWORD_CONFIRM">확인 비밀번호를 입력해 주십시오.</string>
@@ -183,7 +188,7 @@
     <string name="MSG_INVALID_AREA">단체/지역 정보를 확인해 주십시요.</string>
     <string name="MSG_SECESSION_CONFIRM">회원탈퇴를 진행하시겠습니까?\n등록되었던 이메일로는 재가입이 불가능합니다.</string>
     <string name="MSG_API_FAIL">명령 전송이 실패했습니다.</string>
-    
+
     <color name="WALK_INFO_PANEL_BG">#80000000</color>
     <color name="SLIDE_WALK_STATE">#80000000</color>
     <color name="MAIN_BG">#fecc2f</color>

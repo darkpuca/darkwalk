@@ -57,7 +57,7 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 
 		// sample value
 //		txtUid.setText("kms7610@gmail.com");
-//		txtPwd.setText("ms1215");
+		txtPwd.setText("ms1215");
 		chkAuto.setChecked(false);
 		
 		SharedPreferences loginPrefs = this.getSharedPreferences(Globals.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
