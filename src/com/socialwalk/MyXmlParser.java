@@ -29,6 +29,8 @@ import com.socialwalk.dataclass.CommunityPostReplies;
 import com.socialwalk.dataclass.CommunityPostReplies.CommunityPostReply;
 import com.socialwalk.dataclass.CommunityPosts;
 import com.socialwalk.dataclass.CommunityPosts.CommunityPostItem;
+import com.socialwalk.dataclass.HeartRanks;
+import com.socialwalk.dataclass.HeartRanks.RankItem;
 import com.socialwalk.dataclass.NeoClickItems;
 import com.socialwalk.dataclass.NeoClickItems.NeoClickItem;
 import com.socialwalk.dataclass.WalkHistory;
@@ -1026,6 +1028,109 @@ public class MyXmlParser
 					tagName = parser.getName();
 					if (tagName.equalsIgnoreCase("benefit_group"))
 						return summary;
+
+					break;
+				}					
+				eventType = parser.next();
+			}
+			return null;
+		} 
+		catch (Exception e)
+		{
+			Log.d(TAG, e.getLocalizedMessage());
+			return null;
+		}
+	}
+	
+	public HeartRanks GetRanks()
+	{
+		if (null == m_xml || 0 == m_xml.length()) return null;
+		
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(m_xml));
+			
+			HeartRanks ranks = null;
+			RankItem item = null;
+			
+			int parseTargetType = 0;
+			
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT)
+			{
+				String tagName = null;
+				switch (eventType)
+				{
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.END_DOCUMENT:						
+					break;
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("rank"))
+						ranks = new HeartRanks();
+					else if (tagName.equalsIgnoreCase("myRank"))
+						parseTargetType = 0;
+					else if (tagName.equalsIgnoreCase("privateRank"))
+						parseTargetType = 1;
+					else if (tagName.equalsIgnoreCase("groupTotalRank"))
+						parseTargetType = 2;
+					else if (tagName.equalsIgnoreCase("groupAvgRank"))
+						parseTargetType = 3;
+					else if (tagName.equalsIgnoreCase("item"))
+						item = ranks.new RankItem();
+					else if (tagName.equalsIgnoreCase("user_point"))
+					{
+						if (0 != parseTargetType)
+							item.UserPoint = Integer.parseInt(parser.nextText());
+					}
+					else if (tagName.equalsIgnoreCase("group_point"))
+					{
+						if (0 != parseTargetType)
+							item.GroupPoint = Integer.parseInt(parser.nextText());
+					}
+					else if (tagName.equalsIgnoreCase("member_count"))
+					{
+						if (0 != parseTargetType)
+							item.Members = Integer.parseInt(parser.nextText());
+					}
+					else if (tagName.equalsIgnoreCase("user_average"))
+					{
+						if (0 != parseTargetType)
+							item.AveragePoints = Integer.parseInt(parser.nextText());
+					}
+					else if (tagName.equalsIgnoreCase("realname"))
+					{
+						if (0 != parseTargetType)
+							item.Name = parser.nextText();
+					}
+					else if (tagName.equalsIgnoreCase("community_name"))
+					{
+						if (0 != parseTargetType)
+							item.CommunityName = parser.nextText();
+					}
+					else if (tagName.equalsIgnoreCase("second_name"))
+					{
+						if (0 != parseTargetType)
+							item.LocalName = parser.nextText();
+					}
+					
+					break;
+				case XmlPullParser.END_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("rank"))
+						return ranks;
+					else if (tagName.equalsIgnoreCase("item"))
+					{
+						 if (1 == parseTargetType)
+							ranks.PersonalItems.add(item);
+						 else if (2 == parseTargetType)
+							 ranks.GroupSumItems.add(item);
+						 else if (3 == parseTargetType)
+							 ranks.GroupAvgItems.add(item);
+					}
 
 					break;
 				}					

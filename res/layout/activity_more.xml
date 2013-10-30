@@ -36,7 +36,7 @@
             android:layout_height="match_parent"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:background="@color/MAIN_BG" >
+            android:background="@drawable/innerframe_shape_yellow" >
 
             <LinearLayout
                 android:id="@+id/firstLine"

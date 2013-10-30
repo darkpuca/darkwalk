@@ -203,6 +203,21 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		reqQueue.add(req);
 	}
 	
+	public void CommunityMembers(Response.Listener<String> listener, Response.ErrorListener errorListener, int commSeq, int pageIndex, boolean isApplicant)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+
+		int type = isApplicant ? 0 : 1;
+		
+		int pageSize = 10;
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community_member/" + commSeq + "/" + type + "/page/" + pageIndex + "/" + pageSize;
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);
+	}
+
+	
 	public void ReplyPosting(Response.Listener<String> listener, Response.ErrorListener errorListener, int postSequence, String contents)
 	{
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
@@ -319,7 +334,19 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		req.SetXMLBody(xmlBody);
 		reqQueue.add(req);		
 	}
-	
+
+	public void CommunitySecession(Response.Listener<String> listener, Response.ErrorListener errorListener)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community_member/" + LoginAccount.Sequence;
+
+		SocialWalkRequest req = new SocialWalkRequest(Method.DELETE, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+
 	public void IsExistGroupName(Response.Listener<String> listener, Response.ErrorListener errorListener, String groupName)
 	{
 		RequestQueue queue = RequestManager.getRequestQueue();
@@ -509,6 +536,19 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		String urlString = Globals.URL_SERVER_DOMAIN + "/api/users/" + LoginAccount.Sequence; 
 		
 		SocialWalkRequest req = new SocialWalkRequest(Method.DELETE, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+
+	public void Rankings(Response.Listener<String> listener, Response.ErrorListener errorListener, boolean isGlobal)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		
+		String target = isGlobal ? "all" : "local";
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/rank/" + target;
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
 		reqQueue.add(req);		
 	}
 

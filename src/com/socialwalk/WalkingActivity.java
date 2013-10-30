@@ -87,7 +87,7 @@ Response.Listener<String>, Response.ErrorListener
 		this.server = new ServerRequestManager();
 		
         this.aroundersLayout = (RelativeLayout)findViewById(R.id.layoutArounders);
-//        this.aroundersLayout.setVisibility(View.INVISIBLE);
+        this.aroundersLayout.setVisibility(View.INVISIBLE);
         this.aroundersLayout.setOnClickListener(this);
 
 		

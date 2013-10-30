@@ -1,0 +1,110 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CommunityDetailActivity" >
+
+    <RelativeLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/MAIN_BG"
+        android:paddingLeft="20dp"
+        android:paddingRight="8dp" >
+        <TextView
+            android:id="@+id/titleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/TITLE_COMMUNITY_DETAIL"
+            android:textColor="@color/WHITE"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/manageButton"
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+			android:background="@drawable/gray_bg_selector"
+			android:visibility="invisible"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/WHITE"
+            android:text="@string/GROUP_MANAGE" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleLayout"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:background="@color/MAIN_BG" >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/innerframe_shape" >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="60dp"
+                android:padding="@dimen/activity_horizontal_margin" >
+                <TextView
+                    android:id="@+id/nameLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/GRAY"
+                    android:text="@string/GROUP_NAME" />
+                <TextView
+                    android:id="@+id/communityName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nameLabel"
+                    android:layout_marginTop="4dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/DARK_GRAY" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/activity_horizontal_margin" >
+                <TextView
+                    android:id="@+id/descriptionLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/GRAY"
+                    android:text="@string/GROUP_DESCRIPTION" />
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/descriptionLabel"
+                    android:layout_marginTop="4dp"
+                    android:minHeight="40dp"
+                    android:textSize="20sp"
+                    android:textColor="@color/DARK_GRAY" />
+            </RelativeLayout>
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:padding="@dimen/activity_horizontal_margin" >
+	        <Button
+	            android:id="@+id/secessionButton"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:background="@drawable/darkgray_rounded_bg"
+	            android:textSize="20sp"
+	            android:textStyle="bold"
+	            android:textColor="@color/WHITE"
+	            android:text="@string/GROUP_SECESSION" />
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

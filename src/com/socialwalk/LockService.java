@@ -38,9 +38,9 @@ public class LockService extends Service
 	@Override
 	public void onCreate()
 	{
-		KeyguardManager km = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
-		KeyguardManager.KeyguardLock kl = km.newKeyguardLock("IN");
-		kl.disableKeyguard();
+//		KeyguardManager km = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
+//		KeyguardManager.KeyguardLock kl = km.newKeyguardLock("IN");
+//		kl.disableKeyguard();
 		
 		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		filter.addAction(Intent.ACTION_SCREEN_OFF);

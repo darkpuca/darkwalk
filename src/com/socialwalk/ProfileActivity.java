@@ -115,8 +115,13 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 		progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progDlg.setCancelable(false);
 		progDlg.setMessage(getResources().getString(R.string.MSG_LOADING));
-		progDlg.show();
 
+		requestUserProfile();
+	}
+
+	private void requestUserProfile()
+	{
+		if (!progDlg.isShowing()) progDlg.show();
 		this.reqType = REQUEST_USER_PROFILE;
 		this.server.getUserProfile(this, this);
 	}
@@ -241,6 +246,9 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 		else
 		{
 			// 그룹 상세 정보 표시(그룹 탈퇴 가능)
+			Intent i = new Intent(this, CommunityDetailActivity.class);
+			i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, userProfile.CommunitySeq);
+			startActivityForResult(i, Globals.INTENT_REQ_GROUP_SELECT);
 		}
 	}
 	
@@ -479,7 +487,18 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 		
 		updateProfileInformation();
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (Globals.INTENT_REQ_GROUP_SELECT == requestCode)
+		{
+			if (RESULT_OK == resultCode)
+				requestUserProfile();
+		}
 
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 
 	@Override
 	public void onErrorResponse(VolleyError e)

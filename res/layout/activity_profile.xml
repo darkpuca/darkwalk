@@ -36,16 +36,16 @@
     
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/titleLayout"
         android:padding="@dimen/TOPBAR_ICON_SIDE_MARGIN"
         android:background="@color/MAIN_BG" >
         
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/WHITE" >
+            android:background="@drawable/innerframe_shape" >
             
             <RelativeLayout
 	            android:id="@+id/emailLayout"
@@ -370,7 +370,7 @@
 	        
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp" >                
+                android:layout_height="50dp" >                
             </RelativeLayout>
             <RelativeLayout
 	            android:id="@+id/secessionLayout"

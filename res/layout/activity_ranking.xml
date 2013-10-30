@@ -90,18 +90,76 @@
     	</LinearLayout>
     </RelativeLayout>
     
-	<RelativeLayout
+	<LinearLayout
+	    android:orientation="vertical"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:layout_below="@+id/titleLayout"
 	    android:padding="@dimen/activity_horizontal_margin"
 	    android:background="@color/MAIN_BG" >
-	    <ListView
-	        android:id="@+id/rankingList"
+	    
+	    <LinearLayout
+	        android:orientation="vertical"
 	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:background="@drawable/innerframe_shape" />
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:padding="@dimen/activity_horizontal_margin"
+	        android:background="@drawable/innerframe_shape" >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/GRAY"
+                android:text="@string/RANK_PERSONAL" />
+			<ListView
+			    android:id="@+id/personalList"
+			    android:layout_marginTop="4dp"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent" />
+	    </LinearLayout>
 	    	    
-	</RelativeLayout>    
+	    <LinearLayout
+	        android:orientation="vertical"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:layout_marginTop="4dp"
+	        android:padding="@dimen/activity_horizontal_margin"
+	        android:background="@drawable/innerframe_shape" >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/GRAY"
+                android:text="@string/RANK_GROUP_SUM" />
+			<ListView
+			    android:id="@+id/groupSumList"
+			    android:layout_marginTop="4dp"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent" />
+	    </LinearLayout>
+	    	    
+	    <LinearLayout
+	        android:orientation="vertical"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:layout_marginTop="4dp"
+	        android:padding="@dimen/activity_horizontal_margin"
+	        android:background="@drawable/innerframe_shape" >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/GRAY"
+                android:text="@string/RANK_GROUP_AVG" />
+			<ListView
+			    android:id="@+id/groupAvgList"
+			    android:layout_marginTop="4dp"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent" />
+	    </LinearLayout>
+	    	    
+	</LinearLayout>    
 
 </RelativeLayout>

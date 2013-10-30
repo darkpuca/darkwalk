@@ -93,8 +93,6 @@ implements Response.Listener<String>, Response.ErrorListener
 				WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
 		getWindow().addFlags(flags);
 		
-//		EnableKeyGuard(false);
-		
 		setContentView(R.layout.activity_slide);
 		
 		m_server = new ServerRequestManager();
@@ -125,7 +123,7 @@ implements Response.Listener<String>, Response.ErrorListener
 		
 		MoveSliderToStartPosition();
 		
-		EnableKeyGuard(false);
+//		EnableKeyGuard(false);
 		
 		if (getIntent() != null && getIntent().hasExtra("kill") && getIntent().getExtras().getInt("kill") == 1)
 			finish();
@@ -200,7 +198,7 @@ implements Response.Listener<String>, Response.ErrorListener
 						{
 							Log.d(TAG, "slider in STOP area.");
 //							StopWalking();
-							EnableKeyGuard(true);
+//							EnableKeyGuard(true);
 							SlideActivity.this.moveTaskToBack(true);
 							finish();
 							LockReceiver.UpdateAccessTime();
@@ -366,7 +364,7 @@ implements Response.Listener<String>, Response.ErrorListener
 		
 		getWindow().addFlags(flags);
 
-		EnableKeyGuard(false);
+//		EnableKeyGuard(false);
 		
 		UpdateWalkingState();
 		
@@ -427,7 +425,6 @@ implements Response.Listener<String>, Response.ErrorListener
 
 	private void ShowAdPage()
 	{
-		
 		if (null == this.currentNeoClick)
 		{
 			moveTaskToBack(true);
@@ -462,7 +459,7 @@ implements Response.Listener<String>, Response.ErrorListener
 				
 			currentNeoClick.SetAccessStamp();
 			LockReceiver.UpdateAccessTime();
-			EnableKeyGuard(true);
+//			EnableKeyGuard(true);
 		}		
 	}
 	

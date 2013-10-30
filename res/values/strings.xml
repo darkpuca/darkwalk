@@ -33,6 +33,8 @@
     <string name="TITLE_GLOBAL_BENEFICIARIES">전체 후원 프로젝트</string>
     <string name="TITLE_HISTORY_BENEFICIARIES">이전 후원 프로젝트</string>
     <string name="TITLE_BENEFICIARY_DETAIL">후원프로젝트 상세</string>
+    <string name="TITLE_COMMUNITY_DETAIL">커뮤니티 상세</string>
+    <string name="TITLE_COMMUNITY_MANAGE">커뮤니티 관리</string>
     <string name="CLOSE">닫기</string>
     <string name="CONFIRM">확인</string>
     <string name="LOGIN">로그인</string>
@@ -67,9 +69,13 @@
     <string name="GROUP_NAME">그룹 이름</string>
     <string name="GROUP_DESCRIPTION">그룹 설명</string>
     <string name="GROUP_MESSAGE">그룹 안내글</string>
+    <string name="GROUP_MANAGE">그룹 관리</string>
     <string name="CHECK_DUPLICATE">중복 확인</string>
     <string name="GROUP_SIGNUP">가입 신청</string>
     <string name="GROUP_SECESSION">그룹 탈퇴</string>
+    <string name="GROUP_MEMBERS">멤버수</string>
+    <string name="MEMBER_LIST">멤버 리스트</string>
+    <string name="APPLICANTS">가입신청자</string>
     <string name="START">시작</string>
     <string name="STOP">중지</string>
     <string name="SUPPORT">후원하기</string>
@@ -131,6 +137,9 @@
     <string name="AGE_UNIT">살</string>
     <string name="MONEY_UNIT">원</string>
     <string name="ALTITUDE">고도</string>
+    <string name="RANK_PERSONAL">개인랭킹</string>
+    <string name="RANK_GROUP_SUM">그룹랭킹(총액)</string>
+    <string name="RANK_GROUP_AVG">그룹랭킹(1인평균)</string>
     <string name="UNSET">미지정</string>
     <string name="SET_NAME">이름 설정</string>
     <string name="SET_WEIGHT">몸무게 설정</string>

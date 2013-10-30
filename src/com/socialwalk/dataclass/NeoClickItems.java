@@ -64,7 +64,6 @@ public class NeoClickItems
 				}
 			}
 			accessCount++;
-
 		}
 
 		public boolean IsBillingAvailable()

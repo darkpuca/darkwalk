@@ -176,6 +176,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
+        <activity
+            android:name="com.socialwalk.CommunityDetailActivity"
+            android:label="@string/TITLE_COMMUNITY_DETAIL"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.socialwalk.CommunityManageActivity"
+            android:label="@string/TITLE_COMMUNITY_MANAGE"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
+        </activity>
         
         <service android:name="com.socialwalk.LockService" >
         </service>

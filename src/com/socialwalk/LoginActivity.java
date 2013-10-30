@@ -57,8 +57,8 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 
 		// sample value
 //		txtUid.setText("kms7610@gmail.com");
-		txtPwd.setText("ms1215");
-		chkAuto.setChecked(false);
+//		txtPwd.setText("ms1215");
+//		chkAuto.setChecked(false);
 		
 		SharedPreferences loginPrefs = this.getSharedPreferences(Globals.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
 		String uid = loginPrefs.getString(Globals.PREF_KEY_USER_ID, "");
@@ -137,17 +137,17 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 	public void onErrorResponse(VolleyError error)
 	{
 		if (progDlg.isShowing()) progDlg.dismiss();
-		
+		Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
 		error.printStackTrace();
 	}
 
 	@Override
 	public void onResponse(String response)
 	{
+		if (progDlg.isShowing()) progDlg.dismiss();
+
 		if (0 == response.length()) return;
-		
 		MyXmlParser parser = new MyXmlParser(response);
-		
 		SWResponse result = parser.GetResponse();
 		if (null == result) return;
 		
@@ -174,9 +174,10 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 			{
 				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_PASSWORD_MISSMATCH);
 			}
-			
-			if (progDlg.isShowing()) progDlg.dismiss();
-
+			else
+			{
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
+			}
 		}
 		else if (REQUEST_HEARTS == reqType)
 		{
