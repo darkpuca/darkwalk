@@ -12,12 +12,13 @@ public class LockReceiver extends BroadcastReceiver
 	public static boolean wasScreenOn = true;
 	public static Date LastAccess;
 	
-	private static int LimitTime = 10;
+	public static boolean IsPhoneCalling = false;
+	private static int LimitTime = 0;
 
 	@Override
 	public void onReceive(Context context, Intent intent)
 	{
-		if (true == SlideActivity.IsPhoneCalling) return;
+		if (true == IsPhoneCalling) return;
 
 		if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
 		{

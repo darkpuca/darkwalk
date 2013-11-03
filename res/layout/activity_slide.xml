@@ -58,14 +58,15 @@
             android:layout_centerHorizontal="true" />
         <TextView 
             android:id="@+id/heartPoint"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_alignParentTop="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imgSlideAd"
             android:layout_centerHorizontal="true"
-            android:gravity="bottom|center_horizontal"
-            android:textSize="30sp"
+            android:layout_marginTop="2dp"
+            android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="@color/LIGHT_GREEN" />
+            android:textColor="@color/LIGHT_GREEN"
+            android:text="+X" />
 
         <ImageView
             android:src="@drawable/slideline_horizontal"

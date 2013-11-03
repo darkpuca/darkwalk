@@ -39,7 +39,7 @@ public class NeoClickItems
 		private Date firstAccess;
 		private int accessCount;
 		
-		private static final int accessLimit = 3;
+		private static final int accessLimit = 1;
 		
 		public NeoClickItem()
 		{
@@ -68,15 +68,18 @@ public class NeoClickItems
 
 		public boolean IsBillingAvailable()
 		{
-			if (accessLimit >= accessCount) return true;
+			if (accessLimit > accessCount) return true;
 			
 			Date now = new Date();			
 			long diffInMs = now.getTime() - this.firstAccess.getTime();
 			long diffInHour = TimeUnit.MILLISECONDS.toHours(diffInMs);
-			if (1 > diffInHour)
-				return (accessLimit >= accessCount);
-			else if (1 <= diffInHour)
+			if (diffInHour > 1)
 				return true;
+			
+//			if (1 > diffInHour)
+//				return (accessLimit >= accessCount);
+//			else if (1 <= diffInHour)
+//				return true;
 			
 			return false;
 		}

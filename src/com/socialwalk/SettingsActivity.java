@@ -7,16 +7,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.dataclass.AccountHeart;
 import com.socialwalk.request.ServerRequestManager;
 import com.socialwalk.request.SocialWalkRequest;
 
@@ -25,12 +28,14 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 {
 	private ServerRequestManager server = null;
 	private int reqType;
-	private static final int REQUEST_TYPE_LOGOUT = 400;
+	private static final int REQUEST_LOGOUT = 400;
+	private static final int REQUEST_ACCUMULATED_HEARTS = 401;
 	
 	private ProgressDialog progDlg;
 
 	private CheckBox autoLoginCheck, slideCheck;
 	private RelativeLayout logoutLayout;
+	private LinearLayout heartsLayout;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -49,6 +54,20 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 		this.logoutLayout = (RelativeLayout)findViewById(R.id.logoutLayout);
 		this.logoutLayout.setOnClickListener(this);
 		
+		this.heartsLayout = (LinearLayout)findViewById(R.id.totalHeartsLayout);
+		this.heartsLayout.setVisibility(View.INVISIBLE);
+		
+		try
+		{
+			TextView version = (TextView)findViewById(R.id.version);
+			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			version.setText(pInfo.versionName);		
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 		updateOptions();
 
 		// prepare progress dialog
@@ -56,6 +75,16 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 		progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progDlg.setCancelable(false);
 		progDlg.setMessage(getResources().getString(R.string.MSG_SEND_DATA));
+		
+		requestAccumulatedHearts();
+	}
+	
+	private void requestAccumulatedHearts()
+	{
+		if (!progDlg.isShowing()) progDlg.show();
+		
+		this.reqType = REQUEST_ACCUMULATED_HEARTS;
+		this.server.TotalAccumulatedHearts(this, this);
 	}
 	
 	private void setAutologinOption()
@@ -89,7 +118,7 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 			{
 				if (!progDlg.isShowing()) progDlg.show();
 				
-				reqType = REQUEST_TYPE_LOGOUT;
+				reqType = REQUEST_LOGOUT;
 				server.Logout(SettingsActivity.this, SettingsActivity.this);
 			}
 		});
@@ -146,10 +175,11 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 		if (progDlg.isShowing()) progDlg.dismiss();
 		
 		if (0 == response.length()) return;
-		SWResponse result = new MyXmlParser(response).GetResponse();
+		MyXmlParser parser = new MyXmlParser(response);
+		SWResponse result = parser.GetResponse();
 		if (null == result) return;
 		
-		if (REQUEST_TYPE_LOGOUT == this.reqType)
+		if (REQUEST_LOGOUT == this.reqType)
 		{
 			if (Globals.ERROR_NONE == result.Code)
 			{
@@ -162,6 +192,25 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 				editor.commit();
 				
 				finish();
+			}
+		}
+		else if (REQUEST_ACCUMULATED_HEARTS == this.reqType)
+		{
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				AccountHeart hearts = parser.GetAccumulatedHearts();
+				if (null == hearts) return;
+				
+				TextView tvRedHearts = (TextView)findViewById(R.id.totalRedHearts);
+				TextView tvGreenHearts = (TextView)findViewById(R.id.totalGreenHearts);
+				tvRedHearts.setText(Utils.GetDefaultTool().DecimalNumberString(hearts.getRedPointTotal()));
+				tvGreenHearts.setText(Utils.GetDefaultTool().DecimalNumberString(hearts.getGreenPoint()));
+				
+				heartsLayout.setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				heartsLayout.setVisibility(View.INVISIBLE);
 			}
 		}
 	}

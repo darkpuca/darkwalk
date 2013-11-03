@@ -24,12 +24,8 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.dataclass.WalkHistory;
 import com.socialwalk.dataclass.WalkHistoryManager;
-import com.socialwalk.request.ServerRequestManager;
 
 public class WalkService extends Service
 {
@@ -164,13 +160,13 @@ public class WalkService extends Service
 		Log.d(TAG, "walking stopped");
 		
 		WalkingData.Finish();
-		
-		String strXml = WalkingData.GetXML();
-//		Log.d(TAG, strXml);
-		
+
 		// save log file
 		SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATETIME_FORMAT_FOR_HISTORY, Locale.US);
 		String filename = formatter.format(WalkingData.StartTime) + ".log";
+		WalkingData.FileName = filename;
+
+		String strXml = WalkingData.GetXML();
 		
 		try
 		{
@@ -185,7 +181,7 @@ public class WalkService extends Service
 			Log.d(TAG, e.getLocalizedMessage());
 		}
 				
-		Toast.makeText(getBaseContext(), "social walking stopped.", Toast.LENGTH_SHORT).show();
+//		Toast.makeText(getBaseContext(), "social walking stopped.", Toast.LENGTH_SHORT).show();
 		
 		// remove notification item
 		m_notificationManager.cancel(Globals.NOTI_WALKING);

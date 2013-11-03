@@ -3,6 +3,7 @@ package com.socialwalk;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -58,37 +59,45 @@ implements Response.Listener<String>, Response.ErrorListener
 	private void updateDetails(Beneficiary detail)
 	{
 		NetworkImageView profileImage = (NetworkImageView)findViewById(R.id.profileImage);
-		NetworkImageView descImage = (NetworkImageView)findViewById(R.id.descriptionImage);
-		NetworkImageView reviewImage = (NetworkImageView)findViewById(R.id.reviewImage);
+//		NetworkImageView descImage = (NetworkImageView)findViewById(R.id.descriptionImage);
+//		NetworkImageView reviewImage = (NetworkImageView)findViewById(R.id.reviewImage);
 		TextView name = (TextView)findViewById(R.id.name);
 		TextView age = (TextView)findViewById(R.id.age);
 		TextView gender = (TextView)findViewById(R.id.gender);
 		TextView targetMoney = (TextView)findViewById(R.id.targetMoney);
 		TextView currentMoney = (TextView)findViewById(R.id.currentMoney);
+		TextView participants = (TextView)findViewById(R.id.participants);
+		TextView descriptions = (TextView)findViewById(R.id.description);
 		
+		ProgressBar moneyProgress = (ProgressBar)findViewById(R.id.moneyProgress);
+		int progress = (int)(detail.CurrentMoney / detail.TargetMoney *100);
+		moneyProgress.setProgress(progress);
+
 		if (0 < detail.ProfileUrl.length())
 		{
 			profileImage.setImageUrl(null, null);
 			profileImage.setImageUrl(detail.ProfileUrl, ImageCacheManager.getInstance().getImageLoader());
 		}
 		
-		if (0 < detail.DescriptionUrl.length())
-		{
-			descImage.setImageUrl(null, null);
-			descImage.setImageUrl(detail.DescriptionUrl, ImageCacheManager.getInstance().getImageLoader());
-		}
-		
-		if (0 < detail.ReviewsUrl.length())
-		{
-			reviewImage.setImageUrl(null, null);
-			reviewImage.setImageUrl(detail.ReviewsUrl, ImageCacheManager.getInstance().getImageLoader());
-		}
-		
 		name.setText(detail.Name);
 		age.setText(Integer.toString(detail.Age) + getResources().getString(R.string.AGE_UNIT));
 		gender.setText(0 == detail.Gender ? R.string.MAN : R.string.WOMAN);
-		targetMoney.setText(Utils.GetDefaultTool().DecimalNumberString(detail.TargetMoney));
-		currentMoney.setText(Utils.GetDefaultTool().DecimalNumberString(detail.CurrentMoney));
+		targetMoney.setText(String.format("%s " + getResources().getString(R.string.MONEY_UNIT), Utils.GetDefaultTool().DecimalNumberString(detail.TargetMoney)));
+		currentMoney.setText(String.format("%s " + getResources().getString(R.string.MONEY_UNIT), Utils.GetDefaultTool().DecimalNumberString(detail.CurrentMoney)));
+		participants.setText(String.format("%s " + getResources().getString(R.string.MAN_UNIT), Utils.GetDefaultTool().DecimalNumberString(detail.Participants)));
+		descriptions.setText(detail.Description);
+
+//		if (0 < detail.DescriptionUrl.length())
+//		{
+//			descImage.setImageUrl(null, null);
+//			descImage.setImageUrl(detail.DescriptionUrl, ImageCacheManager.getInstance().getImageLoader());
+//		}
+//		
+//		if (0 < detail.ReviewsUrl.length())
+//		{
+//			reviewImage.setImageUrl(null, null);
+//			reviewImage.setImageUrl(detail.ReviewsUrl, ImageCacheManager.getInstance().getImageLoader());
+//		}
 	}
 	
 

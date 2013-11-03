@@ -16,8 +16,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.socialwalk.Globals;
-import com.socialwalk.LoginActivity;
-import com.socialwalk.MainApplication;
 import com.socialwalk.MyXmlParser;
 import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.MyXmlWriter;
@@ -36,6 +34,12 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 	private static final int REQUEST_TYPE_HEARTS = 2;
 	
 	private int m_reqType = 0;
+	private ServerRequestListener listener = null;
+	
+	public interface ServerRequestListener
+	{
+		void onFinishAutoLogin(boolean isLogin);
+	}
 
 	public ServerRequestManager()
 	{
@@ -64,10 +68,11 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		reqQueue.add(req);
 	}
 
-	
-	public void AutoLogin(Context context)
+	public boolean AutoLogin(Context context, ServerRequestListener listener)
 	{
-		if (true == IsLogin) return;
+		if (true == IsLogin) return true;
+		
+		this.listener = listener;
 		
 		SharedPreferences loginPrefs = context.getSharedPreferences(Globals.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
 		
@@ -80,6 +85,8 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 			m_reqType = REQUEST_TYPE_AUTOLOGIN;
 			this.Login(this, this, uid, pwd);
 		}
+		
+		return auto;
 	}
 	
 	public void AccountData(Response.Listener<String> listener, Response.ErrorListener errorListener)
@@ -243,18 +250,19 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		reqQueue.add(req);		
 	}
 
-	public void BenefitSummary(Response.Listener<String> listener, Response.ErrorListener errorListener)
+	public void BeneficiarySummary(Response.Listener<String> listener, Response.ErrorListener errorListener, boolean isGlobal)
 	{
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
 		if (null == reqQueue) return;
 		if (null == LoginAccount) return;
 		
-		String urlString = Globals.URL_SERVER_DOMAIN + "/api/benefit_group";
+		String target = isGlobal ? "all" : "local";
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/benefit_group/graph/" + target;
 		
 		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
 		reqQueue.add(req);		
 	}
-	
+
 	public void Beneficiaries(Response.Listener<String> listener, Response.ErrorListener errorListener, boolean isGlobal, int pageIndex)
 	{
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
@@ -264,18 +272,6 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		int pageSize = 10;
 		String target = isGlobal ? "all" : "local";
 		String urlString = Globals.URL_SERVER_DOMAIN + "/api/benefit/" + target + "/page/" + pageIndex + "/" + pageSize;
-		
-		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
-		reqQueue.add(req);		
-	}
-	
-	public void CurrentBeneficiaries(Response.Listener<String> listener, Response.ErrorListener errorListener)
-	{
-		RequestQueue reqQueue = RequestManager.getRequestQueue();
-		if (null == reqQueue) return;
-		if (null == LoginAccount) return;
-		
-		String urlString = Globals.URL_SERVER_DOMAIN + "/api/benefit";
 		
 		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
 		reqQueue.add(req);		
@@ -363,7 +359,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 			return;
 		}
 
-		String url = Globals.URL_SERVER_DOMAIN + "/api/check/community/community_name/" + utfVal;
+		String url = Globals.URL_SERVER_DOMAIN + "/api/check/community/community_name/" + utfVal + "/0";
 
 		SocialWalkRequest req = new SocialWalkRequest(Method.GET, url, listener, errorListener);
 		queue.add(req);
@@ -551,6 +547,18 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
 		reqQueue.add(req);		
 	}
+	
+	public void TotalAccumulatedHearts(Response.Listener<String> listener, Response.ErrorListener errorListener)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/users/" + LoginAccount.Sequence + "/point/total";
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.GET, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
 
 	
 	@Override
@@ -577,7 +585,12 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 				
 				m_reqType = REQUEST_TYPE_HEARTS;
 				UpdateHearts(this, this);
-			}		
+			}
+			else
+			{
+				if (null != listener)
+					listener.onFinishAutoLogin(IsLogin);
+			}
 		}
 		else if (REQUEST_TYPE_HEARTS == m_reqType)
 		{
@@ -591,6 +604,9 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 				if (null == hearts) return;
 				LoginAccount.Hearts.Copy(hearts);
 			}
+			
+			if (null != listener)
+				listener.onFinishAutoLogin(IsLogin);
 		}
 	}
 

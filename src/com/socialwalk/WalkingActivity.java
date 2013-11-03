@@ -6,10 +6,16 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -37,7 +43,6 @@ import com.nhn.android.maps.maplib.NGeoPoint;
 import com.nhn.android.maps.nmapmodel.NMapError;
 import com.nhn.android.mapviewer.overlay.NMapMyLocationOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
-import com.nhn.android.mapviewer.overlay.NMapPathDataOverlay;
 import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.dataclass.AroundersItems;
 import com.socialwalk.dataclass.AroundersItems.AroundersItem;
@@ -59,24 +64,28 @@ Response.Listener<String>, Response.ErrorListener
 	private NMapOverlayManager mapOverlayManager;
 	private NMapLocationManager mapLocationManager;
 	private NMapMyLocationOverlay mapMyLocationOverlay;
-	private NMapPathDataOverlay pathDataOverlay;
+//	private NMapPathDataOverlay pathDataOverlay;
 
 	private ServerRequestManager server = null;
 	private int reqType;
 	private static final int REQUEST_AROUNDERS = 100;
 	private static final int REQUEST_AD_ACCUMULATE = 101;
 	
+	private LocationManager locationManager;
+	private LocationListener locationListener;
+	
 	private AroundersItems aroundersAds = new AroundersItems();
 	private AroundersItem currentArounders = null;
 	private Date aroundersUpdateTime = null;
 
-	private ImageView walkAni;
+	private ImageView walkAni, characterBgView;
 	private Timer updateTimer;
 	private Handler updateHandler;
 	private TimerTask updateTask;
 	private boolean IsMapMode = false;
 	private RelativeLayout animodeLayout, mapmodeLayout, stopLayout, aroundersLayout;
 	
+	private static boolean characterAminatonEnable = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -86,6 +95,15 @@ Response.Listener<String>, Response.ErrorListener
 		
 		this.server = new ServerRequestManager();
 		
+        this.locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        this.locationListener = new NetworkLocationListener();
+
+		
+        this.characterBgView = (ImageView)findViewById(R.id.mainBgImage);
+		Bitmap newBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.main_character_bg);
+		this.characterBgView.setImageBitmap(newBitmap );
+
+		
         this.aroundersLayout = (RelativeLayout)findViewById(R.id.layoutArounders);
         this.aroundersLayout.setVisibility(View.INVISIBLE);
         this.aroundersLayout.setOnClickListener(this);
@@ -94,17 +112,20 @@ Response.Listener<String>, Response.ErrorListener
 		this.stopLayout = (RelativeLayout)findViewById(R.id.layoutStop);
 		this.stopLayout.setOnClickListener(this);
 		
-		walkAni = (ImageView)findViewById(R.id.walkAniImage);
-		walkAni.setBackgroundResource(R.drawable.charactor_walk_animation);
-		walkAni.post(new Runnable()
+		walkAni = (ImageView)findViewById(R.id.walkCharacter);
+		if (characterAminatonEnable)
 		{
-		    @Override
-		    public void run()
-		    {
-				AnimationDrawable charactorAnimation = (AnimationDrawable)walkAni.getBackground();
-				charactorAnimation.start();
-		    }
-		});
+			walkAni.setBackgroundResource(R.drawable.charactor_walk_ani);
+			walkAni.post(new Runnable()
+			{
+			    @Override
+			    public void run()
+			    {
+					AnimationDrawable charactorAnimation = (AnimationDrawable)walkAni.getBackground();
+					charactorAnimation.start();
+			    }
+			});
+		}
 		
 		walkMap = (NMapView)findViewById(R.id.walkMap);
 		
@@ -117,7 +138,7 @@ Response.Listener<String>, Response.ErrorListener
 		mapController = walkMap.getMapController();
 		mapResProvider = new NaverMapResourceProvider(this);
 		mapOverlayManager = new NMapOverlayManager(this, walkMap, mapResProvider);
-		pathDataOverlay = mapOverlayManager.createPathDataOverlay();
+//		pathDataOverlay = mapOverlayManager.createPathDataOverlay();
 		
 		mapLocationManager = new NMapLocationManager(this);
 		mapLocationManager.setOnLocationChangeListener(onMyLocationChangeListener);
@@ -219,21 +240,6 @@ Response.Listener<String>, Response.ErrorListener
 		{
 			walkSpeed.setText(String.format(getResources().getString(R.string.FORMAT_SPEED), lastItem.CurrentSpeed));
 			altitude.setText(String.format(getResources().getString(R.string.FORMAT_ALTITUDE), lastItem.LogLocation.getAltitude()));
-			
-			if (null == this.aroundersUpdateTime)
-			{
-				requestArounders(lastItem.LogLocation);
-			}
-			else
-			{
-				// 어라운더스 정보가 10분 이내의 정보이면 갱신하지 않는다
-				Date now = new Date();
-				long diffInMs = now.getTime() - aroundersUpdateTime.getTime();
-				long diffInMinutes= TimeUnit.MILLISECONDS.toMinutes(diffInMs);
-				if (10 > diffInMinutes) return;
-				
-				requestArounders(lastItem.LogLocation);
-			}
 		}
 		else
 		{
@@ -248,9 +254,9 @@ Response.Listener<String>, Response.ErrorListener
 		TextView touchHearts = (TextView)findViewById(R.id.touchHearts);
 		TextView calories = (TextView)findViewById(R.id.calories);
 		
-		walkHearts.setText(currentWalk.RedHeartStringByWalk() + getResources().getString(R.string.HEART));
-		touchHearts.setText(currentWalk.RedHeartStringByTouch() + getResources().getString(R.string.HEART));
-		calories.setText(currentWalk.WalkingCaloriesStringFromNow());
+		walkHearts.setText(currentWalk.RedHeartStringByWalk() + " " + getResources().getString(R.string.HEART));
+		touchHearts.setText(currentWalk.RedHeartStringByTouch() + " " + getResources().getString(R.string.HEART));
+		calories.setText(currentWalk.WalkingCaloriesStringFromNow() + " " + getResources().getString(R.string.CALORIES_UNIT));
 	}
 	
 	private void requestArounders(Location loc)
@@ -266,12 +272,36 @@ Response.Listener<String>, Response.ErrorListener
 	{
 		if (mapLocationManager.isMyLocationEnabled())
 			mapLocationManager.disableMyLocation();
+
+    	if (null != this.locationManager && null != this.locationListener)
+    		this.locationManager.removeUpdates(this.locationListener);
 		
 		updateTimer.cancel();
+		
+		((BitmapDrawable)this.characterBgView.getDrawable()).getBitmap().recycle();
+
 		super.onDestroy();
 	}
 
-	
+	@Override
+	protected void onPause()
+	{
+    	if (null != this.locationManager && null != this.locationListener)
+    		this.locationManager.removeUpdates(this.locationListener);
+
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume()
+	{
+    	// 네트워크 기반 위치정보 수신 모듈 재시작
+    	if (null != this.locationManager && null != this.locationListener)
+    		this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 10, this.locationListener);
+
+		super.onResume();
+	}
+
 	@Override
 	public void onBackPressed()
 	{
@@ -403,8 +433,11 @@ Response.Listener<String>, Response.ErrorListener
 				@Override
 				public void onClick(DialogInterface dialog, int which)
 				{
-					AnimationDrawable charactorAnimation = (AnimationDrawable)walkAni.getBackground();
-					charactorAnimation.stop();
+					if (characterAminatonEnable)
+					{
+						AnimationDrawable charactorAnimation = (AnimationDrawable)walkAni.getBackground();
+						charactorAnimation.stop();
+					}
 					
 					WalkHistory currentWalk = WalkHistoryManager.LastWalking();
 					currentWalk.Finish();
@@ -524,35 +557,35 @@ Response.Listener<String>, Response.ErrorListener
 	public void onResponse(String response)
 	{
 		if (0 == response.length()) return;
+
 		MyXmlParser parser = new MyXmlParser(response);
-		SWResponse result = parser.GetResponse();
-		if (null == result) return;
 		
 		if (REQUEST_AROUNDERS == this.reqType)
 		{
 			System.out.println(response);
 			
-			if (Globals.ERROR_NONE == result.Code)
-			{
-				AroundersItems items = parser.GetArounders();
-				if (null == items) return;
-				if (0 == items.Items.size()) return;
-				
-				this.aroundersUpdateTime = new Date();
-				this.aroundersAds.Items.clear();
-				this.aroundersAds.Items.addAll(items.Items);
-				
-				this.currentArounders = this.aroundersAds.GetItem();
-				
-				updateArounders();
-			}
+			AroundersItems items = parser.GetArounders();
+			if (null == items) return;
+			if (0 == items.Items.size()) return;
+			
+			this.aroundersUpdateTime = new Date();
+			this.aroundersAds.Items.clear();
+			this.aroundersAds.Items.addAll(items.Items);
+			
+			this.currentArounders = this.aroundersAds.GetItem();
+			
+			updateArounders();
 		}
 		else if (REQUEST_AD_ACCUMULATE == this.reqType)
 		{
+			SWResponse result = parser.GetResponse();
+			if (null == result) return;
+
 			if (Globals.ERROR_NONE == result.Code)
 			{
 				LockService.AroundersVisitCodes.add(this.currentArounders.getSequence());
-				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(Globals.AD_POINT_AROUNDERS);
+				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(Globals.AD_AROUNDERS_RED);
+				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(Globals.AD_AROUNDERS_GREEN);
 				updateUserInformation();
 			}
 			else
@@ -562,4 +595,47 @@ Response.Listener<String>, Response.ErrorListener
 			}
 		}
 	}
+	
+	
+	private class NetworkLocationListener implements LocationListener
+	{
+		@Override
+		public void onLocationChanged(Location location)
+		{
+			if (null != location)
+			{
+				if (null == aroundersUpdateTime)
+				{
+					aroundersUpdateTime = new Date();
+				}
+				else
+				{
+					// 어라운더스 정보가 10분 이내의 정보이면 갱신하지 않는다
+					Date now = new Date();
+					long diffInMs = now.getTime() - aroundersUpdateTime.getTime();
+					long diffInMinutes= TimeUnit.MILLISECONDS.toMinutes(diffInMs);
+					if (10 > diffInMinutes) return;
+				}
+				
+				requestArounders(location);
+			}
+		}
+
+		@Override
+		public void onProviderDisabled(String provider)
+		{
+		}
+
+		@Override
+		public void onProviderEnabled(String provider)
+		{
+		}
+
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras)
+		{
+		}
+		
+	}
+
 }

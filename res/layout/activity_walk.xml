@@ -331,10 +331,9 @@
 	                android:id="@+id/mainBgImage"
 	                android:layout_width="match_parent"
 	                android:layout_height="match_parent"
-	                android:src="@drawable/main_character_bg"
 	                android:scaleType="centerCrop" />
 				<ImageView
-				    android:id="@+id/walkAniImage"
+				    android:id="@+id/walkCharacter"
 				    android:layout_width="240dp"
 				    android:layout_height="240dp"
 				    android:layout_alignParentBottom="true"

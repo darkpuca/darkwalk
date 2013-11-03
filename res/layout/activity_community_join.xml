@@ -19,15 +19,13 @@
             android:layout_centerVertical="true"
             android:textSize="24sp"
             android:textColor="@color/WHITE"
-            android:textStyle="bold"
-            android:text="GROUP_NAME" />
+            android:textStyle="bold" />
     </RelativeLayout>
-    
         
     <RelativeLayout
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:padding="@dimen/activity_horizontal_margin" >
 	    <Button
@@ -51,28 +49,28 @@
 	    <LinearLayout
 	        android:id="@+id/descLayout"
 	        android:layout_width="match_parent"
-	        android:layout_height="80dp"
-	        android:layout_marginBottom="6dp"
+	        android:layout_height="wrap_content"
+	        android:minHeight="80dp"
+	        android:layout_marginBottom="10dp"
 	        android:orientation="vertical"
 	        android:layout_alignParentTop="true" >
 	        <TextView
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginBottom="4dp"
-	            android:textSize="16sp"
+	            android:textSize="20sp"
 	            android:textStyle="bold"
 	            android:textColor="@color/DARK_GRAY"
 	            android:text="@string/GROUP_DESCRIPTION" />
 	        <TextView
 	            android:id="@+id/groupDesc"
 	            android:layout_width="match_parent"
-	            android:layout_height="match_parent"
+	            android:layout_height="wrap_content"
 	            android:layout_gravity="top"
 		        android:maxLines="3"
 		        android:ellipsize="end"
-	            android:textSize="15sp"
-	            android:textColor="@color/GRAY"
-	            android:text="GROUP_DESC" />
+	            android:textSize="18sp"
+	            android:textColor="@color/GRAY" />
 	    </LinearLayout>
 	    <LinearLayout
 	        android:layout_width="match_parent"
@@ -83,7 +81,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginBottom="4dp"
-	            android:textSize="16sp"
+	            android:textSize="20sp"
 	            android:textStyle="bold"
 	            android:textColor="@color/DARK_GRAY"
 	            android:text="@string/JOIN_REQUEST_MESSAGE" />
@@ -91,12 +89,12 @@
 			    android:id="@+id/reqMessage"
 			    android:layout_width="match_parent"
 			    android:layout_height="match_parent"
-			    android:padding="4dp"
+			    android:padding="6dp"
+			    android:inputType="textMultiLine"
+			    android:gravity="top"
+			    android:textSize="18sp"
 			    android:background="@drawable/field_rounded_bg" />
 	        
 	    </LinearLayout>
     </RelativeLayout>
-    
-    
-    
 </RelativeLayout>

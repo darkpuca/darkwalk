@@ -17,132 +17,198 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:textSize="24sp"
+            android:textSize="@dimen/TITLE_FONT_SIZE"
             android:textColor="@color/WHITE"
             android:textStyle="bold"
             android:text="@string/TITLE_BENEFICIARY_DETAIL" />       
     </RelativeLayout>
 
-	<RelativeLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_below="@+id/titleLayout"
-	    android:padding="@dimen/activity_horizontal_margin"
-	    android:background="@color/MAIN_BG" >
-        <ScrollView
+    <ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@+id/titleLayout"
+		android:background="@color/MAIN_BG" >
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/innerframe_shape" >
-            <LinearLayout
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/detailLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:padding="@dimen/activity_horizontal_margin"
-                android:orientation="vertical" >
+                android:background="@drawable/innerframe_shape" >
 
-                <RelativeLayout
-                    android:id="@+id/detailLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:padding="@dimen/activity_horizontal_margin" >
-
-                    <com.android.volley.toolbox.NetworkImageView
-                        android:id="@+id/profileImage"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:adjustViewBounds="true"
-                        android:scaleType="centerCrop"
-                        android:background="@color/LIGHT_GRAY" />
+				<com.android.volley.toolbox.NetworkImageView
+				    android:id="@+id/profileImage"
+				    android:layout_width="64dp"
+				    android:layout_height="64dp"
+				    android:layout_alignParentLeft="true"
+				    android:layout_alignParentTop="true"
+				    android:adjustViewBounds="true"
+				    android:scaleType="centerCrop"
+				    android:background="@drawable/photo_frame_shape" />
+				<TextView
+				    android:id="@+id/name"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_alignTop="@+id/profileImage"
+				    android:layout_toRightOf="@+id/profileImage"
+				    android:layout_marginLeft="6dp"
+				    android:textSize="20sp"
+				    android:textStyle="bold"
+				    android:textColor="@color/DARK_GRAY" />
+				<LinearLayout
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_below="@+id/name"
+				    android:layout_alignLeft="@+id/name" >
                     <TextView
-                        android:id="@+id/name"
+                        android:id="@+id/age"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/profileImage"
-                        android:layout_toRightOf="@+id/profileImage"
-                        android:layout_marginLeft="6dp"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/DARK_GRAY"
-                        android:text="NAME" />
-                    <LinearLayout
+                        android:textColor="@color/GRAY" />
+					<TextView 
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_marginLeft="3dp"
+					    android:layout_marginRight="3dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/GRAY"
+                        android:text="/" />
+                    <TextView
+                        android:id="@+id/gender"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/name"
-                        android:layout_alignLeft="@+id/name" >
-	                    <TextView
-	                        android:id="@+id/age"
-	                        android:layout_width="wrap_content"
-	                        android:layout_height="wrap_content"
-	                        android:textSize="16sp"
-	                        android:textStyle="bold"
-	                        android:textColor="@color/GRAY"
-	                        android:text="AGE" />
-						<TextView 
-						    android:layout_width="wrap_content"
-						    android:layout_height="wrap_content"
-						    android:layout_marginLeft="3dp"
-						    android:layout_marginRight="3dp"
-	                        android:textSize="16sp"
-	                        android:textStyle="bold"
-	                        android:textColor="@color/GRAY"
-	                        android:text="/" />
-	                    <TextView
-	                        android:id="@+id/gender"
-	                        android:layout_width="wrap_content"
-	                        android:layout_height="wrap_content"
-	                        android:textSize="16sp"
-	                        android:textStyle="bold"
-	                        android:textColor="@color/GRAY"
-	                        android:text="GENDER" />
-                    </LinearLayout>
-                </RelativeLayout>
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/GRAY" />
+				</LinearLayout>
+			</RelativeLayout>
                 
-                <RelativeLayout
-                    android:id="@+id/moneyLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:padding="@dimen/activity_horizontal_margin" >
-			        <TextView
-			            android:id="@+id/targetMoney"
-			            android:layout_width="wrap_content"
-			            android:layout_height="wrap_content"
-						android:layout_alignParentTop="true"
-						android:textSize="20sp"
-						android:textStyle="bold"
-			            android:text="x,xxx,xxx" />
+			<LinearLayout
+			    android:id="@+id/moneyLayout"
+			    android:orientation="vertical"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_marginTop="6dp"
+			    android:padding="@dimen/activity_horizontal_margin"
+			    android:background="@drawable/innerframe_shape" >
+		        <RelativeLayout
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_marginBottom="4dp" >
+		            <TextView
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_alignParentLeft="true"
+		                android:layout_centerVertical="true"
+		                android:textSize="18sp"
+		                android:textColor="@color/GRAY"
+		                android:text="@string/CURRENT_MONEY" />
 			        <TextView
 			            android:id="@+id/currentMoney"
 			            android:layout_width="wrap_content"
 			            android:layout_height="wrap_content"
-						android:layout_below="@+id/targetMoney"
-						android:textSize="20sp"
-						android:textStyle="bold"
-			            android:text="x,xxx,xxx" />
-                </RelativeLayout>
+						android:layout_alignParentRight="true"
+						android:layout_centerVertical="true"
+						android:textSize="22sp"
+						android:textColor="@color/DARK_GRAY"
+						android:textStyle="bold" />
+		        </RelativeLayout>
+		        <RelativeLayout
+		            android:visibility="gone"
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content" >
+		            <TextView
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_alignParentLeft="true"
+		                android:layout_centerVertical="true"
+		                android:textSize="18sp"
+		                android:textColor="@color/GRAY"
+		                android:text="@string/TARGET_MONEY" />
+			        <TextView
+			            android:id="@+id/targetMoney"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+						android:layout_alignParentRight="true"
+						android:layout_centerVertical="true"
+						android:textSize="22sp"
+						android:textColor="@color/DARK_GRAY"
+						android:textStyle="bold" />
+		        </RelativeLayout>
+		        <ProgressBar 
+		            android:id="@+id/moneyProgress"
+					android:layout_width="match_parent"
+					android:layout_height="24dp"
+					android:layout_marginBottom="4dp"
+		            style="?android:attr/progressBarStyleHorizontal"
+		            android:max="100"
+		            android:progress="0"
+					android:progressDrawable="@drawable/money_progress" />
+		        <RelativeLayout
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_marginTop="4dp" >
+		            <TextView
+		                android:id="@+id/participantsLabel"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_centerVertical="true"
+		                android:layout_marginTop="2dp"
+		                android:textSize="16sp"
+		                android:textColor="@color/GRAY"
+		                android:text="@string/PARTICIPANTS" />
+		            <TextView
+		                android:id="@+id/participants"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_toRightOf="@+id/participantsLabel"
+		                android:layout_centerVertical="true"
+		                android:layout_marginLeft="4dp"
+		                android:textSize="16sp"
+		                android:textColor="@color/GRAY"
+		                android:textStyle="bold" />
+		        </RelativeLayout>
 
-				<com.android.volley.toolbox.NetworkImageView
-				    android:id="@+id/descriptionImage"
+				<TextView
+				    android:id="@+id/description"
 				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
-				    android:minHeight="80dp"
-				    android:padding="@dimen/activity_horizontal_margin"
-				    android:adjustViewBounds="true"
-					android:scaleType="centerCrop"
-				    android:background="@color/LIGHT_GRAY" />
-				<com.android.volley.toolbox.NetworkImageView
-				    android:id="@+id/reviewImage"
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:minHeight="80dp"
-				    android:adjustViewBounds="true"
-					android:scaleType="centerInside"
-				    android:padding="@dimen/activity_horizontal_margin"
-				    android:background="@color/LIGHT_GRAY" />
-				
-            </LinearLayout>
-        </ScrollView>
-	    
-	</RelativeLayout>    
+				    android:layout_marginTop="10dp"
+				    android:padding="8dp"
+				    android:lineSpacingExtra="10dp"
+				    android:textSize="18sp"
+				    android:textColor="@color/DARK_GRAY" />
+			</LinearLayout>
+
+<!-- 				
+			<com.android.volley.toolbox.NetworkImageView
+			    android:id="@+id/descriptionImage"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:minHeight="80dp"
+			    android:padding="@dimen/activity_horizontal_margin"
+			    android:adjustViewBounds="true"
+				android:scaleType="centerCrop"
+			    android:background="@color/LIGHT_GRAY" />
+			<com.android.volley.toolbox.NetworkImageView
+			    android:id="@+id/reviewImage"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:minHeight="80dp"
+			    android:adjustViewBounds="true"
+				android:scaleType="centerInside"
+			    android:padding="@dimen/activity_horizontal_margin"
+			    android:background="@color/LIGHT_GRAY" />
+-->				
+	    </LinearLayout>
+	</ScrollView>
     
 </RelativeLayout>

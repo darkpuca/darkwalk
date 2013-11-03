@@ -69,7 +69,7 @@ public class Globals
 	public static final int INTENT_REQ_PROFILE = 1102;
 	public static final int INTENT_REQ_SETTING = 1103;
 
-	public static final long INTRO_WAITING = 2000;
+	public static final long INTRO_WAITING = 3000;
 
 	public static final String AD_TYPE_SLIDE = "slide";
 	public static final String AD_TYPE_INTRO = "intro";
@@ -82,6 +82,8 @@ public class Globals
 	public static final int AD_POINT_INTRO = 10;
 //	public static final int AD_POINT_START = 10;
 	public static final int AD_POINT_WALK = 10;
+	public static final int AD_AROUNDERS_RED = 5;
+	public static final int AD_AROUNDERS_GREEN = 5;
 	
 	public static final int DEFAULT_WEIGHT = 70;
 

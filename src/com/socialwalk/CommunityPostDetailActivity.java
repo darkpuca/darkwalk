@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,13 +41,15 @@ implements Response.Listener<String>, Response.ErrorListener
 	private int communitySequence, postSequence;
 	private ServerRequestManager m_server;
 	private CommunityReplyAdapter m_adapter;
-	private int reqType, pageIndex;
+	private int reqType, pageIndex, totalCount;
 	private ListView repliesList;
-	
+	private ProgressDialog progDlg;
+
 	private static final int REQUEST_POST_DETAIL = 100;
 	private static final int REQUEST_REPLIES = 101;
-	private static final int REQUEST_POST_DELETE = 102;
-	private static final int REQUEST_REPLY_DELETE = 103;
+	private static final int REQUEST_MORE_REPLIES = 102;
+	private static final int REQUEST_POST_DELETE = 103;
+	private static final int REQUEST_REPLY_DELETE = 104;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -54,11 +57,17 @@ implements Response.Listener<String>, Response.ErrorListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_community_post_detail);
 		
-		m_server = new ServerRequestManager();
+		this.m_server = new ServerRequestManager();
 		
-		m_adapter = new CommunityReplyAdapter(this, new Vector<CommunityPostReply>());
-		repliesList = (ListView)findViewById(R.id.repliesList);
-		repliesList.setAdapter(m_adapter);
+		// prepare progress dialog
+		progDlg = new ProgressDialog(this);
+		progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progDlg.setCancelable(false);
+		progDlg.setMessage(getResources().getString(R.string.MSG_LOADING));
+
+		this.m_adapter = new CommunityReplyAdapter(this, new Vector<CommunityPostReply>());
+		this.repliesList = (ListView)findViewById(R.id.repliesList);
+		this.repliesList.setAdapter(m_adapter);
 		registerForContextMenu(repliesList);
 		
 		this.writerSequence = getIntent().getStringExtra(Globals.EXTRA_KEY_WRITER_SEQUENCE);
@@ -75,8 +84,10 @@ implements Response.Listener<String>, Response.ErrorListener
 		}
 		else
 		{
-			reqType = REQUEST_POST_DETAIL;
-			m_server.CommunityPostDetail(this, this, this.postSequence);
+			if (!progDlg.isShowing()) progDlg.show();
+			
+			this.reqType = REQUEST_POST_DETAIL;
+			this.m_server.CommunityPostDetail(this, this, this.postSequence);
 		}
 		
 		Button btnReply = (Button)findViewById(R.id.btnReply);
@@ -128,6 +139,8 @@ implements Response.Listener<String>, Response.ErrorListener
 				@Override
 				public void onClick(DialogInterface dialog, int which)
 				{	
+					if (!progDlg.isShowing()) progDlg.show();
+					
 					CommunityPostReply reply = m_adapter.getItem(menuInfo.position);
 					reqType = REQUEST_REPLY_DELETE;
 					m_server.ReplyDelete(CommunityPostDetailActivity.this, CommunityPostDetailActivity.this, reply.Sequence);
@@ -176,6 +189,8 @@ implements Response.Listener<String>, Response.ErrorListener
 				@Override
 				public void onClick(DialogInterface dialog, int which)
 				{
+					if (!progDlg.isShowing()) progDlg.show();
+					
 					reqType = REQUEST_POST_DELETE;
 					m_server.CommunityPostDelete(CommunityPostDetailActivity.this, CommunityPostDetailActivity.this, postSequence);
 				}
@@ -199,13 +214,13 @@ implements Response.Listener<String>, Response.ErrorListener
 	{
 		if (Globals.INTENT_REQ_POSTING == requestCode && RESULT_OK == resultCode)
 		{
-			RefreshReplies();
+			refreshReplies();
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	private void UpdateContents(CommunityPostItem item)
+	private void updateContents(CommunityPostItem item)
 	{
 		if (null == item) return;
 		
@@ -225,22 +240,36 @@ implements Response.Listener<String>, Response.ErrorListener
 		replyCount.setText(Integer.toString(item.ReplyCount));
 	}
 	
-	private void RefreshReplies()
+	private void refreshReplies()
 	{
-		pageIndex = 0;
+		if (!progDlg.isShowing()) progDlg.show();
+		
+		pageIndex = 1;
 		reqType = REQUEST_REPLIES;
+		m_server.CommunityReplies(this, this, this.postSequence, pageIndex);
+	}
+	
+	private void requestMoreReplies()
+	{
+		if (!progDlg.isShowing()) progDlg.show();
+		
+		pageIndex++;
+		reqType = REQUEST_MORE_REPLIES;
 		m_server.CommunityReplies(this, this, this.postSequence, pageIndex);
 	}
 
 	@Override
 	public void onErrorResponse(VolleyError e)
 	{
+		if (progDlg.isShowing()) progDlg.dismiss();
 		e.printStackTrace();
 	}
 
 	@Override
 	public void onResponse(String response)
 	{
+		if (progDlg.isShowing()) progDlg.dismiss();
+		
 		if (0 == response.length()) return;
 		MyXmlParser parser = new MyXmlParser(response);
 		SWResponse result = parser.GetResponse();
@@ -252,8 +281,9 @@ implements Response.Listener<String>, Response.ErrorListener
 			{
 				CommunityPostItem postItem = parser.GetCommunityPostItem();
 				if (null != postItem)
-					UpdateContents(postItem);
-				RefreshReplies();
+					updateContents(postItem);
+				
+				refreshReplies();
 			}
 		}
 		else if (REQUEST_REPLIES == reqType)
@@ -263,14 +293,31 @@ implements Response.Listener<String>, Response.ErrorListener
 				CommunityPostReplies replies = parser.GetCommunityReplies();
 				if (null == replies) return;
 				
-				if (0 == pageIndex)
+				if (1 == pageIndex)
 					m_adapter.clear();
 					
 				for (CommunityPostReply item : replies.Items)
 					m_adapter.add(item);
 				
+				this.totalCount = replies.TotalCount;
+				
 				TextView replyCount = (TextView)findViewById(R.id.replyCount);
-				replyCount.setText(Integer.toString(m_adapter.getCount()));
+				replyCount.setText(Integer.toString(this.totalCount));
+			}
+			else if (Globals.ERROR_NO_RESULT == result.Code)
+			{
+				m_adapter.clear();
+			}
+		}
+		else if (REQUEST_MORE_REPLIES == reqType)
+		{
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				CommunityPostReplies replies = parser.GetCommunityReplies();
+				if (null == replies) return;
+				
+				for (CommunityPostReply item : replies.Items)
+					m_adapter.add(item);
 			}
 			else if (Globals.ERROR_NO_RESULT == result.Code)
 			{
@@ -288,7 +335,7 @@ implements Response.Listener<String>, Response.ErrorListener
 		else if (REQUEST_REPLY_DELETE == reqType)
 		{
 			if (Globals.ERROR_NONE == result.Code || Globals.ERROR_NO_RESULT == result.Code)
-				RefreshReplies();
+				refreshReplies();
 		}
 	}
 	
@@ -348,6 +395,9 @@ implements Response.Listener<String>, Response.ErrorListener
 			String dateString = sdf.format(item.RegDate);
 			container.RegDate.setText(dateString);
 			
+			if (position == (m_adapter.getCount()-1) && position < (totalCount-1))
+				requestMoreReplies();
+
 			return rowView;
 		}		
 	}	

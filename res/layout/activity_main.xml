@@ -91,7 +91,7 @@
 				android:src="@drawable/main_user_name"
 				android:layout_alignParentLeft="true"
 				android:layout_centerVertical="true" />
-	        <TextView
+<!-- 	        <TextView
 	            android:id="@+id/userNameLabel"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
@@ -100,13 +100,14 @@
 	            android:layout_marginLeft="6dp"
 	            android:textSize="14sp"
 	            android:textColor="@color/WHITE"
-	            android:text="@string/USER_UPPER" />
+	            android:text="@string/USER_UPPER" />-->
 			<TextView
 			    android:id="@+id/userName"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_below="@+id/userNameLabel"
-				android:layout_alignLeft="@+id/userNameLabel"
+				android:layout_toRightOf="@+id/imgUserName"
+				android:layout_centerVertical="true"
+				android:layout_marginLeft="4dp"
 				android:textSize="16sp"
 				android:textStyle="bold"
 				android:textColor="@color/DARK_GRAY" />
@@ -117,7 +118,6 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="match_parent"
 	        android:layout_toRightOf="@+id/layoutUserName" >
-			
 	        <ImageView
 				android:id="@+id/imgUserGroup"
 				android:layout_width="28dp"
@@ -125,25 +125,29 @@
 				android:src="@drawable/main_user_group"
 				android:layout_alignParentLeft="true"
 				android:layout_centerVertical="true" />
-	        <TextView
-	            android:id="@+id/areaName"
+	        <LinearLayout
+	            android:orientation="vertical"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:layout_alignTop="@+id/imgUserGroup"
 	            android:layout_toRightOf="@+id/imgUserGroup"
-	            android:layout_marginLeft="6dp"
-	            android:textSize="14sp"
-	            android:textColor="@color/WHITE"
-	            android:text="@string/GROUP_UPPER" />
-			<TextView
-				android:id="@+id/groupName"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@+id/areaName"
-				android:layout_alignLeft="@+id/areaName"
-				android:textSize="16sp"
-				android:textStyle="bold"
-				android:textColor="@color/DARK_GRAY" />
+	            android:layout_centerVertical="true"
+	            android:layout_marginLeft="6dp" >
+		        <TextView
+		            android:id="@+id/areaName"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textSize="14sp"
+		            android:textColor="@color/WHITE"
+		            android:textStyle="bold"
+		            android:text="@string/GROUP_UPPER" />
+				<TextView
+					android:id="@+id/groupName"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textSize="16sp"
+					android:textStyle="normal"
+					android:textColor="@color/DARK_GRAY" />
+	        </LinearLayout>
 	    </RelativeLayout>
 	</RelativeLayout>
 		
@@ -166,7 +170,6 @@
                 android:id="@+id/mainBgImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/main_character_bg"
                 android:scaleType="centerCrop" />
 			<ImageView
 	            android:id="@+id/imgReady"
@@ -198,7 +201,7 @@
                 android:layout_toRightOf="@+id/imgRed"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="4dp"
-                android:textSize="20sp"
+                android:textSize="22sp"
                 android:textColor="@color/LIGHT_RED"
                 android:textStyle="bold"
                 android:text="X,XXX" />
@@ -209,7 +212,7 @@
                 android:layout_toRightOf="@+id/redHeart"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="4dp"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textColor="@color/LIGHT_RED"
                 android:text="(" />
             <ImageView
@@ -226,9 +229,8 @@
                 android:layout_toRightOf="@+id/walkRedIcon"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="4dp"
-                android:textSize="16sp"
-                android:textColor="@color/LIGHT_RED"
-                android:text="X,XXX" />
+                android:textSize="18sp"
+                android:textColor="@color/LIGHT_RED" />
             <ImageView
                 android:id="@+id/touchRedIcon"
                 android:src="@drawable/main_touch_heart_icon"
@@ -244,16 +246,15 @@
                 android:layout_toRightOf="@+id/touchRedIcon"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="4dp"
-                android:textSize="16sp"
-                android:textColor="@color/LIGHT_RED"
-                android:text="X,XXX" />
+                android:textSize="18sp"
+                android:textColor="@color/LIGHT_RED" />
             <TextView
                 android:id="@+id/redBrace2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/redHeartTouch"
                 android:layout_centerVertical="true"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textColor="@color/LIGHT_RED"
                 android:text=")" />
             <TextView
@@ -263,10 +264,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="4dp"
-                android:textSize="20sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
-                android:textColor="@color/LIGHT_GREEN"
-                android:text="X,XXX" />		            
+                android:textColor="@color/LIGHT_GREEN" />
             <ImageView
                 android:id="@+id/imgGreen"
                 android:src="@drawable/main_green_heart"

@@ -1,7 +1,6 @@
 package com.socialwalk;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -38,8 +36,6 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 	private static final int REQUEST_LOGIN = 100;
 	private static final int REQUEST_HEARTS = 101;
 
-	private static final String TAG = "SW-LOGIN";
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{

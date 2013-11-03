@@ -15,11 +15,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -96,17 +96,20 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 		TextView tvAreaLabel = (TextView)findViewById(R.id.areaLabel);
 		TextView tvSubAreaLabel = (TextView)findViewById(R.id.subAreaLabel);
 		
+		ImageView areaLockedIcon = (ImageView)findViewById(R.id.areaLockedIcon);
 		if (ServerRequestManager.LoginAccount.IsGroupUser)
 		{
 			tvAreaLabel.setText(R.string.ORGANIZAION);
 			tvSubAreaLabel.setText(R.string.MEMBER);
 			this.areaLayout.setEnabled(false);
+			areaLockedIcon.setVisibility(View.VISIBLE);
 		}
 		else
 		{
 			tvAreaLabel.setText(R.string.LOCAL1);
 			tvSubAreaLabel.setText(R.string.LOCAL2);
 			this.areaLayout.setEnabled(true);
+			areaLockedIcon.setVisibility(View.INVISIBLE);
 		}
 		
 		
@@ -504,6 +507,7 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 	public void onErrorResponse(VolleyError e)
 	{
 		if (this.progDlg.isShowing()) progDlg.dismiss();
+		Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
 		e.printStackTrace();
 	}
 
@@ -525,6 +529,10 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 				this.userProfile = parser.GetAccountData();
 				if (null != this.userProfile)
 					updateProfileInformation();
+			}
+			else
+			{
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
 			}
 		}
 		else if (REQUEST_AREAITEM == this.reqType)
@@ -568,6 +576,10 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 				ServerRequestManager.LoginAccount.CommunityName = userProfile.CommunityName;
 				ServerRequestManager.LoginAccount.Gender = userProfile.Gender;
 				ServerRequestManager.LoginAccount.Weight = userProfile.Weight;
+			}
+			else
+			{
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
 			}
 		}
 		else if (REQUEST_SECESSION_PASSWORD == this.reqType)

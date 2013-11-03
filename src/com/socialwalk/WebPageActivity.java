@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -63,7 +62,7 @@ public class WebPageActivity extends Activity
 		// prepare progress dialog
 		progDlg = new ProgressDialog(WebPageActivity.this);
 		progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		progDlg.setCancelable(false);
+		progDlg.setCancelable(true);
 
 		webView.loadUrl(urlString);
 
@@ -75,7 +74,7 @@ public class WebPageActivity extends Activity
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url)
 		{
-			Toast.makeText(getBaseContext(), url, Toast.LENGTH_SHORT).show();
+//			Toast.makeText(getBaseContext(), url, Toast.LENGTH_SHORT).show();
 			String[] names = url.split("/");
 			String targetName = names[names.length-1];
 			System.out.println(targetName);
@@ -113,8 +112,5 @@ public class WebPageActivity extends Activity
 			
 			super.onPageFinished(view, url);
 		}
-
-
 	}
-
 }

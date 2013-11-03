@@ -7,7 +7,6 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.socialwalk.dataclass.AccountData;
 import com.socialwalk.request.ImageCacheManager;
 import com.socialwalk.request.ImageCacheManager.CacheType;
 import com.socialwalk.request.RequestManager;

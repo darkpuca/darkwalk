@@ -48,6 +48,7 @@ implements Response.Listener<String>, Response.ErrorListener
 			public void onClick(View v)
 			{
 				Intent i = new Intent(getBaseContext(), CommunityManageActivity.class);
+				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, communitySeq);
 				startActivity(i);				
 			}
 		});

@@ -49,6 +49,7 @@
 			android:layout_alignParentBottom="true" >
 			<ImageButton
 			    android:id="@+id/btnPhoto"
+			    android:visibility="invisible"
 			    android:layout_width="40dp"
 			    android:layout_height="40dp"
 			    android:layout_alignParentLeft="true"

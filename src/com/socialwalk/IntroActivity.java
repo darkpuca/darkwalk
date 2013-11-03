@@ -18,9 +18,7 @@ import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.request.ServerRequestManager;
 
 public class IntroActivity extends Activity
-implements Response.Listener<String>, Response.ErrorListener
 {
-	private ServerRequestManager server = null;
 	private Handler autoCloseHandler = null;
 	private Runnable autoCloseRunnable = new Runnable()
 	{	
@@ -39,8 +37,6 @@ implements Response.Listener<String>, Response.ErrorListener
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intro);
-
-		server = new ServerRequestManager();
 
 		imgAd = (ImageView)findViewById(R.id.imgAd);
 		Bitmap newBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.intro_bg);
@@ -84,32 +80,4 @@ implements Response.Listener<String>, Response.ErrorListener
 		((BitmapDrawable)imgAd.getDrawable()).getBitmap().recycle();
 		super.onDestroy();
 	}
-
-	@Override
-	public void onErrorResponse(VolleyError e)
-	{
-		e.printStackTrace();
-	}
-
-	@Override
-	public void onResponse(String response)
-	{
-		if (0 == response.length()) return;
-		MyXmlParser parser = new MyXmlParser(response);
-		SWResponse result = parser.GetResponse();
-		if (null == result) return;
-		
-		if (Globals.ERROR_NONE == result.Code)
-		{
-			ServerRequestManager.LoginAccount.Hearts.addGreenPoint(Globals.AD_POINT_INTRO);
-			
-			setResult(RESULT_OK);
-			finish();
-		}
-		else
-		{
-			
-		}
-	}
-
 }

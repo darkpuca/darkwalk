@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,19 +36,22 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 	private static final int INTENT_REQ_CREATE_COMMUNITY = 10;
 	private static final int INTENT_REQ_COMMUNITY_JOIN = 11;
 	
-	private static final int REQUEST_COMMUNITY_ITEMS = 20;
-	private static final int REQUEST_COMMUNITY_SEARCH = 21;
+	private static final int REQUEST_ITEMS = 200;
+	private static final int REQUEST_MORE_ITEMS = 201;
+	private static final int REQUEST_SEARCH = 202;
+	private static final int REQUEST_MORE_SEARCH = 203;
 	
-	private EditText keyword;
+	private String keyword;
+	private EditText tvKeyword;
 	private ListView resultList;
 	private Button btnCreate, btnSearch;
 	private TextView noResultMessage;
 	
-	private CommunityListAdapter m_communityAdapter, m_searchAdapter;
-	private Communities m_communities = null, m_searchResults = null;
-	private int m_requestType = 0;;
-	private ServerRequestManager m_server = new ServerRequestManager();
+	private CommunityListAdapter communityAdapter, searchAdapter;
+	private int reqType = 0, commPageIndex, searchPageIndex, commCount, searchCount;
+	private ServerRequestManager server = new ServerRequestManager();
 
+	private ProgressDialog progDlg;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -55,17 +59,20 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_community_selection);
 		
-		m_communities = new Communities();
-		m_communityAdapter = new CommunityListAdapter(this, m_communities.Items);
+		// prepare progress dialog
+		progDlg = new ProgressDialog(this);
+		progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progDlg.setCancelable(false);
+		progDlg.setMessage(getResources().getString(R.string.MSG_LOADING));
 		
-		m_searchResults = new Communities();
-		m_searchAdapter = new CommunityListAdapter(this, m_searchResults.Items);
+		communityAdapter = new CommunityListAdapter(this, new Vector<Community>());
+		searchAdapter = new CommunityListAdapter(this, new Vector<Community>());
 		
 		resultList = (ListView)findViewById(R.id.resultList);
-		resultList.setAdapter(m_communityAdapter);
+		resultList.setAdapter(communityAdapter);
 		resultList.setOnItemClickListener(this);
 		
-		keyword = (EditText)findViewById(R.id.searchKeyword);
+		tvKeyword = (EditText)findViewById(R.id.searchKeyword);
 		
 		btnCreate = (Button)findViewById(R.id.btnCreateGroup);
 		btnCreate.setOnClickListener(this);
@@ -75,26 +82,62 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		
 		noResultMessage = (TextView)findViewById(R.id.noResultMessage);
 		
-		// request community list
-		m_requestType = REQUEST_COMMUNITY_ITEMS;
-		m_server.CommunityGroups(this, this, m_communities.PageIndex);
+		requestItems();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.group_selection, menu);
-		return true;
+	private void requestItems()
+	{
+		if (!progDlg.isShowing()) progDlg.show();
+		
+		// request community list
+		this.reqType = REQUEST_ITEMS;
+		this.commPageIndex = 1;
+		this.server.CommunityGroups(this, this, this.commPageIndex);
+	}
+	
+	private void requestMoreItems()
+	{
+		if (!progDlg.isShowing()) progDlg.show();
+		
+		// request community list
+		this.reqType = REQUEST_MORE_ITEMS;
+		this.commPageIndex++;
+		this.server.CommunityGroups(this, this, this.commPageIndex);
+	}
+
+	private void requestSearches(String keyword)
+	{
+		if (null == keyword) return;
+		if (0 == keyword.length()) return;
+		
+		if (!progDlg.isShowing()) progDlg.show();
+		
+		this.reqType = REQUEST_SEARCH;
+		this.searchPageIndex = 1;
+		this.server.CommunitySearch(this, this, keyword, this.searchPageIndex);
+	}
+
+	private void requestMoreSearches(String keyword)
+	{
+		if (null == keyword) return;
+		if (0 == keyword.length()) return;
+		
+		if (!progDlg.isShowing()) progDlg.show();
+		
+		this.reqType = REQUEST_MORE_SEARCH;
+		this.searchPageIndex++;
+		this.server.CommunitySearch(this, this, keyword, this.searchPageIndex);
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View v, int position, long id)
 	{
-		Toast.makeText(this, "list item selected. idx: " + position, Toast.LENGTH_SHORT).show();
+//		Toast.makeText(this, "list item selected. idx: " + position, Toast.LENGTH_SHORT).show();
+		Community selItem = (Community)parent.getItemAtPosition(position);
 		
-		int groupId = 12345;
+		int commSeq = selItem.Sequence;
 		Intent i = new Intent(this, CommunityJoinActivity.class);
-		i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, groupId);
+		i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, commSeq);
 		startActivityForResult(i, INTENT_REQ_COMMUNITY_JOIN);
 	}
 
@@ -109,8 +152,7 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 				int commSeq = data.getIntExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, 0);
 				String name = data.getStringExtra(Globals.EXTRA_KEY_COMMUNITY_NAME);
 				String desc = data.getStringExtra(Globals.EXTRA_KEY_COMMUNITY_DESC);
-				
-				Toast.makeText(getBaseContext(), "id:" + commSeq + ", name:" + name + ", desc:" + desc, Toast.LENGTH_SHORT).show();
+//				Toast.makeText(getBaseContext(), "id:" + commSeq + ", name:" + name + ", desc:" + desc, Toast.LENGTH_SHORT).show();
 				
 				Intent i = new Intent();
 				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, commSeq);
@@ -124,9 +166,9 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		{
 			if (RESULT_OK == resultCode)
 			{
-				String name = data.getStringExtra(Globals.EXTRA_KEY_COMMUNITY_NAME);
+				int commSeq = data.getIntExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, 0);
 				Intent i = new Intent();
-				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, name);
+				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, commSeq);
 				setResult(RESULT_OK, i);
 
 				finish();
@@ -142,32 +184,23 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		if (btnCreate.equals(v))
 		{
 			Intent i = new Intent(getBaseContext(), CreateCommunityActivity.class);
-			if (0 < keyword.getText().length())
-				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, keyword.getText().toString());
+			if (0 < tvKeyword.getText().length())
+				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, tvKeyword.getText().toString());
 			
 			startActivityForResult(i, INTENT_REQ_CREATE_COMMUNITY);
 		}
 		else if (btnSearch.equals(v))
 		{
-			if (0 == keyword.getText().length())
+			if (0 == tvKeyword.getText().length())
 			{
-				AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-				dlg.setCancelable(true);
-				dlg.setTitle(R.string.TITLE_INFORMATION);
-				dlg.setMessage(R.string.MSG_EMPTY_KEYWORD);
-				dlg.setNegativeButton(R.string.CLOSE, new DialogInterface.OnClickListener()
-				{					
-					@Override
-					public void onClick(DialogInterface dialog, int which) { dialog.dismiss(); }
-				});
-				dlg.show();
+				this.noResultMessage.setVisibility(View.VISIBLE);
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_EMPTY_KEYWORD);
 			}
 			else
 			{
+				this.keyword = this.tvKeyword.getText().toString();
 				noResultMessage.setVisibility(View.GONE);
-				
-				m_requestType = REQUEST_COMMUNITY_SEARCH;
-				m_server.CommunitySearch(this, this, keyword.getText().toString(), m_searchResults.PageIndex);
+				requestSearches(this.keyword);
 			}
 		}
 	}
@@ -183,6 +216,7 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 	{
 		private Activity m_context = null;
 		private Vector<Community> m_items = null;
+		private boolean isSearchResult = false;
 		
 		public CommunityListAdapter(Activity context, Vector<Community> items)
 		{
@@ -224,7 +258,23 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 			container.Name.setText(item.Name);
 			container.Description.setText(item.Description);
 			
+			if (!isSearchResult)
+			{
+				if (position == (this.getCount()-1) && position < (commCount-1))
+					requestMoreItems();
+			}
+			else
+			{
+				if (position == (this.getCount()-1) && position < (searchCount-1))
+					requestMoreSearches(keyword);
+			}
+			
 			return rowView;
+		}
+		
+		public void IsSearchResult(boolean isSearch)
+		{
+			this.isSearchResult = isSearch;
 		}
 	}
 	
@@ -232,42 +282,77 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{
+		if (progDlg.isShowing()) progDlg.dismiss();
+		
 		error.printStackTrace();
 	}
 
 	@Override
 	public void onResponse(String response)
 	{
-		if (0 == response.length())
-			Toast.makeText(getBaseContext(), R.string.MSG_NO_SEARCH_RESULT, Toast.LENGTH_SHORT).show();
-		
+		if (progDlg.isShowing()) progDlg.dismiss();
+
+		if (0 == response.length()) return;
 		MyXmlParser parser = new MyXmlParser(response);
 		SWResponse result = parser.GetResponse();
 		if (null == result) return;
 		
-		if (REQUEST_COMMUNITY_ITEMS == m_requestType)
+		if (REQUEST_ITEMS == reqType)
 		{
 			if (Globals.ERROR_NONE == result.Code)
 			{
 				Communities recvItems = parser.GetCommunities();
 				if (null == recvItems) return;
 				
-				m_communities.Items.addAll(recvItems.Items);
+				this.communityAdapter.clear();
+				
+				this.commCount = recvItems.TotalCount;
+				
+				for (Community item : recvItems.Items)
+					this.communityAdapter.add(item);
 			}
 		}
-		else if (REQUEST_COMMUNITY_SEARCH == m_requestType)
+		else if (REQUEST_MORE_ITEMS == reqType)
 		{
 			if (Globals.ERROR_NONE == result.Code)
 			{
 				Communities recvItems = parser.GetCommunities();
 				if (null == recvItems) return;
 				
-				m_searchResults.Items.addAll(recvItems.Items);
+				for (Community item : recvItems.Items)
+					this.communityAdapter.add(item);
+			}
+		}
+		else if (REQUEST_SEARCH == reqType)
+		{
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				Communities recvItems = parser.GetCommunities();
+				if (null == recvItems) return;
+
+				this.noResultMessage.setVisibility(View.INVISIBLE);
 				
+				this.searchCount = recvItems.TotalCount;
+				
+				this.searchAdapter.clear();
+
+				for (Community item : recvItems.Items)
+					this.searchAdapter.add(item);
 			}
 			else if (Globals.ERROR_NO_RESULT == result.Code)
 			{
 				noResultMessage.setVisibility(View.VISIBLE);			
+			}
+		}
+		else if (REQUEST_MORE_SEARCH == reqType)
+		{
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				Communities recvItems = parser.GetCommunities();
+				if (null == recvItems) return;
+
+				for (Community item : recvItems.Items)
+					this.searchAdapter.add(item);
 			}
 		}
 	}

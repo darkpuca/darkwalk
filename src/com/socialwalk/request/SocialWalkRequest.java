@@ -8,9 +8,7 @@ import java.util.Map;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import android.util.Log;
@@ -26,7 +24,6 @@ import com.squareup.okhttp.internal.Base64;
 
 public class SocialWalkRequest extends StringRequest
 {
-	private static final String TAG = "VOLLEY";
 	private static final String AES_KEY = "1234567890abcdef";
 	
 	private static String SessionKey = "";
@@ -42,7 +39,7 @@ public class SocialWalkRequest extends StringRequest
 	
 	void SetXMLBody(String xmlBody)
 	{
-		System.out.println(xmlBody);
+//		System.out.println(xmlBody);
 		this.m_xmlBody = xmlBody;
 	}
 		
@@ -101,8 +98,6 @@ public class SocialWalkRequest extends StringRequest
 		}
 		
 		System.out.println(encoded);
-		
-		// TODO: 로그인 세션 관리를 위한 코드 추가 예정
 		
 		super.deliverResponse(encoded);
 	}

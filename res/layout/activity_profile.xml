@@ -62,6 +62,13 @@
 	                android:textSize="18sp"
 	                android:textColor="@color/GRAY"
 	                android:text="@string/EMAIL" />
+	           	<ImageView 
+	           	    android:layout_width="16dp"
+	           	    android:layout_height="16dp"
+	           	    android:layout_alignRight="@+id/emailLabel"
+	           	    android:layout_centerVertical="true"
+	           	    android:layout_marginRight="4dp"
+	           	    android:src="@drawable/locked_item_icon" />
 	            <ImageView
 	                android:id="@+id/emailArrow"
 	                android:layout_width="24dp"
@@ -170,6 +177,14 @@
 	                android:textSize="18sp"
 	                android:textColor="@color/GRAY"
 	                android:text="@string/ORGANIZAION" />
+	           	<ImageView 
+	           	    android:id="@+id/areaLockedIcon"
+	           	    android:layout_width="16dp"
+	           	    android:layout_height="16dp"
+	           	    android:layout_alignRight="@+id/areaLabel"
+	           	    android:layout_marginRight="4dp"
+	           	    android:layout_centerVertical="true"
+	           	    android:src="@drawable/locked_item_icon" />
 	            <ImageView
 	                android:id="@+id/areaArrow"
 	                android:layout_width="24dp"

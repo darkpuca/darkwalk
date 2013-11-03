@@ -1,5 +1,6 @@
 package com.socialwalk.dataclass;
 
+import java.util.Date;
 import java.util.Vector;
 
 public class Beneficiaries
@@ -11,5 +12,10 @@ public class Beneficiaries
 	{
 		this.Items = new Vector<Beneficiary>();
 	}
+
+	
+	
+	
+	
 
 }

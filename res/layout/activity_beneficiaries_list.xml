@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:textSize="24sp"
+            android:textSize="@dimen/TITLE_FONT_SIZE"
             android:textColor="@color/WHITE"
             android:textStyle="bold"
             android:text="@string/TITLE_SPONSOR" />       

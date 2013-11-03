@@ -43,17 +43,6 @@ implements Response.Listener<String>, Response.ErrorListener
 			}
 		});
 		
-		Button btnDetail = (Button)findViewById(R.id.btnDetail);
-		btnDetail.setOnClickListener(new OnClickListener()
-		{			
-			@Override
-			public void onClick(View v)
-			{
-				Intent i = new Intent(getBaseContext(), WalkDetailActivity.class);
-				startActivity(i);
-			}
-		});
-		
 		// prepare progress dialog
 		progDlg = new ProgressDialog(this);
 		progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -61,7 +50,7 @@ implements Response.Listener<String>, Response.ErrorListener
 		progDlg.setMessage(getResources().getString(R.string.MSG_SEND_WALK_DATA));
 		
 		// 걷기 상세 정보 업데이트
-		WalkHistory lastWalk = WalkHistoryManager.LastWalking();
+		final WalkHistory lastWalk = WalkHistoryManager.LastWalking();
 		if(null != lastWalk)
 		{
 			if (0 < lastWalk.RedHearts()) // 하트 적립이 0인 경우는 전송하지 않음. 
@@ -85,9 +74,26 @@ implements Response.Listener<String>, Response.ErrorListener
 			walkSpeed.setText(lastWalk.AverageSpeed());
 			walkHearts.setText(lastWalk.RedHeartStringByWalk());
 			touchHearts.setText(lastWalk.RedHeartStringByTouch());
-			calories.setText(lastWalk.TotalCalories());
+			calories.setText(lastWalk.TotalCalories() + " " + getResources().getString(R.string.CALORIES_UNIT));
 			hearts.setText(lastWalk.RedHeartString());
 		}
+		
+		Button btnDetail = (Button)findViewById(R.id.btnDetail);
+		btnDetail.setOnClickListener(new OnClickListener()
+		{			
+			@Override
+			public void onClick(View v)
+			{
+				if (null != lastWalk)
+				{
+					Intent i = new Intent(getBaseContext(), WalkDetailActivity.class);
+					i.putExtra(Globals.EXTRA_KEY_FILENAME, lastWalk.FileName);
+					startActivity(i);
+				}
+			}
+		});
+		
+
 	}
 
 	@Override

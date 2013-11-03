@@ -1,26 +1,26 @@
 package com.socialwalk;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.socialwalk.MyXmlParser.SWResponse;
-import com.socialwalk.request.ServerRequestManager;
-
-import android.os.Bundle;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Intent;
-import android.view.Menu;
+import android.app.ProgressDialog;
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.request.ServerRequestManager;
 
 public class ReplyPostingActivity extends Activity
 implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 {
 	private ServerRequestManager m_server;
 	private int postSequence;
+	
+	private ProgressDialog progDlg;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -29,6 +29,12 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		setContentView(R.layout.activity_reply_posting);
 		
 		m_server = new ServerRequestManager();
+
+		// prepare progress dialog
+		progDlg = new ProgressDialog(this);
+		progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progDlg.setCancelable(false);
+		progDlg.setMessage(getResources().getString(R.string.MSG_LOADING));
 
 		if (getIntent().hasExtra(Globals.EXTRA_KEY_POST_SEQUENCE))
 			postSequence = getIntent().getExtras().getInt(Globals.EXTRA_KEY_POST_SEQUENCE);
@@ -47,11 +53,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		
 		if (0 == contents.length())
 		{
-			new AlertDialog.Builder(getBaseContext())
-			.setTitle(R.string.TITLE_INFORMATION)
-			.setMessage(R.string.MSG_EMPTY_CONTENTS)
-			.setNeutralButton(R.string.CLOSE, null)
-			.show();
+			Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_EMPTY_CONTENTS);
+			return;
 		}
 
 		m_server.ReplyPosting(this, this, postSequence, contents);
@@ -60,12 +63,17 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 	@Override
 	public void onErrorResponse(VolleyError e)
 	{
+		if (progDlg.isShowing()) progDlg.dismiss();
+		
+		Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
 		e.printStackTrace();
 	}
 
 	@Override
 	public void onResponse(String response)
 	{
+		if (progDlg.isShowing()) progDlg.dismiss();
+
 		if (0 == response.length()) return;
 		MyXmlParser parser = new MyXmlParser(response);
 		SWResponse result = parser.GetResponse();
@@ -75,6 +83,10 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		{
 			setResult(RESULT_OK);
 			finish();
+		}
+		else 
+		{
+			Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
 		}
 	}
 

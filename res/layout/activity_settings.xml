@@ -61,11 +61,11 @@
                     android:text="@string/AUTO_LOGIN" />
                 <CheckBox
                     android:id="@+id/autologinCheck"
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/autologinLabel"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="48dp" 
+                    android:layout_marginRight="16dp" 
                     android:button="@drawable/check_selector"/>
             </RelativeLayout>
             <RelativeLayout
@@ -74,7 +74,6 @@
                 android:layout_height="56sp"
                 android:layout_below="@+id/autologinLayout"
                 android:padding="10dp"
-                android:visibility="invisible"
                 android:background="@drawable/result_line_bg" >
                 <ImageView
                     android:id="@+id/slideIcon"
@@ -85,16 +84,16 @@
                     android:src="@drawable/setting_slide_icon" />
                 <CheckBox
                     android:id="@+id/slideCheck"
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" 
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp" 
                     android:button="@drawable/check_selector"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/slideIcon"
-                    android:layout_toLeftOf="@+id/slideCheck"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="6dp"
                     android:layout_marginRight="6dp"
@@ -103,6 +102,106 @@
                     android:textColor="@color/DARK_GRAY"
                     android:text="@string/SLIDE_OPTION" />
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/versionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="56sp"
+                android:layout_below="@+id/slideLayout"
+                android:padding="10dp"
+                android:background="@drawable/result_line_bg" >
+                <ImageView
+                    android:id="@+id/versionIcon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/setting_version_icon" />
+                <TextView
+                    android:id="@+id/version"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/DARK_GRAY" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/versionIcon"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginRight="6dp"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/DARK_GRAY"
+                    android:text="@string/VERSION" />
+            </RelativeLayout>
+            
+            <LinearLayout
+                android:id="@+id/totalHeartsLayout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/versionLayout"
+                android:layout_margin="32dp"
+                android:padding="16dp"
+                android:background="@drawable/innerframe_shape_yellow" >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="4dp"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/DARK_GRAY"
+                    android:text="@string/TOTAL_ACCUMULATED_HEARTS" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp" >
+                    <ImageView
+                        android:id="@+id/totalRedHeartsLabel"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/main_red_heart" />
+                    <TextView
+                        android:id="@+id/totalRedHearts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/LIGHT_RED" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp" >
+                    <ImageView
+                        android:id="@+id/totalGreedHeartsLabel"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/main_green_heart" />
+                    <TextView
+                        android:id="@+id/totalGreenHearts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/LIGHT_GREEN" />
+                </RelativeLayout>
+			</LinearLayout>
+            
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
@@ -136,7 +235,6 @@
                             android:text="@string/LOGOUT" />
                     </RelativeLayout>
                 </RelativeLayout>
-                
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>

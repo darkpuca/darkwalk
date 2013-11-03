@@ -1,6 +1,5 @@
 package com.socialwalk.dataclass;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -30,16 +29,16 @@ public class WalkHistory
 	private int weight;
 	private long heartRatio;
 	
-	private static final String TAG = "SW-WALK";
 	private static final float METs_WALK = 3.5f;
-	private static final float METs_RATIO_FOR_MINUTES = 1.0175f;
-	private static final float METs_RATIO_FOR_SECONDS = 0.016958f;
+	private static final float METs_RATIO_FOR_MINUTES = 0.0175f;
+	private static final float METs_RATIO_FOR_SECONDS = METs_RATIO_FOR_MINUTES / 60.0f;
 	private static final long RED_HEART_WALK_POINT = (long)0.5;
 
 	public WalkHistory()
 	{
 		this.LogItems = new Vector<WalkLogItem>();
 		this.TotalDistance = 0;
+		this.ValidDistance = 0;
 		this.TotalSpeed = 0;
 		this.StartTime = new Date();
 		this.IsWalking = true;
@@ -52,6 +51,7 @@ public class WalkHistory
 	{
 		this.LogItems = new Vector<WalkLogItem>();
 		this.TotalDistance = 0;
+		this.ValidDistance = 0;
 		this.TotalSpeed = 0;
 		this.StartTime = new Date();
 		this.IsWalking = true;
@@ -147,10 +147,10 @@ public class WalkHistory
 	{
 		String strRet = "";
 		
-		if (this.TotalDistance > 1000)
+//		if (this.TotalDistance > 1000)
 			strRet = String.format(Locale.US, "%.2f km", this.TotalDistance / 1000);
-		else
-			strRet = String.format(Locale.US,"%.2f m", this.TotalDistance);
+//		else
+//			strRet = String.format(Locale.US,"%.2f m", this.TotalDistance);
 		
 		return strRet;
 	}
@@ -212,6 +212,7 @@ public class WalkHistory
 		if (1 >= this.LogItems.size()) return;
 		
 		this.TotalDistance = 0;
+		this.ValidDistance = 0;
 
 		WalkLogItem prevLog = this.LogItems.get(0);
 		for (int i = 1; i < this.LogItems.size(); i++)
@@ -226,7 +227,7 @@ public class WalkHistory
 			else
 			{
 				this.TotalDistance += distance;
-				this.TotalDistance += distance;
+				this.ValidDistance += distance;
 			}
 			prevLog = log;
 		}
@@ -249,9 +250,7 @@ public class WalkHistory
 	public String WalkingCaloriesString(Date toDate)
 	{
 		long calories = WalkingCalories(toDate);
-		
-		DecimalFormat format = new DecimalFormat("###,###");
-        String strCal = format.format(calories);
+        String strCal = Utils.GetDefaultTool().DecimalNumberString(calories);
         return strCal;
 	}
 

@@ -3,17 +3,16 @@ package com.socialwalk;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import com.socialwalk.dataclass.WalkHistory;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.socialwalk.dataclass.WalkHistory;
 
 public class WalkDetailActivity extends Activity
 {
@@ -72,7 +71,7 @@ public class WalkDetailActivity extends Activity
 		SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATETIME_FORMAT_FOR_SERVER, Locale.US);
 		startTime.setText(formatter.format(this.history.StartTime));
 		endTime.setText(formatter.format(this.history.EndTime));
-		calories.setText(this.history.TotalCalories());
+		calories.setText(this.history.TotalCalories() + " " + getResources().getString(R.string.CALORIES_UNIT));
 	}
 
 }

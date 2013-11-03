@@ -3,6 +3,7 @@ package com.socialwalk;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,10 +22,13 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 	private Button btnCheck, btnCreate, btnCancel;
 	private ServerRequestManager m_server = null;
 	
-	private static int RequestTypeCheck = 1;
-	private static int RequestTypeCreate = 2;
+	private static int REQUEST_NAME_CHECK = 200;
+	private static int RequestTypeCreate = 201;
 	private int RequestType = 0;
 	private boolean isValidName = false;
+	
+	private ProgressDialog progDlg;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -34,6 +38,12 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 		
 		m_server = new ServerRequestManager();
 		
+		// prepare progress dialog
+		progDlg = new ProgressDialog(this);
+		progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progDlg.setCancelable(false);
+		progDlg.setMessage(getResources().getString(R.string.MSG_LOADING));
+
 		groupName = (EditText)findViewById(R.id.groupName);
 		groupDesc = (EditText)findViewById(R.id.groupDesc);
 		btnCheck = (Button)findViewById(R.id.btnCheck);
@@ -60,9 +70,11 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_EMPTY_GROUP_NAME);
 				return;
 			}
+
+			if (!progDlg.isShowing()) progDlg.show();
 			
 			String name = groupName.getText().toString();
-			RequestType = RequestTypeCheck;
+			RequestType = REQUEST_NAME_CHECK;
 			m_server.IsExistGroupName(this, this, name);
 		}
 		else if (btnCreate.equals(v))
@@ -76,6 +88,8 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 			String name = groupName.getText().toString();
 			String desc = groupDesc.getText().toString();
 			
+			if (!progDlg.isShowing()) progDlg.show();
+
 			RequestType = RequestTypeCreate;
 			m_server.CreateGroup(this, this, name, desc);
 		}
@@ -89,24 +103,28 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{
+		if (progDlg.isShowing()) progDlg.dismiss();
+		Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
 		error.printStackTrace();
 	}
 
 	@Override
 	public void onResponse(String response)
 	{
+		if (progDlg.isShowing()) progDlg.dismiss();
+
 		if (0 == response.length()) return;
 		
 		MyXmlParser parser = new MyXmlParser(response);
 		SWResponse result = parser.GetResponse();
 		if (null == result) return;
 
-		if (RequestTypeCheck == RequestType)
+		if (REQUEST_NAME_CHECK == RequestType)
 		{			
 			if (Globals.ERROR_NO_RESULT == result.Code)
 			{
 				isValidName = true;
-				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_NAME_AVAILABLE);
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_AVAILABLE_NAME);
 			}
 			else
 			{

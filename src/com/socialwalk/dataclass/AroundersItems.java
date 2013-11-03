@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
-import android.util.Base64;
-
 public class AroundersItems
 {
 	public Vector<AroundersItem> Items;

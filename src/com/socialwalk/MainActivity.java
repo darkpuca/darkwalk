@@ -10,17 +10,19 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -30,19 +32,21 @@ import com.socialwalk.dataclass.AroundersItems;
 import com.socialwalk.dataclass.AroundersItems.AroundersItem;
 import com.socialwalk.request.ImageCacheManager;
 import com.socialwalk.request.ServerRequestManager;
+import com.socialwalk.request.ServerRequestManager.ServerRequestListener;
 
 public class MainActivity extends Activity
-implements Response.Listener<String>, Response.ErrorListener, OnClickListener
+implements Response.Listener<String>, Response.ErrorListener, OnClickListener, ServerRequestListener
 {	
 	private ServerRequestManager m_server = null;
 	private LocationManager m_locationManager;
 	private LocationListener m_locationListener;
 	private RelativeLayout m_aroundersLayout = null, m_startLayout = null;
+	private ImageView characterBgView;
 	
 	private AroundersItems aroundersAds = new AroundersItems();
 	private AroundersItem currentArounders = null;
 	private Date aroundersUpdateTime = null;
-	private boolean isIntroAdVisit = false;
+	private boolean isIntroAdVisit = false, isAutologinRun = false;
 	
 	private int reqType = 0;
 	private static final int REQUEST_AROUNDERS = 200;
@@ -56,10 +60,15 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
         setContentView(R.layout.activity_main);
         
         m_server = new ServerRequestManager();
-        m_server.AutoLogin(this);
+        this.isAutologinRun = m_server.AutoLogin(this, this);
         
         m_locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         m_locationListener = new MyLocationListener();
+        
+        this.characterBgView = (ImageView)findViewById(R.id.mainBgImage);
+		Bitmap newBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.main_character_bg);
+		this.characterBgView.setImageBitmap(newBitmap );
+        
         
         m_aroundersLayout = (RelativeLayout)findViewById(R.id.layoutArounders);
         m_aroundersLayout.setVisibility(View.GONE);
@@ -156,7 +165,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			@Override
 			public void onClick(View v)
 			{
-				Toast.makeText(getBaseContext(), "support button pressed!", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(getBaseContext(), "support button pressed!", Toast.LENGTH_SHORT).show();
+				Utils.GetDefaultTool().ShowMessageDialog(MainActivity.this, R.string.MSG_SERVICE_PREPARING);
 			}
 		});
         
@@ -169,12 +179,12 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        return true;
+//    }
 
     
 	@Override
@@ -210,6 +220,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
     	if (null != m_locationManager && null != m_locationListener)
     		m_locationManager.removeUpdates(m_locationListener);
 		
+		((BitmapDrawable)this.characterBgView.getDrawable()).getBitmap().recycle();
+
 		super.onDestroy();
 	}
 
@@ -240,7 +252,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
         	
         	// 네트워크 기반 위치정보 수신 모듈 재시작
         	if (null != m_locationManager && null != m_locationListener)
-        		m_locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 100, m_locationListener);
+        		m_locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 10, m_locationListener);
         }
 		
 		super.onResume();
@@ -296,7 +308,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 				if (null != data)
 					this.isIntroAdVisit = data.getBooleanExtra(Globals.EXTRA_KEY_INTRO_AD_VISIT, false);
 				
-				StartupProc();
+				if (false == this.isAutologinRun)
+					startupProc();
 			}
 		}
 		else if (Globals.INTENT_REQ_SETTING == requestCode)
@@ -308,7 +321,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
-	private final void StartupProc()
+	private final void startupProc()
 	{
         // check network connection
 		MainApplication app = (MainApplication)getApplication();
@@ -368,7 +381,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			if (Globals.ERROR_NONE == result.Code)
 			{
 				LockService.AroundersVisitCodes.add(this.currentArounders.getSequence());
-				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(Globals.AD_POINT_AROUNDERS);
+				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(Globals.AD_AROUNDERS_RED);
+				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(Globals.AD_AROUNDERS_GREEN);
 				updateUserInformation();
 			}
 			else
@@ -467,7 +481,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			}
 			else
 			{
-				// TODO: 적립되는 광고가 아닐 경우에는 어떻게 표시하
+				// TODO: 적립되는 광고가 아닐 경우에는?
 			}
 
 			this.currentArounders.SetAccessStamp();
@@ -531,5 +545,12 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		{
 			System.out.println(e.getLocalizedMessage());
 		}
+	}
+
+
+	@Override
+	public void onFinishAutoLogin(boolean isLogin)
+	{
+		startupProc();
 	}
 }

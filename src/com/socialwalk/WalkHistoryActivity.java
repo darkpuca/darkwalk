@@ -46,7 +46,6 @@ public class WalkHistoryActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_walk_history);
 		
-		
 		m_historyList = (ListView)findViewById(R.id.historyList);
 
 		m_historyList.setOnItemClickListener(new OnItemClickListener()
@@ -55,7 +54,6 @@ public class WalkHistoryActivity extends Activity
 			public void onItemClick(AdapterView<?> adpater, View view, int position, long id)
 			{
 				File logFile = m_logFiles.get(position);
-//				Toast.makeText(getBaseContext(), logFile.getName(), Toast.LENGTH_SHORT).show();
 				
 				Intent i = new Intent(getBaseContext(), WalkDetailActivity.class);
 				i.putExtra(Globals.EXTRA_KEY_FILENAME, logFile.getName());
@@ -185,6 +183,8 @@ public class WalkHistoryActivity extends Activity
 	{
 		for (File file : m_logFiles)
 			file.delete();
+		
+		m_historyAdapter.clear();
 	}
 
 	private boolean BuildHistoryAdapter(Vector<File> files)

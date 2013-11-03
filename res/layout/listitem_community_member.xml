@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/activity_horizontal_margin" 
+    android:minHeight="40dp" >
+    
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" >
+	    <TextView
+	        android:id="@+id/memberName"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="18sp"
+	        android:textColor="@color/DARK_GRAY"
+	        android:textStyle="bold" />
+	    <TextView
+	        android:id="@+id/memberEmail"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="16sp"
+	        android:textColor="@color/DARK_GRAY"
+	        android:textStyle="normal" />
+    </LinearLayout>
+    <Button
+        android:id="@+id/denyButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/member_deny_selector" />
+    <Button
+        android:id="@+id/allowButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_toLeftOf="@+id/denyButton"
+        android:layout_marginRight="6dp"
+        android:background="@drawable/member_allow_selector" />
+</RelativeLayout>

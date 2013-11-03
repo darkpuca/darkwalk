@@ -69,8 +69,7 @@
                 android:gravity="right"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/LIGHT_GRAY"
-                android:text="XXX.X km" />
+                android:textColor="@color/LIGHT_GRAY" />
         </RelativeLayout>
 	    
         <RelativeLayout
@@ -100,8 +99,7 @@
                 android:gravity="right"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/LIGHT_GRAY"
-                android:text="00:00:00" />
+                android:textColor="@color/LIGHT_GRAY" />
         </RelativeLayout>
         
         <RelativeLayout
@@ -130,8 +128,7 @@
                 android:gravity="right"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/LIGHT_GRAY"
-                android:text="XXX.XX km/h" />
+                android:textColor="@color/LIGHT_GRAY" />
         </RelativeLayout>
         	
         <RelativeLayout
@@ -264,6 +261,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/routeButtonLayout"
             android:layout_marginTop="4dp"
+            android:visibility="gone"
             android:background="@drawable/facebook_icon" />        
         
     </RelativeLayout>

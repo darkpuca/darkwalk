@@ -2,7 +2,6 @@ package com.socialwalk.dataclass;
 
 import java.util.Vector;
 
-import com.socialwalk.MainApplication;
 import com.socialwalk.request.ServerRequestManager;
 
 

@@ -17,21 +17,79 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:textSize="24sp"
+            android:textSize="@dimen/TITLE_FONT_SIZE"
             android:textColor="@color/WHITE"
             android:textStyle="bold"
-            android:text="@string/TITLE_SPONSOR" />       
-		<Button
-		    android:id="@+id/globalButton"
-		    android:layout_width="70dp"
-		    android:layout_height="38dp"
-		    android:layout_alignParentRight="true"
-			android:layout_centerVertical="true"
-		    android:background="@drawable/gray_bg_selector"
-		    android:textSize="16sp"
-		    android:textStyle="bold"
-		    android:textColor="@color/WHITE"
-		    android:text="@string/TOTAL" /> 
+            android:text="@string/TITLE_SPONSOR" />
+
+	        <LinearLayout 
+	            android:layout_width="150dp"
+	            android:layout_height="@dimen/TITLE_BUTTON_HEIGHT"
+	            android:layout_alignParentRight="true"
+	            android:layout_centerVertical="true" >
+	            <RelativeLayout
+	                android:id="@+id/localButtonLayout"
+	                android:layout_width="0dp"
+	                android:layout_weight="0.5"
+	                android:layout_height="match_parent"
+	                android:padding="6dp"
+	                android:background="@drawable/rank_left_selector" >
+	                <RelativeLayout
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_centerInParent="true" >
+		                <ImageView
+		                    android:id="@+id/typeLocalIcon"
+		                    android:src="@drawable/benefit_type_local_selector"
+		                    android:layout_width="20dp"
+		                    android:layout_height="20dp"
+		                    android:layout_centerVertical="true"
+		                    android:layout_alignParentLeft="true" />
+		                <TextView
+		                    android:layout_width="wrap_content"
+		                    android:layout_height="wrap_content"
+		                    android:layout_toRightOf="@+id/typeLocalIcon"
+		                    android:layout_centerVertical="true"
+		                    android:layout_marginLeft="4dp"
+		                    android:textSize="16sp"
+		                    android:textStyle="bold"
+		                    android:textColor="@color/GRAY"
+		                    android:text="@string/LOCAL" />                
+	                </RelativeLayout>
+	            </RelativeLayout>
+	            
+	            <RelativeLayout
+	                android:id="@+id/totalButtonLayout"
+	                android:layout_width="0dp"
+	                android:layout_weight="0.5"
+	                android:layout_height="match_parent"
+	                android:padding="6dp"
+	                android:background="@drawable/rank_right_selector" >
+	                <RelativeLayout
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_centerInParent="true" >
+		                <ImageView
+		                    android:id="@+id/typeAllIcon"
+		                    android:src="@drawable/benefit_type_all_selector"
+		                    android:layout_width="20dp"
+		                    android:layout_height="20dp"
+		                    android:layout_centerVertical="true"
+		                    android:layout_alignParentLeft="true" />
+		                <TextView
+		                    android:layout_width="wrap_content"
+		                    android:layout_height="wrap_content"
+		                    android:layout_toRightOf="@+id/typeAllIcon"
+		                    android:layout_centerVertical="true"
+		                    android:layout_marginLeft="4dp"
+		                    android:textSize="16sp"
+		                    android:textStyle="bold"
+		                    android:textColor="@color/GRAY"
+		                    android:text="@string/NATIONAL" />                
+	                </RelativeLayout>
+	            </RelativeLayout>
+	        </LinearLayout>
+        
     </RelativeLayout>
     
 	<RelativeLayout
@@ -41,122 +99,74 @@
 	    android:padding="@dimen/activity_horizontal_margin"
 	    android:background="@color/MAIN_BG" >
         
-	    <RelativeLayout
+	    <LinearLayout
 	        android:id="@+id/currentProjectLayout"
+	        android:orientation="vertical"
 	        android:layout_width="match_parent"
-	        android:layout_height="70dp"
-	        android:padding="6dp"
+	        android:layout_height="wrap_content"
+	        android:padding="8dp"
 	        android:background="@drawable/innerframe_shape"
 	        android:layout_marginBottom="8dp" >
-	        <TextView
-	            android:id="@+id/targetMoney"
-	            android:layout_width="wrap_content"
+	        <RelativeLayout
+	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-				android:layout_alignParentTop="true"
-				android:textSize="20sp"
-				android:textStyle="bold"
-	            android:text="x,xxx,xxx" />
-	        <TextView
-	            android:id="@+id/currentMoney"
-	            android:layout_width="wrap_content"
+				android:layout_marginBottom="6dp" >
+	            <TextView
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_alignParentLeft="true"
+	                android:layout_centerVertical="true"
+	                android:textSize="18sp"
+	                android:textColor="@color/GRAY"
+	                android:text="@string/CURRENT_MONEY" />
+		        <TextView
+		            android:id="@+id/currentMoney"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+					android:layout_alignParentRight="true"
+					android:layout_centerVertical="true"
+					android:textSize="22sp"
+					android:textColor="@color/DARK_GRAY"
+					android:textStyle="bold" />
+	        </RelativeLayout>
+	        <RelativeLayout
+	            android:visibility="gone"
+	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-				android:layout_below="@+id/targetMoney"
-				android:textSize="20sp"
-				android:textStyle="bold"
-	            android:text="x,xxx,xxx" />
-		</RelativeLayout>
-	    
-	    <RelativeLayout
-	        android:id="@+id/buttonsLayout"
-	        android:layout_width="match_parent"
-	        android:layout_height="60dp"
-	        android:layout_below="@+id/currentProjectLayout"
-	        android:visibility="gone" >
-	        <ImageButton
-	            android:id="@+id/btnSponsor"
-	            android:layout_width="36dp"
-	            android:layout_height="36dp"
-	            android:layout_alignParentRight="true"
-	            android:layout_centerVertical="true"
-	            android:layout_marginRight="4dp"
-	            android:scaleType="fitCenter"
-	            android:src="@drawable/sponsor_icon"
-	            android:background="@drawable/darkgray_rounded_bg" />
-        
-        <LinearLayout 
-            android:layout_width="200dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true" >
-            <RelativeLayout
-                android:id="@+id/localButtonLayout"
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="match_parent"
-                android:padding="6dp"
-                android:background="@drawable/rank_left_selector" >
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true" >
-	                <ImageView
-	                    android:id="@+id/typeLocalIcon"
-	                    android:src="@drawable/benefit_type_local_selector"
-	                    android:layout_width="20dp"
-	                    android:layout_height="20dp"
-	                    android:layout_centerVertical="true"
-	                    android:layout_alignParentLeft="true" />
-	                <TextView
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:layout_toRightOf="@+id/typeLocalIcon"
-	                    android:layout_centerVertical="true"
-	                    android:layout_marginLeft="4dp"
-	                    android:textSize="16sp"
-	                    android:textStyle="bold"
-	                    android:textColor="@color/GRAY"
-	                    android:text="@string/LOCAL" />                
-                </RelativeLayout>
-            </RelativeLayout>
-            
-            <RelativeLayout
-                android:id="@+id/totalButtonLayout"
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="match_parent"
-                android:padding="6dp"
-                android:background="@drawable/rank_right_selector" >
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true" >
-	                <ImageView
-	                    android:id="@+id/typeAllIcon"
-	                    android:src="@drawable/benefit_type_all_selector"
-	                    android:layout_width="20dp"
-	                    android:layout_height="20dp"
-	                    android:layout_centerVertical="true"
-	                    android:layout_alignParentLeft="true" />
-	                <TextView
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:layout_toRightOf="@+id/typeAllIcon"
-	                    android:layout_centerVertical="true"
-	                    android:layout_marginLeft="4dp"
-	                    android:textSize="16sp"
-	                    android:textStyle="bold"
-	                    android:textColor="@color/GRAY"
-	                    android:text="@string/NATIONAL" />                
-                </RelativeLayout>
-            </RelativeLayout>
-        </LinearLayout>
-	        	        
-	    </RelativeLayout>
+				android:layout_marginBottom="6dp" >
+	            <TextView
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_alignParentLeft="true"
+	                android:layout_centerVertical="true"
+	                android:textSize="18sp"
+	                android:textColor="@color/GRAY"
+	                android:text="@string/TARGET_MONEY" />
+		        <TextView
+		            android:id="@+id/targetMoney"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+					android:layout_alignParentRight="true"
+					android:layout_centerVertical="true"
+					android:textSize="22sp"
+					android:textColor="@color/DARK_GRAY"
+					android:textStyle="bold" />
+	        </RelativeLayout>
+	        <ProgressBar 
+	            android:id="@+id/moneyProgress"
+				android:layout_width="match_parent"
+				android:layout_height="24dp"
+	            style="?android:attr/progressBarStyleHorizontal"
+	            android:max="100"
+	            android:progress="0"
+				android:progressDrawable="@drawable/money_progress" />
+		</LinearLayout>
 	    
 	    <ListView
 	        android:id="@+id/itemList"
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
-	        android:layout_below="@+id/buttonsLayout"
+	        android:layout_below="@+id/currentProjectLayout"
 	        android:background="@drawable/innerframe_shape" />
 	</RelativeLayout>    
 

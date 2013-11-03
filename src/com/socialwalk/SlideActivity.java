@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
-import android.app.KeyguardManager;
-import android.app.KeyguardManager.KeyguardLock;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -29,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
 import com.socialwalk.MyXmlParser.SWResponse;
@@ -37,12 +34,11 @@ import com.socialwalk.dataclass.NeoClickItems;
 import com.socialwalk.dataclass.NeoClickItems.NeoClickItem;
 import com.socialwalk.request.ImageCacheManager;
 import com.socialwalk.request.ServerRequestManager;
+import com.socialwalk.request.ServerRequestManager.ServerRequestListener;
 
 public class SlideActivity extends Activity
-implements Response.Listener<String>, Response.ErrorListener
+implements Response.Listener<String>, Response.ErrorListener, ServerRequestListener
 {
-	public static boolean IsPhoneCalling = false;
-
 	private static final String TAG = "SW-SLIDE";
 	private static final int SLIDER_OUTOFBOUNDS = 0;
 	private static final int SLIDER_IN_AD = 1;
@@ -57,13 +53,12 @@ implements Response.Listener<String>, Response.ErrorListener
 
 	private NeoClickItem currentNeoClick = null;
 	
-	private KeyguardManager.KeyguardLock keyLock;
-	private boolean isDragmode;
+//	private KeyguardManager.KeyguardLock keyLock;
 	private int reqType = 0;
 	
 	LayoutParams layoutParams;
 	private int m_windowWidth, m_windowHeight;
-	private int m_sliderWidth, m_sliderHeight, m_layoutH, m_marginBottom, m_startHeight;
+	private int m_sliderWidth, m_sliderHeight, m_marginBottom, m_startHeight;
 	ImageView imgCenter, imgAd, imgStart, imgStop;  // imgHome
 	RelativeLayout sliderLayout;
 	
@@ -107,15 +102,14 @@ implements Response.Listener<String>, Response.ErrorListener
 		imgStop = (ImageView)findViewById(R.id.imgSlideStop);
 		
 		this.heartPoint = (TextView)findViewById(R.id.heartPoint);
-		this.heartPoint.setText(Integer.toString(Globals.AD_POINT_SLIDE_VISIT));
+		this.heartPoint.setText("+" + Integer.toString(Globals.AD_POINT_SLIDE_VISIT));
 		this.heartPoint.setVisibility(View.INVISIBLE);
 		
-		m_layoutH = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, this.getResources().getDisplayMetrics());
-		m_marginBottom = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, this.getResources().getDisplayMetrics());
+		this.m_marginBottom = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, this.getResources().getDisplayMetrics());
 		
 		int centerSize = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, this.getResources().getDisplayMetrics());
-		m_sliderWidth = m_sliderHeight = centerSize;
-		m_startHeight = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, this.getResources().getDisplayMetrics());
+		this.m_sliderWidth = m_sliderHeight = centerSize;
+		this.m_startHeight = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, this.getResources().getDisplayMetrics());
 		
 		// slider 레이아웃 위치조정
 		m_windowWidth = getWindowManager().getDefaultDisplay().getWidth();
@@ -226,7 +220,7 @@ implements Response.Listener<String>, Response.ErrorListener
 		}
 		
 		// auto-login
-		m_server.AutoLogin(this);
+		m_server.AutoLogin(this, this);
 	}
 	
 	@Override
@@ -368,7 +362,7 @@ implements Response.Listener<String>, Response.ErrorListener
 		
 		UpdateWalkingState();
 		
-		if (true == IsPhoneCalling)
+		if (true == LockReceiver.IsPhoneCalling)
 		{
 			finish();
 			return;
@@ -502,26 +496,26 @@ implements Response.Listener<String>, Response.ErrorListener
 		LockReceiver.UpdateAccessTime();
 	}
 	
-	private void StopWalking()
-	{
-		if (WalkService.IsStarted)
-		{	
-			Intent i = new Intent(getApplicationContext(), WalkService.class);
-			stopService(i);
-		}
-		finish();
-	}
-	
-	private void EnableKeyGuard(boolean enable)
-	{
-		KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
-		KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
-		
-		if (true == enable)
-			lock.reenableKeyguard();
-		else
-			lock.disableKeyguard();
-	}
+//	private void StopWalking()
+//	{
+//		if (WalkService.IsStarted)
+//		{	
+//			Intent i = new Intent(getApplicationContext(), WalkService.class);
+//			stopService(i);
+//		}
+//		finish();
+//	}
+//	
+//	private void EnableKeyGuard(boolean enable)
+//	{
+//		KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
+//		KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
+//		
+//		if (true == enable)
+//			lock.reenableKeyguard();
+//		else
+//			lock.disableKeyguard();
+//	}
 
 	
 	public void UpdateSlideAd()
@@ -558,7 +552,6 @@ implements Response.Listener<String>, Response.ErrorListener
 			this.heartPoint.setVisibility(View.VISIBLE);
 		else
 			this.heartPoint.setVisibility(View.INVISIBLE);
-			
 
 		m_adImage.setImageUrl(null, null);
 		m_adImage.setImageUrl(currentNeoClick.ThumbnailUrl, ImageCacheManager.getInstance().getImageLoader());
@@ -574,7 +567,7 @@ implements Response.Listener<String>, Response.ErrorListener
 			
             switch(state){
                 case TelephonyManager.CALL_STATE_RINGING:
-                	IsPhoneCalling = true;
+                	LockReceiver.IsPhoneCalling = true;
                 	Log.d(TAG, "phone called: " + incomingNumber);
                 	moveTaskToBack(true);
                 	break;
@@ -583,9 +576,9 @@ implements Response.Listener<String>, Response.ErrorListener
                     moveTaskToBack(true);
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:
-                	if (IsPhoneCalling)
+                	if (LockReceiver.IsPhoneCalling)
                 	{
-                    	IsPhoneCalling = false;
+                    	LockReceiver.IsPhoneCalling = false;
 
                     	Log.d(TAG, "call state idle.");
                     	Intent i = new Intent(getApplicationContext(), SlideActivity.class);
@@ -638,6 +631,12 @@ implements Response.Listener<String>, Response.ErrorListener
 				System.out.println("하트 적립 실패");
 			}
 		}
+	}
+
+	@Override
+	public void onFinishAutoLogin(boolean isLogin)
+	{
+		
 	}
 }
 

@@ -1,35 +1,25 @@
 package com.socialwalk;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MotionEvent;
 
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapController;
-import com.nhn.android.maps.NMapLocationManager;
 import com.nhn.android.maps.NMapView;
-import com.nhn.android.maps.NMapView.OnMapStateChangeListener;
-import com.nhn.android.maps.NMapView.OnMapViewTouchEventListener;
 import com.nhn.android.maps.maplib.NGeoPoint;
-import com.nhn.android.maps.nmapmodel.NMapError;
 import com.nhn.android.maps.overlay.NMapPathData;
 import com.nhn.android.maps.overlay.NMapPathLineStyle;
-import com.nhn.android.mapviewer.overlay.NMapMyLocationOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPathDataOverlay;
 import com.socialwalk.dataclass.WalkHistory;
 import com.socialwalk.dataclass.WalkHistory.WalkLogItem;
 
-public class WalkRouteActivity extends NMapActivity implements OnMapStateChangeListener, OnMapViewTouchEventListener
+public class WalkRouteActivity extends NMapActivity
 {
 	static final String NAVER_MAP_KEY = "91325246f9eb73ab763580a53e90a23b";
 	private NMapView walkMap;
 	private NMapController mapController;
 	private NaverMapResourceProvider mapResProvider;
 	private NMapOverlayManager mapOverlayManager;
-	private NMapLocationManager mapLocationManager;
-	private NMapMyLocationOverlay mapMyLocationOverlay;
-	private NMapPathDataOverlay pathDataOverlay;
 
 
 	@Override
@@ -42,8 +32,6 @@ public class WalkRouteActivity extends NMapActivity implements OnMapStateChangeL
 		walkMap.setApiKey(NAVER_MAP_KEY);
 		walkMap.setClickable(true);
 		walkMap.setBuiltInZoomControls(true, null);
-		walkMap.setOnMapStateChangeListener(this);
-		walkMap.setOnMapViewTouchEventListener(this);
 		
 		mapController = walkMap.getMapController();
 		mapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 13);
@@ -73,78 +61,4 @@ public class WalkRouteActivity extends NMapActivity implements OnMapStateChangeL
 			pathDataOverlay.showAllPathData(0);
 		}
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.walk_route, menu);
-		return true;
-	}
-
-	@Override
-	public void onLongPress(NMapView arg0, MotionEvent arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onLongPressCanceled(NMapView arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onScroll(NMapView arg0, MotionEvent arg1, MotionEvent arg2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onSingleTapUp(NMapView arg0, MotionEvent arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onTouchDown(NMapView arg0, MotionEvent arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onTouchUp(NMapView arg0, MotionEvent arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onAnimationStateChange(NMapView arg0, int arg1, int arg2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onMapCenterChange(NMapView arg0, NGeoPoint arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onMapCenterChangeFine(NMapView arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onMapInitHandler(NMapView arg0, NMapError arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onZoomLevelChange(NMapView arg0, int arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

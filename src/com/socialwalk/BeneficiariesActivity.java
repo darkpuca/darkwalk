@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,19 +15,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.socialwalk.MyXmlParser.BenefitSummary;
 import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.dataclass.Beneficiaries;
 import com.socialwalk.dataclass.Beneficiary;
-import com.socialwalk.dataclass.CommunityPosts.CommunityPostItem;
+import com.socialwalk.dataclass.BeneficiarySummary;
 import com.socialwalk.request.ServerRequestManager;
 
 public class BeneficiariesActivity extends Activity
@@ -39,10 +37,10 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 	private boolean isGlobal = false;
 	
 	private ServerRequestManager server;
-	private int reqType;
-	private static final int REQUEST_BENEFIT_SUMMARY = 99;
-	private static final int REQUEST_BENEFICIARIES = 100;
-	private static final int REQUEST_CURRENT_BENEFICIARIES = 101;
+	private int reqType, pageIndex, totalCount;
+	private static final int REQUEST_BENEFICIARY_SUMMARY = 100;
+	private static final int REQUEST_BENEFICIARIES = 101;
+	private static final int REQUEST_MORE_BENEFICIARIES = 102;
 	
 	private BeneficiariesAdapter adapter;
 	
@@ -67,26 +65,12 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		localButtonLayout.setOnClickListener(this);
 		totalButtonLayout.setOnClickListener(this);
 		
-		Button globalButton = (Button)findViewById(R.id.globalButton);
-		globalButton.setOnClickListener(new OnClickListener()
-		{			
-			@Override
-			public void onClick(View v)
-			{
-				Intent i = new Intent(getBaseContext(), BeneficiariesListActivity.class);
-				i.putExtra(Globals.EXTRA_KEY_IS_GLOBAL_PROJECT, true);
-				startActivity(i);
-			}
-		});
-		
 		// prepare progress dialog
 		progDlg = new ProgressDialog(this);
 		progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progDlg.setCancelable(false);
 		progDlg.setMessage(getResources().getString(R.string.MSG_LOADING));
 
-		updateBeneficiaries();
-		
 		this.benefitList.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
@@ -100,6 +84,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 				startActivity(i);
 			}
 		});
+		
+		requestBeneficiarySummary();
 	}
 
 	@Override
@@ -110,7 +96,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		
 		this.isGlobal = isGlobal;
 		updateButtonState();
-		refreshBeneficiaries();
+		
+		requestBeneficiarySummary();
 	}
 
 	private void updateButtonState()
@@ -118,29 +105,54 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		localButtonLayout.setSelected(!isGlobal);
 		totalButtonLayout.setSelected(isGlobal);
 	}
-	
-	private void updateBeneficiaries()
+
+	private void updateSummary(BeneficiarySummary summary)
 	{
-		if (!progDlg.isShowing()) progDlg.show();
+		if (null == summary) return;
 		
-		this.reqType = REQUEST_BENEFIT_SUMMARY;
-		this.server.BenefitSummary(this, this);
+		TextView tvTargetMoney = (TextView)findViewById(R.id.targetMoney);
+		TextView tvCurrentMoney = (TextView)findViewById(R.id.currentMoney);
+		
+		tvTargetMoney.setText(String.format("%s " + getResources().getString(R.string.MONEY_UNIT), Utils.GetDefaultTool().DecimalNumberString(summary.TargetMoney)));
+		tvCurrentMoney.setText(String.format("%s " + getResources().getString(R.string.MONEY_UNIT), Utils.GetDefaultTool().DecimalNumberString(summary.CurrentMoney)));
+		
+		ProgressBar moneyProgress = (ProgressBar)findViewById(R.id.moneyProgress);
+		int progress = (int)(summary.CurrentMoney / summary.TargetMoney *100);
+		moneyProgress.setProgress(progress);
 	}
 	
-	private void refreshBeneficiaries()
+	private void requestBeneficiarySummary()
 	{
 		if (!progDlg.isShowing()) progDlg.show();
 
-		this.reqType = REQUEST_CURRENT_BENEFICIARIES;
-		this.server.CurrentBeneficiaries(this, this);
+		this.reqType = REQUEST_BENEFICIARY_SUMMARY;
+		this.server.BeneficiarySummary(this, this, this.isGlobal);
 	}
 	
+	private void requestBeneficiaries()
+	{
+		if (!progDlg.isShowing()) progDlg.show();
+
+		this.reqType = REQUEST_BENEFICIARIES;
+		this.pageIndex = 1;
+		this.server.Beneficiaries(this, this, this.isGlobal, this.pageIndex);
+	}
+	
+	private void requestMoreBeneficiaries()
+	{
+		if (!progDlg.isShowing()) progDlg.show();
+
+		this.reqType = REQUEST_MORE_BENEFICIARIES;
+		this.pageIndex++;
+		this.server.Beneficiaries(this, this, this.isGlobal, this.pageIndex);
+	}
 
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{
 		if (progDlg.isShowing()) progDlg.dismiss();
 		
+		Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
 		error.printStackTrace();
 	}
 
@@ -154,24 +166,27 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		SWResponse result = parser.GetResponse();
 		if (null == result) return;
 		
-		if (REQUEST_BENEFIT_SUMMARY == this.reqType)
+		if (REQUEST_BENEFICIARY_SUMMARY == this.reqType)
 		{
 			if (Globals.ERROR_NONE == result.Code)
 			{
-				BenefitSummary summary = parser.GetBenefitSummry();
-				if (null == summary) return;
-				
-				updateCurrentItem(summary);
+				BeneficiarySummary summary = parser.GetBeneficiarySummary();
+				if (null != summary)
+					updateSummary(summary);
 			}
-			refreshBeneficiaries();
-		}		
-		else if (REQUEST_CURRENT_BENEFICIARIES == this.reqType)
+			
+			requestBeneficiaries();
+		}
+		else if (REQUEST_BENEFICIARIES == this.reqType)
 		{
 			if (Globals.ERROR_NONE == result.Code)
 			{
 				Beneficiaries items = parser.GetBeneficiaries();
 				if (null == items) return;
 				
+				this.adapter.clear();
+				
+				this.totalCount = items.TotalCount;
 				for (Beneficiary item : items.Items)
 					this.adapter.add(item);
 			}
@@ -181,24 +196,23 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 				Toast.makeText(this, "후원프로젝트 없음", Toast.LENGTH_SHORT).show();
 			}
 		}
+		else if (REQUEST_MORE_BENEFICIARIES == this.reqType)
+		{
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				Beneficiaries items = parser.GetBeneficiaries();
+				if (null == items) return;
+				
+				for (Beneficiary item : items.Items)
+					this.adapter.add(item);
+			}
+		}
 	}
-	
-	private void updateCurrentItem(BenefitSummary summary)
-	{
-		if (null == summary) return;
-		
-		TextView tvTargetMoney = (TextView)findViewById(R.id.targetMoney);
-		TextView tvCurrentMoney = (TextView)findViewById(R.id.currentMoney);
-		
-		tvTargetMoney.setText(Double.toString(summary.TargetMoney));
-		tvCurrentMoney.setText(Double.toString(summary.CurrentMoney));
-	}
-
 	
 	
 	private class BeneficiaryContainer
 	{
-		public TextView Name, AreaName, BenefitDate, BenefitMoney;
+		public TextView Name, AreaName, BenefitDate, BenefitMoney, BenefitDateLabel;
 	}
 
 	private class BeneficiariesAdapter extends ArrayAdapter<Beneficiary>
@@ -222,11 +236,14 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			
 			if (null == rowView)
 			{
-				try {
+				try
+				{
 					LayoutInflater inflater = m_context.getLayoutInflater();
 					rowView = inflater.inflate(R.layout.listitem_beneficiary, null, true);					
-				} catch (Exception e) {
-					Log.d("SW", e.getLocalizedMessage());
+				} 
+				catch (Exception e)
+				{
+					System.out.println(e.getLocalizedMessage());
 					return null;
 				}
 
@@ -235,6 +252,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 				container.AreaName = (TextView)rowView.findViewById(R.id.areaName);
 				container.BenefitDate = (TextView)rowView.findViewById(R.id.benefitDate);
 				container.BenefitMoney = (TextView)rowView.findViewById(R.id.benefitMoney);
+				container.BenefitDateLabel = (TextView)rowView.findViewById(R.id.benefitDateLabel);
 				
 				rowView.setTag(container);
 			}
@@ -248,9 +266,24 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			container.Name.setText(item.Name);
 			container.AreaName.setText(item.AreaSubName);
 			
-			SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATE_FORMAT_FOR_SERVER, Locale.US);
-			container.BenefitDate.setText(formatter.format(item.StartDate));
 			container.BenefitMoney.setText(Utils.GetDefaultTool().DecimalNumberString(item.TargetMoney));
+			
+			if (item.InProgress)
+			{
+				container.BenefitDateLabel.setVisibility(View.INVISIBLE);
+				container.BenefitDate.setText(R.string.BENEFIT_IN_PROGRESS);
+			}
+			else
+			{
+				container.BenefitDateLabel.setVisibility(View.VISIBLE);
+				
+				SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATE_FORMAT_FOR_SERVER, Locale.US);
+				container.BenefitDate.setText(formatter.format(item.StartDate));
+			}
+			
+			if (position == (this.getCount()-1) && position < (totalCount-1))
+				requestMoreBeneficiaries();
+
 			
 			return rowView;
 		}		
