@@ -7,10 +7,12 @@ import java.util.Locale;
 import java.util.Vector;
 
 import com.socialwalk.dataclass.WalkHistory;
+import com.socialwalk.request.ServerRequestManager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -208,7 +210,7 @@ public class WalkHistoryActivity extends Activity
 
 	private Vector<File> GetLogFiles()
 	{
-		File dataDir = getApplicationContext().getFilesDir();
+		File dataDir = getApplicationContext().getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
 		File[] dataFiles = dataDir.listFiles();
 		
 		Vector<File> logFiles = new Vector<File>();
@@ -277,7 +279,7 @@ public class WalkHistoryActivity extends Activity
 			
 			WalkHistory history = m_histories.get(position);
 			
-			DateFormat sdf = new SimpleDateFormat("yyyy. MM.dd HH:mm", Locale.US);
+			DateFormat sdf = new SimpleDateFormat(Globals.DATETIME_FORMAT_FOR_UI, Locale.US);
 			String dateString = sdf.format(history.StartTime);
 			viewContainer.logDate.setText(dateString);
 			viewContainer.hearts.setText(history.RedHeartString() + getResources().getString(R.string.HEART));

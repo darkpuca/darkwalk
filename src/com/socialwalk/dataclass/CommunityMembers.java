@@ -17,8 +17,8 @@ public class CommunityMembers
 	
 	public class CommunityMemberItem
 	{
-		public int Sequence, MemberSequence;
-		public String Name, Email, Message;
+		public int MemberSequence;
+		public String Sequence, Name, Email, Message;
 		public boolean IsAllowed;
 	}
 }

@@ -203,8 +203,7 @@
                 android:layout_marginLeft="4dp"
                 android:textSize="22sp"
                 android:textColor="@color/LIGHT_RED"
-                android:textStyle="bold"
-                android:text="X,XXX" />
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/redBrace1"
                 android:layout_width="wrap_content"

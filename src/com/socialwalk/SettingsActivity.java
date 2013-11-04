@@ -97,7 +97,7 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 	
 	private void setSlideOption()
 	{
-		LockService.IsActive = slideCheck.isChecked();
+		MainApplication.IsSlideActive = slideCheck.isChecked();
 		
 		SharedPreferences loginPrefs = this.getSharedPreferences(Globals.PREF_NAME_SLIDE, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = loginPrefs.edit();

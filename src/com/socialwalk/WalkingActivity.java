@@ -584,8 +584,14 @@ Response.Listener<String>, Response.ErrorListener
 			if (Globals.ERROR_NONE == result.Code)
 			{
 				LockService.AroundersVisitCodes.add(this.currentArounders.getSequence());
+				
 				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(Globals.AD_AROUNDERS_RED);
 				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(Globals.AD_AROUNDERS_GREEN);
+				
+				WalkHistory currentWalk = WalkHistoryManager.LastWalking();
+				if(null != currentWalk)
+					currentWalk.IncreaseAdTouch();
+					
 				updateUserInformation();
 			}
 			else

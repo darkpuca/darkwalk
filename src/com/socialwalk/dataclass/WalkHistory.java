@@ -27,12 +27,12 @@ public class WalkHistory
 	public String FileName;
 	private int AdTouchCount;
 	private int weight;
-	private long heartRatio;
+	private int heartStepDistance;
 	
 	private static final float METs_WALK = 3.5f;
 	private static final float METs_RATIO_FOR_MINUTES = 0.0175f;
 	private static final float METs_RATIO_FOR_SECONDS = METs_RATIO_FOR_MINUTES / 60.0f;
-	private static final long RED_HEART_WALK_POINT = (long)0.5;
+	private static final int RED_HEART_BY_DISTANCE = 20;
 
 	public WalkHistory()
 	{
@@ -43,7 +43,7 @@ public class WalkHistory
 		this.StartTime = new Date();
 		this.IsWalking = true;
 		this.weight = Globals.DEFAULT_WEIGHT;
-		this.heartRatio = RED_HEART_WALK_POINT;
+		this.heartStepDistance = RED_HEART_BY_DISTANCE;
 		this.AdTouchCount = 0;
 	}
 	
@@ -56,7 +56,7 @@ public class WalkHistory
 		this.StartTime = new Date();
 		this.IsWalking = true;
 		this.weight = weight; 
-		this.heartRatio = RED_HEART_WALK_POINT;
+		this.heartStepDistance = RED_HEART_BY_DISTANCE;
 	}
 	
 	public WalkLogItem AddLog(Location location)
@@ -76,10 +76,10 @@ public class WalkHistory
 				newLog.DistanceFromPrevious = newLog.LogLocation.distanceTo(prevLog.LogLocation);
 
 				long diffInMs = newLog.LogTime.getTime() - prevLog.LogTime.getTime();
-				float speed = (float)(newLog.DistanceFromPrevious / diffInMs *1000L);
+				float mpsSpeed = (float)(newLog.DistanceFromPrevious / diffInMs *1000L);
 
 				// km/h로 속도 변환
-				newLog.CurrentSpeed = speed * 3.6f;
+				newLog.CurrentSpeed = mpsSpeed * 3.6f;
 				
 				// 걷기 속도 제한
 				if (newLog.CurrentSpeed > 10)
@@ -124,10 +124,11 @@ public class WalkHistory
 		for (int i = this.LogItems.size()-1; i >= 0; i--)
 		{
 			WalkLogItem item = this.LogItems.get(i);
-			if (item.IsValid)
-				return item;
-			else
-				continue;
+			return item;
+//			if (item.IsValid)
+//				return item;
+//			else
+//				continue;
 		}
 		
 		return null;
@@ -145,12 +146,13 @@ public class WalkHistory
 	
 	public String TotalDistanceString()
 	{
-		String strRet = "";
-		
+//		String strRet = "";
 //		if (this.TotalDistance > 1000)
-			strRet = String.format(Locale.US, "%.2f km", this.TotalDistance / 1000);
+//			strRet = String.format(Locale.US, "%.2f km", this.TotalDistance / 1000);
 //		else
 //			strRet = String.format(Locale.US,"%.2f m", this.TotalDistance);
+		
+		String strRet = String.format(Locale.US,  "%.2f km", this.TotalDistance / 1000);
 		
 		return strRet;
 	}
@@ -235,8 +237,8 @@ public class WalkHistory
 		if (0 == this.weight)
 			this.weight = Globals.DEFAULT_WEIGHT;
 		
-		if (0 == this.heartRatio)
-			this.heartRatio = RED_HEART_WALK_POINT;
+		if (0 == this.heartStepDistance)
+			this.heartStepDistance = RED_HEART_BY_DISTANCE;
 	}
 	
 	private long WalkingCalories(Date toDate)
@@ -267,13 +269,13 @@ public class WalkHistory
 	
 	private long RedHeartByWalk()
 	{
-		long distance = (long)(this.ValidDistance / 10);
-		return  distance * RED_HEART_WALK_POINT;
+		long hearts = (long)(this.ValidDistance / (float)this.heartStepDistance);
+		return hearts;
 	}
 	
 	private long RedHeartByTouch()
 	{
-		return this.AdTouchCount * Globals.AD_POINT_WALK;
+		return this.AdTouchCount * Globals.AD_AROUNDERS_RED;
 	}
 	
 	public long RedHearts()
@@ -309,12 +311,17 @@ public class WalkHistory
 		this.weight = weight;
 	}
 	
-	public long getHeartRatio() {
-		return heartRatio;
+	public int getHeartStepDistance() {
+		return heartStepDistance;
 	}
 
-	public void setHeartRatio(long heartRatio) {
-		this.heartRatio = heartRatio;
+	public void setHeartStepDistance(int distance) {
+		this.heartStepDistance = distance;
+	}
+	
+	public void IncreaseAdTouch()
+	{
+		this.AdTouchCount++;
 	}
 
 	public String GetXML()

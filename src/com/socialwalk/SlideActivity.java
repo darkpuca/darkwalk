@@ -350,7 +350,7 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 	@Override
 	protected void onResume()
 	{
-		if (!LockService.IsActive) finish();
+		if (!MainApplication.IsSlideActive) finish();
 		
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | 
 				WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |

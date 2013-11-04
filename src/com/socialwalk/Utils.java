@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.socialwalk.dataclass.WalkHistory;
+import com.socialwalk.request.ServerRequestManager;
 
 public class Utils
 {
@@ -101,7 +102,7 @@ public class Utils
 	{
 		if (null != fileName)
 		{
-			File dataDir = context.getFilesDir();
+			File dataDir = context.getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
 			String filePath = dataDir.getPath() + "/" + fileName;
 			File file = new File(filePath);
 			MyXmlParser parser = new MyXmlParser(file);

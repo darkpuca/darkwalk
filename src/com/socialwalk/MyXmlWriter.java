@@ -258,6 +258,39 @@ public class MyXmlWriter
 		}
 	}
 	
+	public static String CommunityMemberAllow(String memberSequence, int allowCode)
+	{
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		
+		try
+		{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", true);
+			
+			serializer.startTag("", "community_member");
+			serializer.startTag("", "item");
+			serializer.startTag("", "user_seq");
+			serializer.text(memberSequence);
+			serializer.endTag("", "user_seq");
+			serializer.startTag("", "verified");
+			serializer.text(Integer.toString(allowCode));
+			serializer.endTag("", "verified");
+			serializer.endTag("", "item");
+			serializer.endTag("", "community_member");
+			
+			serializer.endDocument();
+			
+			return writer.toString();
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.getLocalizedMessage());
+			return "";
+		}
+	}
+
+	
 	public static String AccumulateHeart(String userSequence, String adSequence, int point)
 	{
 		XmlSerializer serializer = Xml.newSerializer();
@@ -367,7 +400,7 @@ public class MyXmlWriter
 			serializer.endTag("", "weight");
 
 			serializer.startTag("", "heartRatio");
-			serializer.text(Long.toString(log.getHeartRatio()));
+			serializer.text(Integer.toString(log.getHeartStepDistance()));
 			serializer.endTag("", "heartRatio");
 
 			serializer.startTag("", "locations");

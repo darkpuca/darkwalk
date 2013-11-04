@@ -28,7 +28,7 @@ public class WalkDetailActivity extends Activity
 		this.targetFileName = getIntent().getStringExtra(Globals.EXTRA_KEY_FILENAME);
 		this.history = Utils.GetDefaultTool().WalkHistoryFromFile(this, this.targetFileName);
 		
-		UpdateDetails();
+		updateDetails();
 		
 		RelativeLayout routeButtonLayout = (RelativeLayout)findViewById(R.id.routeButtonLayout);
 		routeButtonLayout.setOnClickListener(new OnClickListener()
@@ -53,7 +53,7 @@ public class WalkDetailActivity extends Activity
 		});
 	}
 	
-	private void UpdateDetails()
+	private void updateDetails()
 	{
 		if (null == this.history) return;
 		
@@ -68,7 +68,7 @@ public class WalkDetailActivity extends Activity
 		walkTime.setText(this.history.TotalWalkingTimeString());
 		walkSpeed.setText(this.history.AverageSpeed());
 
-		SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATETIME_FORMAT_FOR_SERVER, Locale.US);
+		SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATETIME_FORMAT_FOR_UI, Locale.US);
 		startTime.setText(formatter.format(this.history.StartTime));
 		endTime.setText(formatter.format(this.history.EndTime));
 		calories.setText(this.history.TotalCalories() + " " + getResources().getString(R.string.CALORIES_UNIT));

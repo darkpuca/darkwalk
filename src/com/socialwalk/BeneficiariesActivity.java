@@ -112,9 +112,11 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		
 		TextView tvTargetMoney = (TextView)findViewById(R.id.targetMoney);
 		TextView tvCurrentMoney = (TextView)findViewById(R.id.currentMoney);
+		TextView tvParticipants = (TextView)findViewById(R.id.participants);
 		
 		tvTargetMoney.setText(String.format("%s " + getResources().getString(R.string.MONEY_UNIT), Utils.GetDefaultTool().DecimalNumberString(summary.TargetMoney)));
 		tvCurrentMoney.setText(String.format("%s " + getResources().getString(R.string.MONEY_UNIT), Utils.GetDefaultTool().DecimalNumberString(summary.CurrentMoney)));
+		tvParticipants.setText(String.format("%s " + getResources().getString(R.string.MAN_UNIT), Utils.GetDefaultTool().DecimalNumberString(summary.Participants)));
 		
 		ProgressBar moneyProgress = (ProgressBar)findViewById(R.id.moneyProgress);
 		int progress = (int)(summary.CurrentMoney / summary.TargetMoney *100);

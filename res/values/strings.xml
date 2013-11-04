@@ -95,7 +95,7 @@
     <string name="CONTINUE">계속</string>
     <string name="DETAIL">상세정보</string>
     <string name="DELETE">삭제</string>
-    <string name="BY_GROUP">그룹별</string>
+    <string name="BY_GROUP">지역</string>
     <string name="TOTAL">전체</string>
     <string name="SHOW_ALL">모두보기</string>
     <string name="EDIT_PROFILE">프로필 수정</string>
@@ -208,7 +208,9 @@
     <string name="MSG_SECESSION_CONFIRM">회원탈퇴를 진행하시겠습니까?\n등록되었던 이메일로는 재가입이 불가능합니다.</string>
     <string name="MSG_API_FAIL">명령 전송이 실패했습니다.</string>
     <string name="MSG_SERVICE_PREPARING">서비스 준비중입니다.</string>
-
+    <string name="MSG_MEMBER_ALLOW_CONFIRM">선택한 사용자를 승인하시겠습니까?</string>
+    <string name="MSG_MEMBER_DENY_CONFIRM">선택한 사용자를 거절하시겠습니까?</string>
+    
     <color name="WALK_INFO_PANEL_BG">#80000000</color>
     <color name="SLIDE_WALK_STATE">#80000000</color>
     <color name="MAIN_BG">#fecc2f</color>

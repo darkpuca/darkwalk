@@ -160,6 +160,31 @@
 	            android:max="100"
 	            android:progress="0"
 				android:progressDrawable="@drawable/money_progress" />
+	        <RelativeLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="4dp" >
+	            <TextView
+	                android:id="@+id/participantsLabel"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_centerVertical="true"
+	                android:layout_marginTop="2dp"
+	                android:textSize="16sp"
+	                android:textColor="@color/GRAY"
+	                android:text="@string/PARTICIPANTS" />
+	            <TextView
+	                android:id="@+id/participants"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_toRightOf="@+id/participantsLabel"
+	                android:layout_centerVertical="true"
+	                android:layout_marginLeft="4dp"
+	                android:textSize="16sp"
+	                android:textColor="@color/GRAY"
+	                android:textStyle="bold" />
+	        </RelativeLayout>
+	        
 		</LinearLayout>
 	    
 	    <ListView

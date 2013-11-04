@@ -56,6 +56,7 @@ public class Globals
 	
 	public static final String DATETIME_FORMAT_FOR_HISTORY = "yyyyMMddHHmmss";
 	public static final String DATETIME_FORMAT_FOR_SERVER = "yyyy-MM-dd HH:mm:ss";
+	public static final String DATETIME_FORMAT_FOR_UI = "yyyy-MM-dd HH½Ã mmºÐ";
 	public static final String DATE_FORMAT_FOR_SERVER = "yyyy-MM-dd";
 	
 	public static final int NOTI_WALKING = 2000;

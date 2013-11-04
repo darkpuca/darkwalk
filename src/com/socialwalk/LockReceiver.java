@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 public class LockReceiver extends BroadcastReceiver
 {
@@ -13,7 +14,7 @@ public class LockReceiver extends BroadcastReceiver
 	public static Date LastAccess;
 	
 	public static boolean IsPhoneCalling = false;
-	private static int LimitTime = 0;
+	private static int LimitTime = 10;
 
 	@Override
 	public void onReceive(Context context, Intent intent)
@@ -31,7 +32,7 @@ public class LockReceiver extends BroadcastReceiver
 		{
 			wasScreenOn = true;
 			
-			if (!LockService.IsActive) return;
+			if (!MainApplication.IsSlideActive) return;
 			
 			if (null != LastAccess)
 			{
@@ -47,7 +48,7 @@ public class LockReceiver extends BroadcastReceiver
 		}
 		else if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED))
 		{
-			if (!LockService.IsActive) return;
+			if (!MainApplication.IsSlideActive) return;
 
 			Intent i = new Intent(context, SlideActivity.class);
 			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);

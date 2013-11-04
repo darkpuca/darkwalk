@@ -245,7 +245,7 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("weight"))
 						history.setWeight(Integer.parseInt(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("heartRatio"))
-						history.setHeartRatio(Integer.parseInt(parser.nextText()));
+						history.setHeartStepDistance(Integer.parseInt(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("location"))
 						logItem = history.new WalkLogItem();
 					else if (tagName.equalsIgnoreCase("date"))
@@ -1167,7 +1167,7 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("member_seq"))
 						item.MemberSequence = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("user_seq"))
-						item.Sequence = Integer.parseInt(parser.nextText());
+						item.Sequence = parser.nextText();
 					else if (tagName.equalsIgnoreCase("realname"))
 						item.Name = parser.nextText();
 					else if (tagName.equalsIgnoreCase("user_id"))

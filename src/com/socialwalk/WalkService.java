@@ -1,5 +1,6 @@
 package com.socialwalk;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 import com.socialwalk.dataclass.WalkHistory;
 import com.socialwalk.dataclass.WalkHistoryManager;
+import com.socialwalk.request.ServerRequestManager;
 
 public class WalkService extends Service
 {
@@ -170,7 +172,10 @@ public class WalkService extends Service
 		
 		try
 		{
-			FileOutputStream fos = openFileOutput(filename, MODE_PRIVATE);
+			File logDir = this.getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
+			File logFile = new File(logDir, filename);
+
+			FileOutputStream fos = new FileOutputStream(logFile);
 			OutputStreamWriter osw = new OutputStreamWriter(fos);
 			osw.write(strXml);
 			osw.close();
@@ -192,6 +197,38 @@ public class WalkService extends Service
 		// stop gps update
 		this.unregisterReceiver(m_walkReceiver);
 		m_locationManager.removeUpdates(m_locationIntent);
+	}
+	
+	private File getUserFolder()
+	{
+		if (null == ServerRequestManager.LoginAccount) return null;
+		
+		File folder = new File(ServerRequestManager.LoginAccount.Sequence);
+		if (!folder.exists())
+			folder.mkdir();
+		
+		return folder;
+	}
+	
+	private File getUserLogFile(File folder, String filename)
+	{
+		if (null == ServerRequestManager.LoginAccount || null == folder || null == filename) return null;
+		
+		try
+		{
+			File logFile = new File(folder, filename);
+			if (logFile.exists())
+				logFile.delete();
+			
+//			logFile.createNewFile();
+			
+			return logFile;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	

@@ -2,6 +2,7 @@ package com.socialwalk;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap.CompressFormat;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -19,6 +20,8 @@ import com.socialwalk.request.RequestManager;
  */
 public class MainApplication extends Application
 {
+	public static boolean IsSlideActive;
+	
 	private static int DISK_IMAGECACHE_SIZE = 1024*1024*10;
 	private static CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = CompressFormat.PNG;
 	private static int DISK_IMAGECACHE_QUALITY = 100;  //PNG is lossless so quality is ignored but must be provided
@@ -27,10 +30,11 @@ public class MainApplication extends Application
 	private NetworkInfo wifiNetInfo, mobileNetInfo;
 
 	@Override
-	public void onCreate() {
+	public void onCreate()
+	{
 		super.onCreate();
-
 		init();
+		getSlideActive();
 	}
 
 	/**
@@ -72,5 +76,12 @@ public class MainApplication extends Application
         LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
 	}
+	
+	private void getSlideActive()
+	{
+		SharedPreferences slidePrefs = this.getSharedPreferences(Globals.PREF_NAME_SLIDE, Context.MODE_PRIVATE);
+		IsSlideActive = slidePrefs.getBoolean(Globals.PREF_KEY_SLIDE, true);
+	}
+
 
 }

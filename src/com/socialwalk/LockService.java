@@ -19,7 +19,6 @@ import com.socialwalk.dataclass.NeoClickItems;
 public class LockService extends Service
 {
 	public static boolean IsRegisted = false;
-	public static boolean IsActive = true;
 	
 	public static NeoClickItems NeoClickAds = new NeoClickItems();
 	public static Date NeoClickUpdateTime;
@@ -48,8 +47,6 @@ public class LockService extends Service
 		mReceiver = new LockReceiver();
 		registerReceiver(mReceiver, filter);
 		
-//		getSlideActive();
-		
 		// 슬라이더 등록 상태 저장
 		IsRegisted = true;
 		
@@ -61,12 +58,6 @@ public class LockService extends Service
 	{
 		super.onStart(intent, startId);
 	}
-	
-	private void getSlideActive()
-	{
-		SharedPreferences slidePrefs = this.getSharedPreferences(Globals.PREF_NAME_SLIDE, Context.MODE_PRIVATE);
-		IsActive = slidePrefs.getBoolean(Globals.PREF_KEY_SLIDE, true);
-	}
-	
+		
 }
 

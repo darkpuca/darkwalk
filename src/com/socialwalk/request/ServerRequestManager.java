@@ -560,6 +560,20 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		reqQueue.add(req);		
 	}
 
+	public void CommunityMemberAllow(Response.Listener<String> listener, Response.ErrorListener errorListener, int communitySequence, String memberSequence, boolean allow)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+		
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community_member/" + communitySequence;
+		String xmlBody = MyXmlWriter.CommunityMemberAllow(memberSequence, allow ? 1 : 3);
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.PUT, urlString, listener, errorListener);
+		req.SetXMLBody(xmlBody);
+		
+		reqQueue.add(req);		
+	}
 	
 	@Override
 	public void onErrorResponse(VolleyError error)

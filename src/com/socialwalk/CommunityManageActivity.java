@@ -3,11 +3,14 @@ package com.socialwalk;
 import java.util.Vector;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,21 +23,24 @@ import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.dataclass.CommunityDetail;
 import com.socialwalk.dataclass.CommunityMembers;
 import com.socialwalk.dataclass.CommunityMembers.CommunityMemberItem;
+import com.socialwalk.dataclass.CommunityPostReplies.CommunityPostReply;
 import com.socialwalk.request.ServerRequestManager;
 
 public class CommunityManageActivity extends Activity
-implements Response.Listener<String>, Response.ErrorListener
+implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 {
 	private int communitySequence;
 	
 	private ServerRequestManager server;
 	private int reqType, memberCount, memberPageIndex, applicantCount, applicantPageIndex;
+	private CommunityMemberItem actionMember;
 	
 	private static final int REQUEST_DETAIL = 100;
 	private static final int REQUEST_MEMBERS = 101;
 	private static final int REQUEST_MORE_MEMBERS = 102;
 	private static final int REQUEST_APPLICANTS = 103;
 	private static final int REQUEST_MORE_APPLICANTS = 104;
+	private static final int REQUEST_MEMBER_ALLOW = 105;
 	
 	private ListView membersList, applicantsList;
 	private CommunityMemberAdapter memberAdapter, applicantAdapter;
@@ -173,6 +179,18 @@ implements Response.Listener<String>, Response.ErrorListener
 				}
 			}
 		}
+		else if (REQUEST_MEMBER_ALLOW == this.reqType)
+		{
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				this.applicantAdapter.remove(this.actionMember);
+				this.actionMember = null;
+			}
+			else
+			{
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
+			}
+		}
 	}
 
 	private void requestMembers()
@@ -282,6 +300,12 @@ implements Response.Listener<String>, Response.ErrorListener
 				container.allowButton.setVisibility(View.VISIBLE);
 				container.denyButton.setVisibility(View.VISIBLE);
 				
+				container.allowButton.setTag(position);
+				container.denyButton.setTag(position);
+				
+				container.allowButton.setOnClickListener(CommunityManageActivity.this);
+				container.denyButton.setOnClickListener(CommunityManageActivity.this);
+				
 				if (position == (this.getCount()-1) && position < (applicantCount-1))
 					requestMoreApplicants();
 			}
@@ -295,6 +319,75 @@ implements Response.Listener<String>, Response.ErrorListener
 			}
 			return rowView;
 		}
+	}
+
+	@Override
+	public void onClick(View v)
+	{
+		Integer index = (Integer)v.getTag();
+		int position = index.intValue();
+		
+		this.actionMember = (CommunityMemberItem)this.applicantAdapter.getItem(position);
+		if (null == this.actionMember) return;
+		
+		if (R.id.allowButton == v.getId())
+		{
+			AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+			dlg.setCancelable(false);
+			dlg.setTitle(R.string.TITLE_INFORMATION);
+			dlg.setMessage(R.string.MSG_MEMBER_ALLOW_CONFIRM);
+			dlg.setPositiveButton(R.string.CONTINUE, new DialogInterface.OnClickListener()
+			{	
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{	
+					if (!progDlg.isShowing()) progDlg.show();
+					reqType = REQUEST_MEMBER_ALLOW;
+					server.CommunityMemberAllow(CommunityManageActivity.this, CommunityManageActivity.this, communitySequence, actionMember.Sequence, true);
+				}
+			});
+			
+			dlg.setNegativeButton(R.string.CANCEL, new DialogInterface.OnClickListener()
+			{				
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					dialog.dismiss();
+				}
+			});
+			dlg.show();
+		}
+		else if (R.id.denyButton == v.getId())
+		{
+			AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+			dlg.setCancelable(false);
+			dlg.setTitle(R.string.TITLE_INFORMATION);
+			dlg.setMessage(R.string.MSG_MEMBER_DENY_CONFIRM);
+			dlg.setPositiveButton(R.string.CONTINUE, new DialogInterface.OnClickListener()
+			{	
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{	
+					if (!progDlg.isShowing()) progDlg.show();
+					reqType = REQUEST_MEMBER_ALLOW;
+					server.CommunityMemberAllow(CommunityManageActivity.this, CommunityManageActivity.this, communitySequence, actionMember.Sequence, false);
+				}
+			});
+			
+			dlg.setNegativeButton(R.string.CANCEL, new DialogInterface.OnClickListener()
+			{				
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					dialog.dismiss();
+				}
+			});
+			dlg.show();			
+		}
+		
+
+
+		
 	}	
 
 	
