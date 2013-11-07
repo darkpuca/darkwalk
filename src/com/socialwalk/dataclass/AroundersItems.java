@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
+import com.socialwalk.Utils;
+
 public class AroundersItems
 {
 	public Vector<AroundersItem> Items;
@@ -23,18 +25,20 @@ public class AroundersItems
 		for (int i = this.currentIndex; i < this.Items.size(); i++)
 		{
 			AroundersItem item = this.Items.get(i);
-			if (item.IsBillingAvailable())
+			if (Utils.GetDefaultTool().IsBillingArounders(item.sequence))
 			{
 				validItem = item;
 				this.currentIndex++;
-				this.currentIndex = this.currentIndex % this.Items.size();
 				break;
 			}
 		}
 		
 		if (null == validItem)
 			validItem = this.Items.get(0);
-		
+
+		if (this.currentIndex >= this.Items.size())
+			this.currentIndex = 0;
+
 		return validItem;
 	}
 
@@ -42,13 +46,13 @@ public class AroundersItems
 	{
 		public String Company;
 		public String Promotion;
-		public String IconURL;
 		public String BannerURL;
 		public int Distance;
 		public double Latitude;
 		public double Longitude;
 		
 		private String sequence;
+		private String iconURL;
 		private String targetURL;
 		private Date firstAccess;
 		
@@ -64,6 +68,17 @@ public class AroundersItems
 			return this.sequence;
 		}
 
+		public String getIconURL()
+		{
+			return iconURL;
+		}
+
+		public void setIconURL(String iconURL)
+		{
+			this.sequence = GetSequenceFromUrl(iconURL);
+			this.iconURL = iconURL;
+		}
+
 		public String getTargetURL()
 		{
 			return this.targetURL;
@@ -71,50 +86,21 @@ public class AroundersItems
 
 		public void setTargetURL(String targetURL)
 		{
-			this.sequence = GetSequenceFromUrl(targetURL);
+//			this.sequence = GetSequenceFromUrl(targetURL);
 			this.targetURL = targetURL;
 		}
 
-		public void SetAccessStamp()
-		{
-			if (null == this.firstAccess)
-			{
-				this.firstAccess = new Date();
-			}
-			else
-			{
-				Date now = new Date();			
-				long diffInMs = now.getTime() - this.firstAccess.getTime();
-				long diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMs);
-				if (1 <= diffInDays)
-					this.firstAccess = new Date();
-			}
-		}
-		
-		public boolean IsBillingAvailable()
-		{	
-			if (null == this.firstAccess) return true;
-			
-			Date now = new Date();			
-			long diffInMs = now.getTime() - this.firstAccess.getTime();
-			long diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMs);
-			if (1 <= diffInDays)
-				return true;
-			
-			return false;
-
-		}
 		
 		private String GetSequenceFromUrl(String url)
 		{
 			if (null == url) return null;
 			if (0 == url.length()) return null;
 			
-//			String[] strSplit1 = url.split("?");
-//			String[] strSplit2 = strSplit1[strSplit1.length-1].split("=");
-			String[] strSplit2 = url.split("=");
+			String[] strSplit = url.split("/");
+			String filename = strSplit[strSplit.length-1];
 			
-			String seq = strSplit2[strSplit2.length-1];
+			
+			String seq = filename.replace(".jpg", "");
 			if (null != seq && 0 != seq.length())
 				return seq;
 			

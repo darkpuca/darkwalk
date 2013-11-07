@@ -1,13 +1,20 @@
 package com.socialwalk;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Vector;
+
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap.CompressFormat;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.socialwalk.dataclass.NeoClickItems;
 import com.socialwalk.request.ImageCacheManager;
 import com.socialwalk.request.ImageCacheManager.CacheType;
 import com.socialwalk.request.RequestManager;
@@ -28,19 +35,37 @@ public class MainApplication extends Application
 	
 	private ConnectivityManager connectivity;
 	private NetworkInfo wifiNetInfo, mobileNetInfo;
+	
+	public static Vector<String> AroundersVisitCodes;
+	public static Date AroundersDate;
+	
+	public static NeoClickItems NeoClickAds = new NeoClickItems();
+	public static Date NeoClickUpdateTime;
+
 
 	@Override
 	public void onCreate()
 	{
 		super.onCreate();
+
+        // slide 서비스를 등록
+        if (!LockService.IsRegisted)
+			startService(new Intent(this, LockService.class));
+        
+        createAroundersMetas();
+
 		init();
+		
 		getSlideActive();
 	}
+	
+	
 
 	/**
 	 * Intialize the request manager and the image cache 
 	 */
-	private void init() {
+	private void init()
+	{
 		RequestManager.init(this);
 		createImageCache();
 	}
@@ -83,5 +108,74 @@ public class MainApplication extends Application
 		IsSlideActive = slidePrefs.getBoolean(Globals.PREF_KEY_SLIDE, true);
 	}
 
+	private void createAroundersMetas()
+	{
+		if (null == AroundersVisitCodes)
+			AroundersVisitCodes = new Vector<String>();
+		
+		SharedPreferences adPrefs = this.getSharedPreferences(Globals.PREF_NAME_AD, Context.MODE_PRIVATE);
+		String prefCodes = adPrefs.getString(Globals.PREF_KEY_AROUNDERS_VISIT_CODES, "");
+		if (0 < prefCodes.length())
+		{
+			prefCodes.replace("[", "");
+			prefCodes.replace("]", "");
+			
+			String[] codes = prefCodes.split(",");
+			for (String code : codes)
+				AroundersVisitCodes.add(code);
+		}
+		
+		String prefTime = adPrefs.getString(Globals.PREF_KEY_AROUDERS_TIME, "");
+		if (0 < prefTime.length())
+		{
+			try
+			{
+				SimpleDateFormat  format = new SimpleDateFormat(Globals.DATE_FORMAT_FOR_SERVER, Locale.US);  
+				AroundersDate = format.parse(prefTime);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				AroundersDate = new Date();
+			}
+		}
+		else
+		{
+			AroundersDate = new Date();
+		}
+
+	}
+	
+	public void SaveMetas()
+	{
+		saveAroundersMetas();
+	}
+	
+	private void saveAroundersMetas()
+	{
+		SharedPreferences adPrefs = getSharedPreferences(Globals.PREF_NAME_AD, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = adPrefs.edit();
+
+		if (0 < AroundersVisitCodes.size())
+		{
+			String codes = "";
+			for (String code : AroundersVisitCodes)
+			{
+				if (0 < codes.length()) code += ",";
+				codes += code;
+			}
+			
+			editor.putString(Globals.PREF_KEY_AROUNDERS_VISIT_CODES, codes);
+
+			SimpleDateFormat  format = new SimpleDateFormat(Globals.DATE_FORMAT_FOR_SERVER, Locale.US);
+			editor.putString(Globals.PREF_KEY_AROUDERS_TIME, format.format(AroundersDate));
+		}
+		else
+		{
+			editor.putString(Globals.PREF_KEY_AROUNDERS_VISIT_CODES, "");
+		}
+
+		editor.commit();
+	}
 
 }

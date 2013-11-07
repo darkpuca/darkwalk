@@ -210,6 +210,66 @@ public class MyXmlParser
 		}
 	}
 
+	public NeoClickItems GetRobinhootItems()
+	{
+		if (null == m_xml || 0 == m_xml.length()) return null;
+		
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(m_xml));
+			
+			NeoClickItems items = null;
+			NeoClickItem item = null;
+			
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT)
+			{
+				String tagName = null;
+				
+				switch (eventType)
+				{
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.END_DOCUMENT:						
+					break;
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("Results"))
+						items = new NeoClickItems();
+					else if (tagName.equalsIgnoreCase("ad_data"))
+						item = items.new NeoClickItem();
+					else if (tagName.equalsIgnoreCase("aduid"))
+						item.Sequence = parser.nextText();
+					else if (tagName.equalsIgnoreCase("siteurl"))
+						item.Homepage = parser.nextText();
+					else if (tagName.equalsIgnoreCase("clickurl"))
+						item.TargetUrl = parser.nextText();
+					else if (tagName.equalsIgnoreCase("imgurl"))
+						item.ThumbnailUrl = parser.nextText();
+					break;
+				case XmlPullParser.END_TAG:
+					tagName = parser.getName();
+					if (tagName.equalsIgnoreCase("Results"))
+						return items;
+					else if (tagName.equalsIgnoreCase("ad_data"))
+						items.Items.add(item);
+					break;
+				}					
+				eventType = parser.next();
+			}
+			
+			return null;
+			
+		} 
+		catch (Exception e)
+		{
+			Log.d(TAG, e.getLocalizedMessage());
+			return null;
+		}
+	}
+	
 	public WalkHistory GetWalkHistory()
 	{
 		if (null == m_xml || 0 == m_xml.length()) return null;
@@ -246,6 +306,8 @@ public class MyXmlParser
 						history.setWeight(Integer.parseInt(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("heartRatio"))
 						history.setHeartStepDistance(Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("adTouchCount"))
+						history.setAdTouchCount(Integer.parseInt(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("location"))
 						logItem = history.new WalkLogItem();
 					else if (tagName.equalsIgnoreCase("date"))
@@ -989,7 +1051,7 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("promotion"))
 						item.Promotion = parser.nextText();
 					else if (tagName.equalsIgnoreCase("icon"))
-						item.IconURL = parser.nextText();
+						item.setIconURL(parser.nextText());
 					else if (tagName.equalsIgnoreCase("banner"))
 						item.BannerURL = parser.nextText();
 					else if (tagName.equalsIgnoreCase("url"))

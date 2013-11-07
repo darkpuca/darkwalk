@@ -3,6 +3,7 @@ package com.socialwalk;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.Vector;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -10,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.socialwalk.dataclass.WalkHistory;
 import com.socialwalk.request.ServerRequestManager;
@@ -17,6 +19,7 @@ import com.socialwalk.request.ServerRequestManager;
 public class Utils
 {
 	private static Utils defaultTool = null;
+	
 	
 	public static Utils GetDefaultTool()
 	{
@@ -145,14 +148,25 @@ public class Utils
 		if (null == adCode || 0 == adCode.length()) return false;
 		
 		Date now = new Date();
-		if (LockService.AroundersDate.getDate() != now.getDate())
+		if (MainApplication.AroundersDate.getDate() != now.getDate())
 		{
-			LockService.AroundersVisitCodes.clear();
-			LockService.AroundersDate = new Date();
+			MainApplication.AroundersVisitCodes.clear();
+			MainApplication.AroundersDate = new Date();
 		}
 		
-		boolean isVisited = LockService.AroundersVisitCodes.contains(adCode);
+		Log.d("DEBUG", "click code: " + adCode);
+		Log.d("DEBUG", "visit codes: " + MainApplication.AroundersVisitCodes.toString());
+		
+		boolean isVisited = MainApplication.AroundersVisitCodes.contains(adCode);
 		
 		return !isVisited;
+	}
+	
+	public void SaveAroundersCode(String code)
+	{
+		if (null == code) return;
+		if (0 == code.length()) return;
+		
+		MainApplication.AroundersVisitCodes.add(code);
 	}
 }

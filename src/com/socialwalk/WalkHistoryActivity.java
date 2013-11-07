@@ -1,8 +1,10 @@
 	package com.socialwalk;
 
 import java.io.File;
+import java.text.Collator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.Vector;
 
@@ -41,6 +43,15 @@ public class WalkHistoryActivity extends Activity
 	private Vector<File> m_logFiles;
 	private HistoryAdapter m_historyAdapter;
 	ProgressDialog m_progDlg;
+	
+	private final Comparator<WalkHistory> myComparator = new Comparator<WalkHistory>(){
+		@Override
+		public int compare(WalkHistory lhs, WalkHistory rhs)
+		{
+			return rhs.EndTime.compareTo(lhs.EndTime);
+		}
+	};
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -203,7 +214,10 @@ public class WalkHistoryActivity extends Activity
 		}
 		
 		if (0 < histories.size())
+		{
 			m_historyAdapter = new HistoryAdapter(this, histories);
+			m_historyAdapter.sort(myComparator);
+		}
 		
 		return true;
 	}
@@ -252,7 +266,6 @@ public class WalkHistoryActivity extends Activity
 			this.m_histories = histories;			
 		}
 
-
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
@@ -287,6 +300,8 @@ public class WalkHistoryActivity extends Activity
 			
 			return rowView;
 		}
+
+		
 		
 	}
 }

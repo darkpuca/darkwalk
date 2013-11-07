@@ -533,6 +533,7 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 			else
 			{
 				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
+				finish();
 			}
 		}
 		else if (REQUEST_AREAITEM == this.reqType)

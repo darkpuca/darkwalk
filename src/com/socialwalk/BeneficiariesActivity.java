@@ -120,6 +120,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		
 		ProgressBar moneyProgress = (ProgressBar)findViewById(R.id.moneyProgress);
 		int progress = (int)(summary.CurrentMoney / summary.TargetMoney *100);
+		
+		if (0 == progress) progress = 1;
 		moneyProgress.setProgress(progress);
 	}
 	

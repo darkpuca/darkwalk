@@ -23,7 +23,7 @@ public class Globals
 	
 	public static final String URL_NEO_AD_DOMAIN = "http://web.howapi.co.kr";
 	public static final String URL_NEO_AD = URL_NEO_AD_DOMAIN + "/zzzCashSlide.asp?tp=1";
-	public static final String URL_NEO_AD2 = URL_NEO_AD_DOMAIN + "/zzzparsing.asp?tp=1";
+	public static final String URL_ROBINHOOT_AD = "http://ad.robinhoot.co.kr/app/robinad_xml.utf8.asp?part=socialwalk1&area=55&adcnt=5";
 
 	public static final String URL_AROUNDERS_REQ_TEST = "http://test.arounders.co.kr/adRequest.skp";
 	public static final String AROUNDERS_REQ_URL = "http://ad.arounders.co.kr/adRequest.skp";
@@ -48,11 +48,14 @@ public class Globals
 	public static final String PREF_ENVIRNMENT = "ENV";
 	public static final String PREF_NAME_SLIDE = "SLIDE";
 	public static final String PREF_NAME_LOGIN = "LOGIN";
+	public static final String PREF_NAME_AD = "AD";
 	
 	public static final String PREF_KEY_AUTOLOGIN = "AUTO_LOGIN";
 	public static final String PREF_KEY_USER_ID = "USER_ID";
 	public static final String PREF_KEY_PASSWORD = "PASSWORD";
 	public static final String PREF_KEY_SLIDE = "SLIDE";
+	public static final String PREF_KEY_AROUDERS_TIME = "AROUNDERS_TIME";
+	public static final String PREF_KEY_AROUNDERS_VISIT_CODES = "AROUNDERS_CODES";
 	
 	public static final String DATETIME_FORMAT_FOR_HISTORY = "yyyyMMddHHmmss";
 	public static final String DATETIME_FORMAT_FOR_SERVER = "yyyy-MM-dd HH:mm:ss";
@@ -69,6 +72,7 @@ public class Globals
 	public static final int INTENT_REQ_WEBVIEW = 1101;
 	public static final int INTENT_REQ_PROFILE = 1102;
 	public static final int INTENT_REQ_SETTING = 1103;
+	public static final int INTENT_REQ_COMMUNITY_DELETE = 1104;
 
 	public static final long INTRO_WAITING = 3000;
 

@@ -1,6 +1,7 @@
 package com.socialwalk;
 
 import java.util.Date;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 import android.content.BroadcastReceiver;
@@ -15,6 +16,7 @@ public class LockReceiver extends BroadcastReceiver
 	
 	public static boolean IsPhoneCalling = false;
 	private static int LimitTime = 10;
+	
 
 	@Override
 	public void onReceive(Context context, Intent intent)

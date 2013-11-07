@@ -74,10 +74,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
         m_aroundersLayout.setVisibility(View.GONE);
         m_aroundersLayout.setOnClickListener(this);
         
-        // slide 서비스를 등록
-        if (!LockService.IsRegisted)
-			startService(new Intent(this, LockService.class));
-
         // start button action
 		m_startLayout = (RelativeLayout)findViewById(R.id.layoutStartButton);
 		m_startLayout.setOnClickListener(this);
@@ -199,7 +195,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
-				System.exit(0);
+				finish();
 			}
 		});
 		exitDlg.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
@@ -222,6 +218,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 		
 		((BitmapDrawable)this.characterBgView.getDrawable()).getBitmap().recycle();
 
+		((MainApplication)getApplication()).SaveMetas();
+		
 		super.onDestroy();
 	}
 
@@ -380,7 +378,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 			
 			if (Globals.ERROR_NONE == result.Code)
 			{
-				LockService.AroundersVisitCodes.add(this.currentArounders.getSequence());
+				Utils.GetDefaultTool().SaveAroundersCode(this.currentArounders.getSequence());
 				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(Globals.AD_AROUNDERS_RED);
 				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(Globals.AD_AROUNDERS_GREEN);
 				updateUserInformation();
@@ -415,7 +413,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 		TextView adPromotion = (TextView)findViewById(R.id.adPromo);
 		TextView adDistance = (TextView)findViewById(R.id.adDistance);
 		
-		adIcon.setImageUrl(currentArounders.IconURL, ImageCacheManager.getInstance().getImageLoader());
+		adIcon.setImageUrl(currentArounders.getIconURL(), ImageCacheManager.getInstance().getImageLoader());
 		adCompany.setText(currentArounders.Company);
 		adPromotion.setText(currentArounders.Promotion);
 		adDistance.setText(Integer.toString(currentArounders.Distance) + "m");
@@ -484,7 +482,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 				// TODO: 적립되는 광고가 아닐 경우에는?
 			}
 
-			this.currentArounders.SetAccessStamp();
 			Intent i = new Intent(getBaseContext(), WebPageActivity.class);
 			i.putExtra(Globals.EXTRA_KEY_URL, currentArounders.getTargetURL());
 			startActivity(i);

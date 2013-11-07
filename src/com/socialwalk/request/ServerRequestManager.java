@@ -148,6 +148,16 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		reqQueue.add(req);		
 	}
 	
+	public void CommunityDelete(Response.Listener<String> listener, Response.ErrorListener errorListener, int communityId)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community/" + communityId;
+		SocialWalkRequest req = new SocialWalkRequest(Method.DELETE, urlString, listener, errorListener);
+		reqQueue.add(req);		
+	}
+	
 	public void CommunityPosts(Response.Listener<String> listener, Response.ErrorListener errorListener, int communityId, int pageIndex)
 	{
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
@@ -387,7 +397,8 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		RequestQueue queue = RequestManager.getRequestQueue();
 		if (null == queue) return;
 		
-		String url = Globals.URL_NEO_AD;
+//		String url = Globals.URL_NEO_AD;
+		String url = Globals.URL_ROBINHOOT_AD;
 
 		StringRequest req = new StringRequest(Method.GET, url, listener, errorListener);
 		queue.add(req);

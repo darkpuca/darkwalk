@@ -268,6 +268,7 @@ public class MyXmlWriter
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", true);
 			
+			serializer.startTag("", "request");
 			serializer.startTag("", "community_member");
 			serializer.startTag("", "item");
 			serializer.startTag("", "user_seq");
@@ -278,6 +279,7 @@ public class MyXmlWriter
 			serializer.endTag("", "verified");
 			serializer.endTag("", "item");
 			serializer.endTag("", "community_member");
+			serializer.endTag("", "request");
 			
 			serializer.endDocument();
 			
@@ -403,6 +405,10 @@ public class MyXmlWriter
 			serializer.text(Integer.toString(log.getHeartStepDistance()));
 			serializer.endTag("", "heartRatio");
 
+			serializer.startTag("", "adTouchCount");
+			serializer.text(Integer.toString(log.getAdTouchCount()));
+			serializer.endTag("", "adTouchCount");
+			
 			serializer.startTag("", "locations");
 			for (WalkLogItem item : log.LogItems)
 			{

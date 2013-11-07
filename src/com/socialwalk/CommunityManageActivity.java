@@ -8,7 +8,11 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -34,6 +38,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 	private ServerRequestManager server;
 	private int reqType, memberCount, memberPageIndex, applicantCount, applicantPageIndex;
 	private CommunityMemberItem actionMember;
+	private CommunityDetail detail;
 	
 	private static final int REQUEST_DETAIL = 100;
 	private static final int REQUEST_MEMBERS = 101;
@@ -41,6 +46,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 	private static final int REQUEST_APPLICANTS = 103;
 	private static final int REQUEST_MORE_APPLICANTS = 104;
 	private static final int REQUEST_MEMBER_ALLOW = 105;
+	private static final int REQUEST_COMMUNITY_DELETE = 106;
 	
 	private ListView membersList, applicantsList;
 	private CommunityMemberAdapter memberAdapter, applicantAdapter;
@@ -81,6 +87,51 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		}
 	}
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+        getMenuInflater().inflate(R.menu.community_manage, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (R.id.action_community_delete == item.getItemId())
+		{
+			if (1 < this.detail.MemberCount)
+			{
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_COMMUNITY_MEMBER_EXIST);
+				return false;
+			}
+			
+			
+			AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+			dlg.setCancelable(false);
+			dlg.setTitle(R.string.TITLE_INFORMATION);
+			dlg.setMessage(R.string.MSG_COMMUNITY_DELETE_CONFIRM);
+			dlg.setPositiveButton(R.string.CONTINUE, new DialogInterface.OnClickListener()
+			{	
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					requestCommunityDelete();
+				}
+			});
+			
+			dlg.setNegativeButton(R.string.CANCEL, new DialogInterface.OnClickListener()
+			{				
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					dialog.dismiss();
+				}
+			});
+			dlg.show();
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	private void updateCommunityDetail(CommunityDetail detail)
 	{
 		TextView tvName = (TextView)findViewById(R.id.communityName);
@@ -115,9 +166,9 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		{
 			if (Globals.ERROR_NONE == result.Code)
 			{
-				CommunityDetail detail = parser.GetCommunityDetail();
-				if (null != detail)
-					updateCommunityDetail(detail);
+				this.detail = parser.GetCommunityDetail();
+				if (null != this.detail)
+					updateCommunityDetail(this.detail);
 			}
 			
 			requestMembers();
@@ -185,10 +236,23 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			{
 				this.applicantAdapter.remove(this.actionMember);
 				this.actionMember = null;
+				
+				requestMembers();
 			}
 			else
 			{
 				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
+			}
+		}
+		else if (REQUEST_COMMUNITY_DELETE == this.reqType)
+		{
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				ServerRequestManager.LoginAccount.CommunitySeq = 0;
+				ServerRequestManager.LoginAccount.CommunityName = null;
+				
+				setResult(RESULT_OK);
+				finish();
 			}
 		}
 	}
@@ -230,12 +294,13 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		this.server.CommunityMembers(this, this, this.communitySequence, applicantPageIndex, true);
 	}
 	
-	
-	
-	
-	
-	
-	
+	private void requestCommunityDelete()
+	{
+		if (!progDlg.isShowing()) progDlg.show();
+		
+		this.reqType = REQUEST_COMMUNITY_DELETE;
+		this.server.CommunityDelete(this, this, this.communitySequence);
+	}
 	
 	
 	

@@ -49,6 +49,18 @@
 				    android:layout_alignParentTop="true"
 				    android:adjustViewBounds="true"
 				    android:scaleType="centerCrop"
+				    android:src="@drawable/profile_none"
+				    android:background="@drawable/photo_frame_shape" />
+				<ImageView
+				    android:id="@+id/profileImageNone"
+				    android:visibility="invisible"
+				    android:layout_width="64dp"
+				    android:layout_height="64dp"
+				    android:layout_alignParentLeft="true"
+				    android:layout_alignParentTop="true"
+				    android:adjustViewBounds="true"
+				    android:scaleType="centerCrop"
+				    android:src="@drawable/profile_none"
 				    android:background="@drawable/photo_frame_shape" />
 				<TextView
 				    android:id="@+id/name"
@@ -144,6 +156,7 @@
 						android:textStyle="bold" />
 		        </RelativeLayout>
 		        <ProgressBar 
+		            android:visibility="gone"
 		            android:id="@+id/moneyProgress"
 					android:layout_width="match_parent"
 					android:layout_height="24dp"

@@ -49,7 +49,7 @@ implements Response.Listener<String>, Response.ErrorListener
 			{
 				Intent i = new Intent(getBaseContext(), CommunityManageActivity.class);
 				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, communitySeq);
-				startActivity(i);				
+				startActivityForResult(i, Globals.INTENT_REQ_COMMUNITY_DELETE);				
 			}
 		});
 		
@@ -98,7 +98,21 @@ implements Response.Listener<String>, Response.ErrorListener
 		tvDesc.setText(detail.Description);
 	}
 	
-	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (Globals.INTENT_REQ_COMMUNITY_DELETE == requestCode)
+		{
+			if (RESULT_OK == resultCode)
+			{
+				setResult(RESULT_OK);
+				finish();
+			}
+		}
+
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{

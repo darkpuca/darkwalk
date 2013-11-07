@@ -138,6 +138,10 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 			if (Globals.ERROR_NONE == result.Code)
 			{
 				int newSeq = parser.GetReturnId();
+				
+				ServerRequestManager.LoginAccount.CommunitySeq = newSeq;
+				ServerRequestManager.LoginAccount.CommunityName = groupName.getText().toString();
+				
 				Intent i = new Intent();
 				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, newSeq);
 				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, groupName.getText().toString());

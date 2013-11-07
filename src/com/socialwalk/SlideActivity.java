@@ -107,7 +107,7 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 		
 		this.m_marginBottom = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, this.getResources().getDisplayMetrics());
 		
-		int centerSize = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, this.getResources().getDisplayMetrics());
+		int centerSize = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, this.getResources().getDisplayMetrics());
 		this.m_sliderWidth = m_sliderHeight = centerSize;
 		this.m_startHeight = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, this.getResources().getDisplayMetrics());
 		
@@ -521,26 +521,26 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 	public void UpdateSlideAd()
 	{
 		// 광고 업데이트 5초 이하면 변경 안함
-		if (null != LockService.NeoClickUpdateTime)
+		if (null != MainApplication.NeoClickUpdateTime)
 		{
 			Date now = new Date();
-			long diffInMs = now.getTime() - LockService.NeoClickUpdateTime.getTime();
+			long diffInMs = now.getTime() - MainApplication.NeoClickUpdateTime.getTime();
 			long diffInSeconds = TimeUnit.MILLISECONDS.toSeconds(diffInMs);
 			if (5 > diffInSeconds) return;
 		}
 		
-		if (0 == LockService.NeoClickAds.Items.size())
+		if (0 == MainApplication.NeoClickAds.Items.size())
 		{
 			reqType = REQUEST_NEOCLICK;
 			m_server.UpdateNeoClickItems(this, this);
 		}
 		else
 		{
-			currentNeoClick = LockService.NeoClickAds.GetNextItem();
+			currentNeoClick = MainApplication.NeoClickAds.GetNextItem();
 			UpdateControls();
 		}
 		
-		LockService.NeoClickUpdateTime = new Date();
+		MainApplication.NeoClickUpdateTime = new Date();
 	}
 	
 	public void UpdateControls()
@@ -604,12 +604,13 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 		{
 			System.out.println(response);
 			
-			NeoClickItems items = parser.GetNeoClickItems();
+//			NeoClickItems items = parser.GetNeoClickItems();
+			NeoClickItems items = parser.GetRobinhootItems();
 			
 			if (null == items) return;
-			LockService.NeoClickAds.SetItems(items.Items);
+			MainApplication.NeoClickAds.SetItems(items.Items);
 			
-			this.currentNeoClick = LockService.NeoClickAds.GetNextItem();
+			this.currentNeoClick = MainApplication.NeoClickAds.GetNextItem();
 			UpdateControls();
 		}
 		else if (REQUEST_ACCUMULATE_VISIT == reqType ||

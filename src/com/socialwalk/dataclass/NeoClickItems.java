@@ -33,7 +33,7 @@ public class NeoClickItems
 	
 	public class NeoClickItem
 	{
-		public String Sequence;
+		public String Sequence, Homepage;
 		public String TargetUrl;
 		public String ThumbnailUrl;		
 		private Date firstAccess;
@@ -72,8 +72,10 @@ public class NeoClickItems
 			
 			Date now = new Date();			
 			long diffInMs = now.getTime() - this.firstAccess.getTime();
-			long diffInHour = TimeUnit.MILLISECONDS.toHours(diffInMs);
-			if (diffInHour > 1)
+//			long diffInHour = TimeUnit.MILLISECONDS.toHours(diffInMs);
+//			if (diffInHour > 1)
+			long diffInSeconds = TimeUnit.MILLISECONDS.toHours(diffInMs);
+			if (diffInSeconds > 10)
 				return true;
 			
 //			if (1 > diffInHour)

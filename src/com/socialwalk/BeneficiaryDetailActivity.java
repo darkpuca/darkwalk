@@ -3,6 +3,8 @@ package com.socialwalk;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -61,6 +63,7 @@ implements Response.Listener<String>, Response.ErrorListener
 		NetworkImageView profileImage = (NetworkImageView)findViewById(R.id.profileImage);
 //		NetworkImageView descImage = (NetworkImageView)findViewById(R.id.descriptionImage);
 //		NetworkImageView reviewImage = (NetworkImageView)findViewById(R.id.reviewImage);
+		ImageView profileNoneImage = (ImageView)findViewById(R.id.profileImageNone);
 		TextView name = (TextView)findViewById(R.id.name);
 		TextView age = (TextView)findViewById(R.id.age);
 		TextView gender = (TextView)findViewById(R.id.gender);
@@ -71,12 +74,18 @@ implements Response.Listener<String>, Response.ErrorListener
 		
 		ProgressBar moneyProgress = (ProgressBar)findViewById(R.id.moneyProgress);
 		int progress = (int)(detail.CurrentMoney / detail.TargetMoney *100);
+		
+		if (0 == progress) progress = 1;
 		moneyProgress.setProgress(progress);
 
 		if (0 < detail.ProfileUrl.length())
 		{
 			profileImage.setImageUrl(null, null);
 			profileImage.setImageUrl(detail.ProfileUrl, ImageCacheManager.getInstance().getImageLoader());
+		}
+		else
+		{
+			profileNoneImage.setVisibility(View.VISIBLE);
 		}
 		
 		name.setText(detail.Name);

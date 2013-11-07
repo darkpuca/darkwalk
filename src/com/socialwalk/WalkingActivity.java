@@ -299,6 +299,19 @@ Response.Listener<String>, Response.ErrorListener
     	if (null != this.locationManager && null != this.locationListener)
     		this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 10, this.locationListener);
 
+    	// 저장된 어라운더스 광고 정보가 있을 경우 이를 이용하여 위치 기반 광고를 표시한다.
+    	aroundersLayout.setVisibility(View.INVISIBLE);
+    	if (0 < this.aroundersAds.Items.size())
+    	{
+    		AroundersItem item = this.aroundersAds.GetItem();
+    		if (null != item)
+    		{
+    			this.currentArounders = item;
+    			updateArounders();
+    		}
+    	}
+
+    	
 		super.onResume();
 	}
 
@@ -477,7 +490,6 @@ Response.Listener<String>, Response.ErrorListener
 				// TODO: 적립되는 광고가 아닐 경우에는 어떻게 표시하
 			}
 
-			this.currentArounders.SetAccessStamp();
 			Intent i = new Intent(getBaseContext(), WebPageActivity.class);
 			i.putExtra(Globals.EXTRA_KEY_URL, currentArounders.getTargetURL());
 			startActivity(i);
@@ -539,7 +551,7 @@ Response.Listener<String>, Response.ErrorListener
 		TextView adPromotion = (TextView)findViewById(R.id.adPromo);
 		TextView adDistance = (TextView)findViewById(R.id.adDistance);
 		
-		adIcon.setImageUrl(currentArounders.IconURL, ImageCacheManager.getInstance().getImageLoader());
+		adIcon.setImageUrl(currentArounders.getIconURL(), ImageCacheManager.getInstance().getImageLoader());
 		adCompany.setText(currentArounders.Company);
 		adPromotion.setText(currentArounders.Promotion);
 		adDistance.setText(Integer.toString(currentArounders.Distance) + "m");
@@ -583,10 +595,10 @@ Response.Listener<String>, Response.ErrorListener
 
 			if (Globals.ERROR_NONE == result.Code)
 			{
-				LockService.AroundersVisitCodes.add(this.currentArounders.getSequence());
+				Utils.GetDefaultTool().SaveAroundersCode(this.currentArounders.getSequence());
 				
-				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(Globals.AD_AROUNDERS_RED);
-				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(Globals.AD_AROUNDERS_GREEN);
+//				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(Globals.AD_AROUNDERS_RED);
+//				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(Globals.AD_AROUNDERS_GREEN);
 				
 				WalkHistory currentWalk = WalkHistoryManager.LastWalking();
 				if(null != currentWalk)

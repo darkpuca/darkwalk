@@ -165,11 +165,10 @@ implements Response.Listener<String>, Response.ErrorListener
 		{
 			if (Globals.ERROR_NONE == result.Code)
 			{
-				WalkHistory lastWalk = WalkHistoryManager.LastWalking();
-				if(null != lastWalk)
-				{
-					
-				}
+				ServerRequestManager.LoginAccount.Hearts.addRedPointByWalk(this.history.RedHeartByWalk());
+				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(this.history.RedHeartByTouch());
+				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(this.history.GreedHeartByTouch());
+
 			}
 		}
 	}	

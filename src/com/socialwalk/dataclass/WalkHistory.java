@@ -267,15 +267,20 @@ public class WalkHistory
 		return WalkingCaloriesString(this.EndTime);
 	}
 	
-	private long RedHeartByWalk()
+	public int RedHeartByWalk()
 	{
-		long hearts = (long)(this.ValidDistance / (float)this.heartStepDistance);
+		int hearts = (int)(this.ValidDistance / (float)this.heartStepDistance);
 		return hearts;
 	}
 	
-	private long RedHeartByTouch()
+	public int RedHeartByTouch()
 	{
 		return this.AdTouchCount * Globals.AD_AROUNDERS_RED;
+	}
+	
+	public int GreedHeartByTouch()
+	{
+		return this.AdTouchCount * Globals.AD_AROUNDERS_GREEN;
 	}
 	
 	public long RedHearts()
@@ -291,13 +296,13 @@ public class WalkHistory
 	
 	public String RedHeartStringByWalk()
 	{
-		long hearts = RedHeartByWalk();
+		int hearts = RedHeartByWalk();
 		return Utils.GetDefaultTool().DecimalNumberString(hearts);
 	}
 
 	public String RedHeartStringByTouch()
 	{
-		long hearts = RedHeartByTouch();
+		int hearts = RedHeartByTouch();
 		return Utils.GetDefaultTool().DecimalNumberString(hearts);
 	}
 
@@ -319,6 +324,14 @@ public class WalkHistory
 		this.heartStepDistance = distance;
 	}
 	
+	public int getAdTouchCount() {
+		return AdTouchCount;
+	}
+
+	public void setAdTouchCount(int adTouchCount) {
+		AdTouchCount = adTouchCount;
+	}
+
 	public void IncreaseAdTouch()
 	{
 		this.AdTouchCount++;
