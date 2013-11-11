@@ -161,7 +161,7 @@ public class MainApplication extends Application
 			String codes = "";
 			for (String code : AroundersVisitCodes)
 			{
-				if (0 < codes.length()) code += ",";
+				if (0 < codes.length()) codes += ",";
 				codes += code;
 			}
 			

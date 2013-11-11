@@ -17,6 +17,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -195,7 +196,10 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
+				((MainApplication)getApplication()).SaveMetas();
+
 				finish();
+				System.exit(0);
 			}
 		});
 		exitDlg.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
@@ -313,7 +317,12 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 		else if (Globals.INTENT_REQ_SETTING == requestCode)
 		{
 			if (false == ServerRequestManager.IsLogin)
+			{
+				((MainApplication)getApplication()).SaveMetas();
+
 				finish();
+				System.exit(0);
+			}
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
@@ -332,11 +341,13 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
         // login
         if (!ServerRequestManager.IsLogin)
         {
+        	Log.d("DEBUG", "manual login start");
             Intent i = new Intent(this, LoginActivity.class);
             startActivityForResult(i, Globals.INTENT_REQ_LOGIN);
         }
         else
         {
+        	Log.d("DEBUG", "update user information");
         	updateUserInformation();
         }
 	}

@@ -841,7 +841,7 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("reg_date"))
 						summary.RegDate = dateFromString(parser.nextText(), Globals.DATETIME_FORMAT_FOR_SERVER);
 					else if (tagName.equalsIgnoreCase("participant"))
-						summary.Sequence = Integer.parseInt(parser.nextText());
+						summary.Participants = Integer.parseInt(parser.nextText());
 					break;
 				case XmlPullParser.END_TAG:
 					tagName = parser.getName();
@@ -1174,11 +1174,18 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("item"))
 					{
 						 if (1 == parseTargetType)
-							ranks.PersonalItems.add(item);
+						 {
+							 if (null != item.Name)
+								 ranks.PersonalItems.add(item);
+						 }
 						 else if (2 == parseTargetType)
+						 {
 							 ranks.GroupSumItems.add(item);
+						 }
 						 else if (3 == parseTargetType)
+						 {
 							 ranks.GroupAvgItems.add(item);
+						 }
 					}
 
 					break;

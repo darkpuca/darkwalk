@@ -65,8 +65,7 @@
             android:layout_marginTop="2dp"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="@color/LIGHT_GREEN"
-            android:text="+X" />
+            android:textColor="@color/LIGHT_GREEN" />
 
         <ImageView
             android:src="@drawable/slideline_horizontal"

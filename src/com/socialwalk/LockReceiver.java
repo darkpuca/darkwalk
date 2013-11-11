@@ -12,7 +12,7 @@ import android.content.SharedPreferences;
 public class LockReceiver extends BroadcastReceiver
 {
 	public static boolean wasScreenOn = true;
-	public static Date LastAccess;
+	public static Date SlideLastAccess;
 	
 	public static boolean IsPhoneCalling = false;
 	private static int LimitTime = 10;
@@ -36,10 +36,10 @@ public class LockReceiver extends BroadcastReceiver
 			
 			if (!MainApplication.IsSlideActive) return;
 			
-			if (null != LastAccess)
+			if (null != SlideLastAccess)
 			{
 				Date now = new Date();
-				long diffInMs = now.getTime() - LastAccess.getTime();
+				long diffInMs = now.getTime() - SlideLastAccess.getTime();
 				long diffInMinutes= TimeUnit.MILLISECONDS.toMinutes(diffInMs);
 				if (LimitTime > diffInMinutes) return;
 			}
@@ -59,9 +59,9 @@ public class LockReceiver extends BroadcastReceiver
 
 	}
 	
-	public static void UpdateAccessTime()
+	public static void UpdateSlideAccessTime()
 	{
-		LastAccess = new Date();
+		SlideLastAccess = new Date();
 	}
 
 }

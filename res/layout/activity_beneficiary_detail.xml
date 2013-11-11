@@ -112,6 +112,7 @@
 			    android:padding="@dimen/activity_horizontal_margin"
 			    android:background="@drawable/innerframe_shape" >
 		        <RelativeLayout
+		            android:visibility="gone"
 		            android:layout_width="match_parent"
 		            android:layout_height="wrap_content"
 		            android:layout_marginBottom="4dp" >
@@ -134,7 +135,7 @@
 						android:textStyle="bold" />
 		        </RelativeLayout>
 		        <RelativeLayout
-		            android:visibility="gone"
+		            android:visibility="visible"
 		            android:layout_width="match_parent"
 		            android:layout_height="wrap_content" >
 		            <TextView
@@ -166,6 +167,7 @@
 		            android:progress="0"
 					android:progressDrawable="@drawable/money_progress" />
 		        <RelativeLayout
+		            android:visibility="gone"
 		            android:layout_width="match_parent"
 		            android:layout_height="wrap_content"
 		            android:layout_marginTop="4dp" >

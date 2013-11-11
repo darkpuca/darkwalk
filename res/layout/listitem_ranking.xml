@@ -1,50 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="wrap_content"
     android:padding="@dimen/activity_horizontal_margin" 
     android:minHeight="40dp" >
     
     <TextView
         android:id="@+id/ranking"
-        android:layout_width="24dp"
+        android:layout_width="20dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true" 
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textColor="@color/DARK_GRAY"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:text="X" />
     <TextView
         android:id="@+id/name"
-        android:layout_width="120dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/ranking"
         android:layout_centerVertical="true"
         android:layout_marginLeft="4dp"
-        android:textSize="16sp"
+        android:textSize="13sp"
         android:textColor="@color/DARK_GRAY"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:ellipsize="end"
+        android:text="NAME" />
     <TextView
         android:id="@+id/hearts"
-        android:layout_width="60dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
 		android:gravity="right"
         android:textSize="16sp"
         android:textColor="@color/DARK_GRAY"
-        android:textStyle="bold" />
-    <TextView
-        android:id="@+id/localName"
+        android:textStyle="bold"
+        android:text="X,XXX,XXX" />
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/name"
         android:layout_toLeftOf="@+id/hearts"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:layout_centerVertical="true"
-        android:visibility="gone"
-        android:textSize="14sp"
-        android:textColor="@color/GRAY" />
+        android:layout_centerVertical="true">
+	    <TextView
+	        android:id="@+id/localName"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:visibility="visible"
+	        android:textSize="12sp"
+	        android:textColor="@color/GRAY"
+	        android:text="LOCAL" />
+	    <TextView
+	        android:id="@+id/communityName"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:visibility="visible"
+	        android:textSize="12sp"
+	        android:textColor="@color/GRAY"
+	        android:ellipsize="end"
+	        android:text="COMMUNITYNAME" />
+	    <TextView
+	        android:id="@+id/memberCount"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:visibility="visible"
+	        android:textSize="12sp"
+	        android:textColor="@color/GRAY"
+	        android:text="MEMBERS" />
+	    	    
+    </LinearLayout>
 
 </RelativeLayout>

@@ -79,6 +79,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		boolean auto = loginPrefs.getBoolean(Globals.PREF_KEY_AUTOLOGIN, false);
 		if (auto)
 		{
+			Log.d("DEBUG", "auto-login start");
 			String uid = loginPrefs.getString(Globals.PREF_KEY_USER_ID, "");
 			String pwd = loginPrefs.getString(Globals.PREF_KEY_PASSWORD, "");
 			

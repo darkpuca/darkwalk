@@ -161,7 +161,7 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 	
 	private class RankingItemContainer
 	{
-		public TextView Ranking, Name, LocalName, Hearts;
+		public TextView Ranking, Name, LocalName, CommunityName, MemberCount, Hearts;
 	}
 
 	private class RankingItemAdapter extends ArrayAdapter<RankItem>
@@ -200,6 +200,8 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 				container.Ranking = (TextView)rowView.findViewById(R.id.ranking);
 				container.Name = (TextView)rowView.findViewById(R.id.name);
 				container.LocalName = (TextView)rowView.findViewById(R.id.localName);
+				container.CommunityName = (TextView)rowView.findViewById(R.id.communityName);
+				container.MemberCount = (TextView)rowView.findViewById(R.id.memberCount);
 				container.Hearts = (TextView)rowView.findViewById(R.id.hearts);
 				
 				rowView.setTag(container);
@@ -211,19 +213,41 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 			
 			RankItem item = m_items.get(position);
 			container.Ranking.setText(Integer.toString(position+1));
-//			container.LocalName.setText(item.CommunityName);
-			container.Hearts.setText(Utils.GetDefaultTool().DecimalNumberString(item.UserPoint));
+			container.LocalName.setText(item.CommunityName);
 			container.LocalName.setText(item.LocalName);
 			
 			if (this.isGroupList)
-				container.Name.setText(item.CommunityName);
+			{
+				container.Hearts.setText(Utils.GetDefaultTool().DecimalNumberString(item.GroupPoint));
+				container.MemberCount.setVisibility(View.VISIBLE);
+				container.CommunityName.setVisibility(View.GONE);
+
+				if (null == item.CommunityName || 0 == item.CommunityName.length())
+					container.Name.setText(R.string.NO_GROUP);
+				else
+					container.Name.setText(item.CommunityName);
+				
+				String memberCount = String.format(getResources().getString(R.string.MEMBER_COUNT) + " %s" + getResources().getString(R.string.MAN_UNIT), Utils.GetDefaultTool().DecimalNumberString(item.Members));
+				container.MemberCount.setText(memberCount);
+				
+			}
 			else
+			{
+				container.Hearts.setText(Utils.GetDefaultTool().DecimalNumberString(item.UserPoint));
+				container.MemberCount.setVisibility(View.GONE);
+				container.CommunityName.setVisibility(View.VISIBLE);
+
 				container.Name.setText(item.Name);
+				if (null == item.CommunityName || 0 == item.CommunityName.length())
+					container.CommunityName.setText(R.string.NO_GROUP);
+				else
+					container.CommunityName.setText(item.CommunityName);
+			}
 			
 			if (this.showLocal)
 				container.LocalName.setVisibility(View.VISIBLE);
 			else
-				container.LocalName.setVisibility(View.INVISIBLE);
+				container.LocalName.setVisibility(View.GONE);
 			
 			return rowView;
 		}

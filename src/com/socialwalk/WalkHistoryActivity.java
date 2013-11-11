@@ -66,10 +66,10 @@ public class WalkHistoryActivity extends Activity
 			@Override
 			public void onItemClick(AdapterView<?> adpater, View view, int position, long id)
 			{
-				File logFile = m_logFiles.get(position);
+				WalkHistory history = m_historyAdapter.getItem(position);
 				
 				Intent i = new Intent(getBaseContext(), WalkDetailActivity.class);
-				i.putExtra(Globals.EXTRA_KEY_FILENAME, logFile.getName());
+				i.putExtra(Globals.EXTRA_KEY_FILENAME, history.FileName);
 				startActivity(i);
 			}
 		});

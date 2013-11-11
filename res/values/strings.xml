@@ -161,6 +161,8 @@
     <string name="MAN_UNIT">명</string>
     <string name="VERSION">버전</string>
     <string name="PARTICIPANTS">참여인원</string>
+    <string name="FREE">free</string>
+    <string name="MEMBER_COUNT">회원수</string>
     <string name="FORMAT_DISTANCE">%.2f km</string>
     <string name="FORMAT_SPEED">%.1f km/h</string>
     <string name="FORMAT_TIME">HH:mm:ss</string>

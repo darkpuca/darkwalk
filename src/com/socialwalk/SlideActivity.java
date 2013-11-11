@@ -193,9 +193,10 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 							Log.d(TAG, "slider in STOP area.");
 //							StopWalking();
 //							EnableKeyGuard(true);
+							LockReceiver.UpdateSlideAccessTime();
+
 							SlideActivity.this.moveTaskToBack(true);
 							finish();
-							LockReceiver.UpdateAccessTime();
 							break;
 						}
 						default:
@@ -450,9 +451,10 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 			{
 				Toast.makeText(this, "over clicked", Toast.LENGTH_SHORT).show();
 			}
-				
+
+			LockReceiver.UpdateSlideAccessTime();
+
 			currentNeoClick.SetAccessStamp();
-			LockReceiver.UpdateAccessTime();
 //			EnableKeyGuard(true);
 		}		
 	}
@@ -462,8 +464,11 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 		// 걷기 상태이면 그냥 슬라이드 화면 종료
 		if (WalkService.IsStarted)
 		{
+			LockReceiver.UpdateSlideAccessTime();
+
 			finish();
 			moveTaskToBack(true);
+
 			return;
 		}
 		
@@ -482,7 +487,9 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 			Utils.GetDefaultTool().ShowGpsSettingWithDialog(this);
 			return;
 		}
-		
+
+		LockReceiver.UpdateSlideAccessTime();
+
 		if (!WalkService.IsStarted)
 		{
 			reqType = REQUEST_ACCUMULATE_START;
@@ -492,8 +499,6 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 			startService(i);
 			finish();
 		}
-
-		LockReceiver.UpdateAccessTime();
 	}
 	
 //	private void StopWalking()
@@ -545,13 +550,18 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 	
 	public void UpdateControls()
 	{
-		if (null == currentNeoClick) return;
+		if (null == currentNeoClick)
+		{
+			this.heartPoint.setVisibility(View.INVISIBLE);
+			return;
+		}
 		
+		this.heartPoint.setVisibility(View.VISIBLE);
 		
 		if (currentNeoClick.IsBillingAvailable())
-			this.heartPoint.setVisibility(View.VISIBLE);
+			this.heartPoint.setText("+" + Integer.toString(Globals.AD_POINT_SLIDE_VISIT));
 		else
-			this.heartPoint.setVisibility(View.INVISIBLE);
+			this.heartPoint.setText(R.string.FREE);
 
 		m_adImage.setImageUrl(null, null);
 		m_adImage.setImageUrl(currentNeoClick.ThumbnailUrl, ImageCacheManager.getInstance().getImageLoader());
