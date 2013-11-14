@@ -27,7 +27,7 @@
         <activity
             android:name="com.socialwalk.MainActivity"
             android:label="@string/APP_NAME"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
@@ -40,7 +40,9 @@
             android:name="com.socialwalk.SlideActivity"
             android:clearTaskOnLaunch="true"
             android:label="@string/TITLE_SLIDE"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
+            android:finishOnTaskLaunch="true"
+            android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>

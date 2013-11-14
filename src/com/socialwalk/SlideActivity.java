@@ -1,7 +1,11 @@
 package com.socialwalk;
 
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
@@ -31,6 +35,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
 import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.dataclass.NeoClickItems;
+import com.socialwalk.dataclass.WalkHistory;
+import com.socialwalk.dataclass.WalkHistoryManager;
 import com.socialwalk.dataclass.NeoClickItems.NeoClickItem;
 import com.socialwalk.request.ImageCacheManager;
 import com.socialwalk.request.ServerRequestManager;
@@ -70,6 +76,11 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 	private static final int LOGIN_REQ_START = 300;
 	private static final int LOGIN_REQ_AD = 301;
 
+	private TextView slideClock, clockMeridiem, clockDate, clockWeekday;
+	private Timer updateTimer;
+	private Handler updateHandler;
+	private TimerTask updateTask;
+
 	
 	@Override
 	public void onAttachedToWindow()
@@ -82,6 +93,8 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		
+//		Log.d("DEBUG", "phone state: " + LockReceiver.IsPhoneCalling);
 		
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | 
 				WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
@@ -118,6 +131,34 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 		MoveSliderToStartPosition();
 		
 //		EnableKeyGuard(false);
+
+		this.slideClock = (TextView)findViewById(R.id.slideClock);
+		this.clockMeridiem = (TextView)findViewById(R.id.clockMeridiem);
+		this.clockDate = (TextView)findViewById(R.id.clockDate);
+		this.clockWeekday = (TextView)findViewById(R.id.clockWeekday);
+		updateHandler = new Handler();
+		updateTask = new TimerTask()
+		{			
+			@Override
+			public void run()
+			{
+				updateHandler.post(new Runnable()
+				{					
+					@Override
+					public void run()
+					{
+						updateCurrentTime();
+					}
+				});
+			}
+		};
+		
+		updateTimer = new Timer();
+		updateTimer.scheduleAtFixedRate(updateTask, 0, 5000);
+
+
+		
+		
 		
 		if (getIntent() != null && getIntent().hasExtra("kill") && getIntent().getExtras().getInt("kill") == 1)
 			finish();
@@ -229,6 +270,23 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 	{
 		super.onDestroy();
 	}
+	
+	private void updateCurrentTime()
+	{
+		if (null == this.slideClock || null == this.clockMeridiem || null == this.clockDate || null == this.clockWeekday) return;
+		
+		Date now = new Date();
+		SimpleDateFormat sdfClock = new SimpleDateFormat("h:mm", Locale.US);
+		SimpleDateFormat sdfMeridiem = new SimpleDateFormat("a", Locale.US);
+		SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd", Locale.US);
+		SimpleDateFormat sdfWeekday = new SimpleDateFormat("E", Locale.US);
+		
+		this.slideClock.setText(sdfClock.format(now));
+		this.clockMeridiem.setText(sdfMeridiem.format(now));
+		this.clockDate.setText(sdfDate.format(now));
+		this.clockWeekday.setText(sdfWeekday.format(now));
+	}
+
 
 	private void MoveSliderToStartPosition()
 	{
@@ -390,8 +448,11 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 	@Override
 	protected void onPause()
 	{
+
 		super.onPause();
 	}
+	
+	
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -452,7 +513,7 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 				Toast.makeText(this, "over clicked", Toast.LENGTH_SHORT).show();
 			}
 
-			LockReceiver.UpdateSlideAccessTime();
+//			LockReceiver.UpdateSlideAccessTime();
 
 			currentNeoClick.SetAccessStamp();
 //			EnableKeyGuard(true);
@@ -577,24 +638,20 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 			
             switch(state){
                 case TelephonyManager.CALL_STATE_RINGING:
+                	Log.d("DEBUG", "phone called: " + incomingNumber);
                 	LockReceiver.IsPhoneCalling = true;
-                	Log.d(TAG, "phone called: " + incomingNumber);
                 	moveTaskToBack(true);
                 	break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
-                    System.out.println("call Activity off hook");
+                    Log.d("DEBUG", "call off hook. iscalling: " + LockReceiver.IsPhoneCalling);
                     moveTaskToBack(true);
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:
-                	if (LockReceiver.IsPhoneCalling)
-                	{
-                    	LockReceiver.IsPhoneCalling = false;
-
-                    	Log.d(TAG, "call state idle.");
-                    	Intent i = new Intent(getApplicationContext(), SlideActivity.class);
-            			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    	getApplicationContext().startActivity(i);
-                	}
+                	if (LockReceiver.IsPhoneCalling) LockReceiver.IsPhoneCalling = false;
+                	Log.d("DEBUG", "call state idle. iscalling:" + LockReceiver.IsPhoneCalling);
+//                	Intent i = new Intent(getApplicationContext(), SlideActivity.class);
+//        			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                	getApplicationContext().startActivity(i);
                     break;
             }
 		}
