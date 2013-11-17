@@ -8,6 +8,8 @@ public class NeoClickItems
 {
 	public Vector<NeoClickItem> Items;
 	private int currentIndex;
+	
+	private static int ValidAccessMinutes = 10;
 
 	public NeoClickItems()
 	{
@@ -56,8 +58,8 @@ public class NeoClickItems
 			{
 				Date now = new Date();			
 				long diffInMs = now.getTime() - this.firstAccess.getTime();
-				long diffInHour = TimeUnit.MILLISECONDS.toHours(diffInMs);
-				if (1 <=  diffInHour)
+				long diffInMinutes = TimeUnit.MILLISECONDS.toMinutes(diffInMs);
+				if (ValidAccessMinutes <=  diffInMinutes)
 				{
 					accessCount = 0;
 					firstAccess = new Date();
@@ -68,24 +70,17 @@ public class NeoClickItems
 
 		public boolean IsBillingAvailable()
 		{
+			if (null == this.firstAccess) return true;
 			if (accessLimit > accessCount) return true;
 			
 			Date now = new Date();			
 			long diffInMs = now.getTime() - this.firstAccess.getTime();
-//			long diffInHour = TimeUnit.MILLISECONDS.toHours(diffInMs);
-//			if (diffInHour > 1)
-			long diffInSeconds = TimeUnit.MILLISECONDS.toHours(diffInMs);
-			if (diffInSeconds > 10)
+			long diffInMinutes = TimeUnit.MILLISECONDS.toMinutes(diffInMs);
+			if (ValidAccessMinutes <= diffInMinutes)
 				return true;
-			
-//			if (1 > diffInHour)
-//				return (accessLimit >= accessCount);
-//			else if (1 <= diffInHour)
-//				return true;
 			
 			return false;
 		}
-
 	}
 
 

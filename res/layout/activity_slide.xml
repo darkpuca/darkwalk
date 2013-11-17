@@ -44,6 +44,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_above="@+id/slideClock"
 	        android:layout_alignLeft="@+id/slideClock"
+	        android:layout_marginBottom="4dp"
 	        android:textSize="18sp"
 	        android:textColor="@color/WHITE" />
 	    <TextView
@@ -52,6 +53,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_above="@+id/slideClock"
 	        android:layout_alignRight="@+id/slideClock"
+	        android:layout_marginBottom="4dp"
 	        android:textSize="18sp"
 	        android:textColor="@color/WHITE" />
 	    <TextView

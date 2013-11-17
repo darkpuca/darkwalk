@@ -6,7 +6,8 @@ public class CommunityDetail
 {
 	public int Id, Type, OwnerId, SignupType, VerifyCode;
 	public String AreaName, AreaSubName, Name, Description;
-	public int MakerSequence, Mastersequence, MemberCount;
+	public String MakerSequence, Mastersequence;
+	public int MemberCount;
 	public String MakerName, MasterName;
 	public Date RegDate, ModifyDate;
 	

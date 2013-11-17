@@ -193,6 +193,7 @@ public class MyXmlWriter
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", true);
 			
+			serializer.startTag("", "request");
 			serializer.startTag("", "users");
 			serializer.startTag("", "old_password");
 			serializer.text(oldPassword);
@@ -201,6 +202,7 @@ public class MyXmlWriter
 			serializer.text(newPassword);
 			serializer.endTag("", "new_password");
 			serializer.endTag("", "users");
+			serializer.endTag("", "request");
 			
 			serializer.endDocument();
 			

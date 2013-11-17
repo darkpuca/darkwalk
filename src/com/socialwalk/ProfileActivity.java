@@ -126,7 +126,7 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 	{
 		if (!progDlg.isShowing()) progDlg.show();
 		this.reqType = REQUEST_USER_PROFILE;
-		this.server.getUserProfile(this, this);
+		this.server.GetUserProfile(this, this);
 	}
 
 	@Override

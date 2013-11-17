@@ -50,6 +50,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 	
 	private ListView membersList, applicantsList;
 	private CommunityMemberAdapter memberAdapter, applicantAdapter;
+	private Button deleteButton;
 	
 	private ProgressDialog progDlg;
 
@@ -85,14 +86,54 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			this.reqType = REQUEST_DETAIL;
 			this.server.CommunityDetail(this, this, this.communitySequence);
 		}
+		
+		this.deleteButton = (Button)findViewById(R.id.deleteButton);
+		this.deleteButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				if (1 < detail.MemberCount)
+				{
+					Utils.GetDefaultTool().ShowMessageDialog(CommunityManageActivity.this, R.string.MSG_COMMUNITY_MEMBER_EXIST);
+					return;
+				}
+				
+				
+				AlertDialog.Builder dlg = new AlertDialog.Builder(CommunityManageActivity.this);
+				dlg.setCancelable(false);
+				dlg.setTitle(R.string.TITLE_INFORMATION);
+				dlg.setMessage(R.string.MSG_COMMUNITY_DELETE_CONFIRM);
+				dlg.setPositiveButton(R.string.CONTINUE, new DialogInterface.OnClickListener()
+				{	
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						requestCommunityDelete();
+					}
+				});
+				
+				dlg.setNegativeButton(R.string.CANCEL, new DialogInterface.OnClickListener()
+				{				
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						dialog.dismiss();
+					}
+				});
+				dlg.show();
+			}
+		});
 	}
 	
+	/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
         getMenuInflater().inflate(R.menu.community_manage, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
+	*/
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)

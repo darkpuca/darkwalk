@@ -534,7 +534,7 @@ Response.Listener<String>, Response.ErrorListener
 		@Override
 		public void onLocationUnavailableArea(NMapLocationManager locationManager, NGeoPoint myLocation)
 		{
-			Toast.makeText(WalkingActivity.this, R.string.MSG_MY_LOCATION_FAIL, Toast.LENGTH_LONG).show();
+//			Toast.makeText(WalkingActivity.this, R.string.MSG_MY_LOCATION_FAIL, Toast.LENGTH_LONG).show();
 			stopMyLocation();
 		}
 

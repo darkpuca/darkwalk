@@ -26,7 +26,7 @@ public class Globals
 	public static final String URL_ROBINHOOT_AD = "http://ad.robinhoot.co.kr/app/robinad_xml.utf8.asp?part=socialwalk1&area=55&adcnt=5";
 
 	public static final String URL_AROUNDERS_REQ_TEST = "http://test.arounders.co.kr/adRequest.skp";
-	public static final String AROUNDERS_REQ_URL = "http://ad.arounders.co.kr/adRequest.skp";
+	public static final String URL_AROUNDERS_REQ = "http://ad.arounders.co.kr/adRequest.skp";
 	public static final String AROUNDERS_API_KEY_TEST = "QNN6";
 	public static final String AROUNDERS_APP_KEY = "123";
 	public static final int AROUNDERS_AD_SIZE = 10;
@@ -56,6 +56,7 @@ public class Globals
 	public static final String PREF_KEY_SLIDE = "SLIDE";
 	public static final String PREF_KEY_AROUDERS_TIME = "AROUNDERS_TIME";
 	public static final String PREF_KEY_AROUNDERS_VISIT_CODES = "AROUNDERS_CODES";
+	public static final String PREF_KEY_SLIDE_AD_HISTORIES = "SLIDE_HISTORIES";
 	
 	public static final String DATETIME_FORMAT_FOR_HISTORY = "yyyyMMddHHmmss";
 	public static final String DATETIME_FORMAT_FOR_SERVER = "yyyy-MM-dd HH:mm:ss";

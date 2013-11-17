@@ -22,7 +22,18 @@
             android:textColor="@color/WHITE"
             android:textSize="@dimen/TITLE_FONT_SIZE"
             android:textStyle="bold" />
-    </RelativeLayout>
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="96dp"
+            android:layout_height="@dimen/TITLE_BUTTON_HEIGHT"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+			android:background="@drawable/gray_bg_selector"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/WHITE"
+            android:text="@string/ACTION_COMMUNITY_DELETE" />
+	</RelativeLayout>
     
 	<RelativeLayout
         android:layout_width="match_parent"

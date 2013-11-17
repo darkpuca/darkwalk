@@ -317,7 +317,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
 		if (null == reqQueue) return;
 		
-		String urlString = Globals.URL_SERVER_DOMAIN + "/users/" + LoginAccount.Sequence + "/user_pw";
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/users/" + LoginAccount.Sequence + "/user_pw";
 
 		final String xmlBody = MyXmlWriter.ChangePassword(LoginAccount.Password, newPassword);
 		
@@ -466,7 +466,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		queue.add(req);
 	}
 	
-	public void getUserProfile(Response.Listener<String> listener, Response.ErrorListener errorListener)
+	public void GetUserProfile(Response.Listener<String> listener, Response.ErrorListener errorListener)
 	{
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
 		if (null == reqQueue) return;
@@ -478,7 +478,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		reqQueue.add(req);		
 	}
 
-	public void checkEmail(Response.Listener<String> listener, Response.ErrorListener errorListener, String email)
+	public void CheckEmail(Response.Listener<String> listener, Response.ErrorListener errorListener, String email)
 	{
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
 		if (null == reqQueue) return;

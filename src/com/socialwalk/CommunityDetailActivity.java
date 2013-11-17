@@ -1,7 +1,9 @@
 package com.socialwalk;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +18,7 @@ import com.socialwalk.dataclass.CommunityDetail;
 import com.socialwalk.request.ServerRequestManager;
 
 public class CommunityDetailActivity extends Activity
-implements Response.Listener<String>, Response.ErrorListener
+implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 {
 	private ServerRequestManager server;
 	private int reqType;
@@ -54,35 +56,11 @@ implements Response.Listener<String>, Response.ErrorListener
 		});
 		
 		this.secessionButton = (Button)findViewById(R.id.secessionButton);
-		this.secessionButton.setOnClickListener(new OnClickListener()
-		{			
-			@Override
-			public void onClick(View v)
-			{
-				if (!progDlg.isShowing()) progDlg.show();
-				reqType = REQUEST_COMMUNITY_SECESSION;
-				server.CommunitySecession(CommunityDetailActivity.this, CommunityDetailActivity.this);
-			}
-		});
+		this.secessionButton.setOnClickListener(this);
 		
 		this.communitySeq = getIntent().getIntExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, 0);
 		if (0 < this.communitySeq)
 		{
-			if (null != ServerRequestManager.LoginAccount)
-			{
-				// group management button visibility
-				if (this.communitySeq == ServerRequestManager.LoginAccount.CommunitySeq)
-				{
-					manageButton.setVisibility(View.VISIBLE);
-					secessionButton.setVisibility(View.INVISIBLE);
-				}
-				else
-				{
-					manageButton.setVisibility(View.INVISIBLE);
-					secessionButton.setVisibility(View.VISIBLE);
-				}
-			}
-
 			progDlg.show();
 			this.reqType = REQUEST_COMMUNITY_DETAIL;
 			this.server.CommunityDetail(this, this, this.communitySeq);
@@ -96,6 +74,17 @@ implements Response.Listener<String>, Response.ErrorListener
 		
 		tvName.setText(detail.Name);
 		tvDesc.setText(detail.Description);
+		
+		if (detail.Mastersequence.equalsIgnoreCase(ServerRequestManager.LoginAccount.Sequence))
+		{
+			manageButton.setVisibility(View.VISIBLE);
+			secessionButton.setVisibility(View.INVISIBLE);
+		}
+		else
+		{
+			manageButton.setVisibility(View.INVISIBLE);
+			secessionButton.setVisibility(View.VISIBLE);
+		}
 	}
 	
 	@Override
@@ -151,6 +140,38 @@ implements Response.Listener<String>, Response.ErrorListener
 			{
 				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
 			}
+		}
+	}
+
+	@Override
+	public void onClick(View v)
+	{
+		if (this.secessionButton.equals(v))
+		{
+			AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+			dlg.setCancelable(false);
+			dlg.setTitle(R.string.TITLE_INFORMATION);
+			dlg.setMessage(R.string.MSG_COMMUNITY_SECESSION_CONFIRM);
+			dlg.setPositiveButton(R.string.CONTINUE, new DialogInterface.OnClickListener()
+			{	
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					if (!progDlg.isShowing()) progDlg.show();
+					reqType = REQUEST_COMMUNITY_SECESSION;
+					server.CommunitySecession(CommunityDetailActivity.this, CommunityDetailActivity.this);
+				}
+			});
+			
+			dlg.setNegativeButton(R.string.CANCEL, new DialogInterface.OnClickListener()
+			{				
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					dialog.dismiss();
+				}
+			});
+			dlg.show();
 		}
 	}
 

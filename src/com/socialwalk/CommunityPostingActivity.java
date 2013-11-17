@@ -72,7 +72,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		
 		if (Globals.ERROR_NONE == result.Code)
 		{
-			Toast.makeText(getBaseContext(), R.string.MSG_COMMUNITY_POSTING_SUCCESS, Toast.LENGTH_SHORT).show();
+//			Toast.makeText(getBaseContext(), R.string.MSG_COMMUNITY_POSTING_SUCCESS, Toast.LENGTH_SHORT).show();
 			
 			Intent i = new Intent();
 			setResult(RESULT_OK, i);

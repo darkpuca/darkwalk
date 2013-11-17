@@ -571,11 +571,11 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("owner_second_name"))
 						detail.AreaSubName = parser.nextText();
 					else if (tagName.equalsIgnoreCase("opening_seq"))
-						detail.MakerSequence = Integer.parseInt(parser.nextText());
+						detail.MakerSequence = parser.nextText();
 					else if (tagName.equalsIgnoreCase("opening_name"))
 						detail.MakerName = parser.nextText();
 					else if (tagName.equalsIgnoreCase("operator_seq"))
-						detail.Mastersequence = Integer.parseInt(parser.nextText());
+						detail.Mastersequence = parser.nextText();
 					else if (tagName.equalsIgnoreCase("operator_name"))
 						detail.MasterName = parser.nextText();
 					else if (tagName.equalsIgnoreCase("community_member_count"))

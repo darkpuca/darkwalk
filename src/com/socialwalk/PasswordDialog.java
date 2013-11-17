@@ -1,5 +1,7 @@
 package com.socialwalk;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -83,6 +85,7 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 	public void onErrorResponse(VolleyError e)
 	{
 		e.printStackTrace();
+		Utils.GetDefaultTool().ShowMessageDialog(getDialog().getContext(), R.string.MSG_API_FAIL);
 	}
 
 	@Override
@@ -95,9 +98,16 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 		
 		if (Globals.ERROR_NONE == result.Code)
 		{
-			
+			SharedPreferences loginPrefs = getDialog().getContext().getSharedPreferences(Globals.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor = loginPrefs.edit();
+			editor.putString(Globals.PREF_KEY_PASSWORD, password.getText().toString());
+			editor.commit();
+
 			dismiss();
 		}
+		else
+		{
+			Utils.GetDefaultTool().ShowMessageDialog(getDialog().getContext(), R.string.MSG_API_FAIL);
+		}
 	}
-
 }

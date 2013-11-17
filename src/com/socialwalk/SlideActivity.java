@@ -211,7 +211,7 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 						case SLIDER_IN_AD:
 						{
 							Log.d(TAG, "slider in AD area.");
-							ShowAdPage();
+							showAdPage();
 							break;
 						}
 //						case SLIDER_IN_HOME:
@@ -462,7 +462,7 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 			if (RESULT_OK == resultCode)
 			{
 				if (LOGIN_REQ_AD == this.loginReqType)
-					ShowAdPage();
+					showAdPage();
 				else if (LOGIN_REQ_START == this.loginReqType)
 					StartWalking();
 				
@@ -479,7 +479,7 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	private void ShowAdPage()
+	private void showAdPage()
 	{
 		if (null == this.currentNeoClick)
 		{
@@ -496,6 +496,7 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 				return;
 			}
 			
+			
 			Intent i = new Intent(getApplicationContext(), WebPageActivity.class);
 			i.putExtra(Globals.EXTRA_KEY_URL, currentNeoClick.TargetUrl);
 			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -507,16 +508,9 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 			{
 				reqType = REQUEST_ACCUMULATE_VISIT;
 				m_server.AccumulateHeart(this, this, Globals.AD_TYPE_SLIDE, currentNeoClick.Sequence, Globals.AD_POINT_SLIDE_VISIT);
+				
+				currentNeoClick.SetAccessStamp();
 			}
-			else
-			{
-				Toast.makeText(this, "over clicked", Toast.LENGTH_SHORT).show();
-			}
-
-//			LockReceiver.UpdateSlideAccessTime();
-
-			currentNeoClick.SetAccessStamp();
-//			EnableKeyGuard(true);
 		}		
 	}
 	
@@ -623,7 +617,7 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 			this.heartPoint.setText("+" + Integer.toString(Globals.AD_POINT_SLIDE_VISIT));
 		else
 			this.heartPoint.setText(R.string.FREE);
-
+		
 		m_adImage.setImageUrl(null, null);
 		m_adImage.setImageUrl(currentNeoClick.ThumbnailUrl, ImageCacheManager.getInstance().getImageLoader());
 	}

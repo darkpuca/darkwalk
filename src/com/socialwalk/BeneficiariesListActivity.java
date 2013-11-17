@@ -128,7 +128,7 @@ implements Response.Listener<String>, Response.ErrorListener
 			}
 			else if (Globals.ERROR_NO_RESULT == result.Code)
 			{
-				Toast.makeText(this, "후원프로젝트 없음", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(this, "후원프로젝트 없음", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

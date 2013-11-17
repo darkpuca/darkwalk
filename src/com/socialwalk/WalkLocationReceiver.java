@@ -19,10 +19,10 @@ public class WalkLocationReceiver extends BroadcastReceiver
 	{
 		if (intent.hasExtra(LocationManager.KEY_PROVIDER_ENABLED))
 		{
-			if (!intent.getBooleanExtra(LocationManager.KEY_PROVIDER_ENABLED, true))
-				Toast.makeText(context, "GPS disabled.", Toast.LENGTH_SHORT).show();
-			else
-				Toast.makeText(context, "GPS enabled.", Toast.LENGTH_SHORT).show();
+//			if (!intent.getBooleanExtra(LocationManager.KEY_PROVIDER_ENABLED, true))
+//				Toast.makeText(context, "GPS disabled.", Toast.LENGTH_SHORT).show();
+//			else
+//				Toast.makeText(context, "GPS enabled.", Toast.LENGTH_SHORT).show();
 		}
 		
 		if (intent.hasExtra(LocationManager.KEY_LOCATION_CHANGED))

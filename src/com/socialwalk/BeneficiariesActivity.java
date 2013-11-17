@@ -197,7 +197,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			else if (Globals.ERROR_NO_RESULT == result.Code)
 			{
 				this.adapter.clear();
-				Toast.makeText(this, "후원프로젝트 없음", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(this, "후원프로젝트 없음", Toast.LENGTH_SHORT).show();
 			}
 		}
 		else if (REQUEST_MORE_BENEFICIARIES == this.reqType)
