@@ -65,6 +65,7 @@
 				        android:layout_toRightOf="@+id/userIdFieldIcon"
 				        android:layout_marginLeft="16dp"
 				        android:background="@color/TRANSPARENT"
+				        android:hint="@string/MSG_EMPTY_EMAIL"
 				        android:textSize="18sp"
 				        android:textColor="@color/BLACK" />
 	                	                	                
@@ -117,6 +118,7 @@
 				        android:layout_toRightOf="@+id/userPwdFieldIcon"
 				        android:layout_marginLeft="16dp"
 				        android:background="@color/TRANSPARENT"
+				        android:hint="@string/MSG_EMPTY_PASSWORD"
 				        android:textSize="18sp"
 				        android:textColor="@color/BLACK" />
 	            </RelativeLayout>

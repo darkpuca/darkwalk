@@ -140,7 +140,7 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 		this.autoLoginCheck.setChecked(loginPrefs.getBoolean(Globals.PREF_KEY_AUTOLOGIN, false));
 
 		SharedPreferences slidePrefs = this.getSharedPreferences(Globals.PREF_NAME_SLIDE, Context.MODE_PRIVATE);
-		this.slideCheck.setChecked(slidePrefs.getBoolean(Globals.PREF_KEY_SLIDE, true));
+		this.slideCheck.setChecked(slidePrefs.getBoolean(Globals.PREF_KEY_SLIDE, false));
 	}
 
 	

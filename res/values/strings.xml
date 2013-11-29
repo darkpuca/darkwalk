@@ -29,7 +29,7 @@
     <string name="TITLE_COMMUNITY_POST_DETAIL">커뮤니티 글상세</string>
     <string name="TITLE_REPLY_POSTING">커뮤니티 댓글쓰기</string>
     <string name="TITLE_MORE">더보기</string>
-    <string name="TITLE_PROFILE">프로필</string>
+    <string name="TITLE_PROFILE">마이페이지</string>
     <string name="TITLE_CHANGE_EMAIL">이메일 변경</string>
     <string name="TITLE_GLOBAL_BENEFICIARIES">전체 후원 프로젝트</string>
     <string name="TITLE_HISTORY_BENEFICIARIES">이전 후원 프로젝트</string>
@@ -53,8 +53,8 @@
     <string name="BACK">뒤로</string>
     <string name="EXIT">종료</string>
     <string name="NOTICE">공지사항</string>
-    <string name="PROFILE">프로필</string>
-    <string name="HELP">도움말</string>
+    <string name="PROFILE">마이페이지</string>
+    <string name="HELP">FAQ</string>
     <string name="SOCIALWALK_INFORM">소셜워크 알리기</string>
     <string name="SOCIALWALK_INFO">소셜워크 소개</string>
     <string name="HEART_MALL">하트몰</string>
@@ -170,6 +170,7 @@
     <string name="FORMAT_ALTITUDE">%.1f m</string>
     <string name="FORMAT_CALORIES">###,### 칼로리</string>
     <string name="MSG_EMPTY_USERID">사용자 ID를 입력해 주십시오.</string>
+    <string name="MSG_EMPTY_EMAIL">이메일 주소를 입력해 주십시오.</string>
     <string name="MSG_EMPTY_PASSWORD">비밀번호를 입력해 주십시오.</string>
     <string name="MSG_EMPTY_PASSWORD_CONFIRM">확인 비밀번호를 입력해 주십시오.</string>
     <string name="MSG_EMPTY_GROUP_NAME">그룹 이름을 입력해 주십시오.</string>

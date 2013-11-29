@@ -381,7 +381,7 @@
 		                android:text="PROMOTION" />
 		            <RelativeLayout
 		                android:id="@+id/layoutDistance"
-		                android:layout_width="56dp"
+		                android:layout_width="60dp"
 		                android:layout_height="wrap_content"
 		                android:layout_alignParentTop="true"
 		                android:layout_alignParentRight="true" >

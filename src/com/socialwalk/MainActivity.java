@@ -455,6 +455,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 		        // 위치기반 광고의 위치정보는 네트워크를 이용한 위치 정보를 활용한다.
 				reqType = REQUEST_AROUNDERS;
 		        m_server.AroundersItems(MainActivity.this, MainActivity.this, location.getLatitude(), location.getLongitude());
+//		        m_server.AroundersItems(MainActivity.this, MainActivity.this, 37.48454f, 127.03394f);
 			}
 			
 		}

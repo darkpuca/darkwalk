@@ -28,6 +28,7 @@ public class Globals
 	public static final String URL_AROUNDERS_REQ_TEST = "http://test.arounders.co.kr/adRequest.skp";
 	public static final String URL_AROUNDERS_REQ = "http://ad.arounders.co.kr/adRequest.skp";
 	public static final String AROUNDERS_API_KEY_TEST = "QNN6";
+	public static final String AROUNDERS_API_KEY = "wwDAWe";
 	public static final String AROUNDERS_APP_KEY = "123";
 	public static final int AROUNDERS_AD_SIZE = 10;
 

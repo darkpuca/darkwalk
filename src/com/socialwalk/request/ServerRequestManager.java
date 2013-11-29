@@ -414,7 +414,8 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		final double mt = latitude;
 		final double mn = longitude;
 		
-		String url = Globals.URL_AROUNDERS_REQ_TEST;
+		
+		String url = Globals.URL_AROUNDERS_REQ;
 		StringRequest req = new StringRequest(Method.POST, url, listener, errorListener)
 		{
 			@Override
@@ -422,9 +423,10 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 			{
 				Map<String, String>  params = new HashMap<String, String>();  
 	            params.put("m", Globals.AROUNDERS_APP_KEY);  
-	            params.put("k", Globals.AROUNDERS_API_KEY_TEST);
+	            params.put("k", Globals.AROUNDERS_API_KEY);
 	            params.put("mt", Double.toString(mt));
 	            params.put("mn", Double.toString(mn));
+	            params.put("r", "2000");
 	            params.put("n", Integer.toString(Globals.AROUNDERS_AD_SIZE));
 				return params;
 			}			
