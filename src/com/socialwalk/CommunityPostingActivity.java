@@ -18,8 +18,9 @@ import com.socialwalk.request.ServerRequestManager;
 public class CommunityPostingActivity extends Activity
 implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 {
-	private ServerRequestManager m_server;
-	private int m_communityId = 0;
+	private ServerRequestManager server;
+	private int communitySeq, postSeq;
+	private boolean isModify = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -27,10 +28,19 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_community_posting);
 		
-		m_server = new ServerRequestManager();
+		this.server = new ServerRequestManager();
 
-		if (getIntent().hasExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE))
-			m_communityId = getIntent().getExtras().getInt(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE);
+		this.communitySeq = getIntent().getExtras().getInt(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, 0);
+		
+		if (getIntent().hasExtra(Globals.EXTRA_KEY_POST_SEQUENCE) && getIntent().hasExtra(Globals.EXTRA_KEY_POST_CONTENTS))
+		{
+			this.isModify = true;
+			this.postSeq = getIntent().getExtras().getInt(Globals.EXTRA_KEY_POST_SEQUENCE, 0);
+
+			EditText etContents = (EditText)findViewById(R.id.contents);
+			String contents = getIntent().getExtras().getString(Globals.EXTRA_KEY_POST_CONTENTS);
+			etContents.setText(contents);
+		}
 
 		Button btnPost = (Button)findViewById(R.id.btnPost);
 		btnPost.setOnClickListener(this);
@@ -39,7 +49,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 	@Override
 	public void onClick(View v)
 	{
-		if (0 == m_communityId) return;
+		if (0 == communitySeq) return;
 		
 		EditText etContents = (EditText)findViewById(R.id.contents);
 		String contents = etContents.getText().toString();
@@ -53,7 +63,10 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			.show();
 		}
 
-		m_server.CommunityPosting(this, this, m_communityId, contents);
+		if (false == this.isModify)
+			server.CommunityPosting(this, this, this.communitySeq, contents);
+		else
+			server.CommunityPostModify(this, this, this.postSeq, contents);
 	}
 
 	@Override

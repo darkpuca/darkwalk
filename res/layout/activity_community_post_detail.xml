@@ -21,6 +21,14 @@
             android:textColor="@color/WHITE"
             android:textStyle="bold"
             android:text="@string/TITLE_COMMUNITY" />
+        <ImageButton
+            android:id="@+id/optionButton"
+            android:layout_width="@dimen/TITLE_BUTTON_HEIGHT"
+            android:layout_height="@dimen/TITLE_BUTTON_HEIGHT"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/option_more"
+            android:background="@drawable/gray_bg_selector" />
     </RelativeLayout>
 
     <RelativeLayout

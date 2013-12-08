@@ -11,18 +11,16 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
     
-    <TextView
-        android:layout_width="wrap_content" 
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true" 
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/WHITE"
-        android:textSize="24dp"
-        android:text="@string/SOCIALWALK_COPYTITLE" />
-
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="150dp"
+        android:scaleType="centerInside"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="18dp"
+        android:src="@drawable/intro_promo" />
     
-    <RelativeLayout
+    
+<!--     <RelativeLayout
         android:id="@+id/layoutHeartButton"
         android:layout_width="70dp"
         android:layout_height="80dp"
@@ -46,9 +44,43 @@
 	        android:layout_marginBottom="8dp"
 	        android:textSize="18sp"
 	        android:textStyle="bold"
-	        android:text="30" />
-        
-    </RelativeLayout>
-    
+	        android:text="30" />        
+    </RelativeLayout> -->
 
+<!--     <TextView
+        android:id="@+id/promotionTitle"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:textColor="@color/WHITE"
+        android:textSize="20dp"
+        android:text="@string/SOCIALWALK_PROMOTION" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/promotionTitle"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/SOCIALWALK_COPYTITLE"
+            android:textColor="@color/WHITE"
+            android:textSize="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/SOCIALWALK_COPYTITLE2"
+            android:textColor="@color/WHITE"
+            android:textSize="20dp" />
+    </LinearLayout>
+ -->
+    
+    
 </RelativeLayout>

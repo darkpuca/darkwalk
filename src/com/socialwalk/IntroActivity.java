@@ -45,25 +45,25 @@ public class IntroActivity extends Activity
 		autoCloseHandler = new Handler();
 		autoCloseHandler.postDelayed(autoCloseRunnable, Globals.INTRO_WAITING);
 
-		RelativeLayout buttonLayout = (RelativeLayout)findViewById(R.id.layoutHeartButton);
-		buttonLayout.setOnClickListener(new OnClickListener()
-		{			
-			@Override
-			public void onClick(View v)
-			{
-				// 자동 종료 명령 해제
-				autoCloseHandler.removeCallbacks(autoCloseRunnable);
-				
-				Intent i = new Intent(getBaseContext(), WebPageActivity.class);
-				i.putExtra(Globals.EXTRA_KEY_URL, Globals.URL_SERVER_DOMAIN);
-				startActivity(i);
-				
-				Intent retData = new Intent();
-				retData.putExtra(Globals.EXTRA_KEY_INTRO_AD_VISIT, true);
-				setResult(RESULT_OK, retData);
-				finish();
-			}
-		});
+//		RelativeLayout buttonLayout = (RelativeLayout)findViewById(R.id.layoutHeartButton);
+//		buttonLayout.setOnClickListener(new OnClickListener()
+//		{			
+//			@Override
+//			public void onClick(View v)
+//			{
+//				// 자동 종료 명령 해제
+//				autoCloseHandler.removeCallbacks(autoCloseRunnable);
+//				
+//				Intent i = new Intent(getBaseContext(), WebPageActivity.class);
+//				i.putExtra(Globals.EXTRA_KEY_URL, Globals.URL_SERVER_DOMAIN);
+//				startActivity(i);
+//				
+//				Intent retData = new Intent();
+//				retData.putExtra(Globals.EXTRA_KEY_INTRO_AD_VISIT, true);
+//				setResult(RESULT_OK, retData);
+//				finish();
+//			}
+//		});
 	}
 
 	

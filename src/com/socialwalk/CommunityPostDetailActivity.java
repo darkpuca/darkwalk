@@ -22,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -99,6 +100,16 @@ implements Response.Listener<String>, Response.ErrorListener
 				Intent i = new Intent(getBaseContext(), ReplyPostingActivity.class);
 				i.putExtra(Globals.EXTRA_KEY_POST_SEQUENCE, postSequence);
 				startActivityForResult(i, Globals.INTENT_REQ_POSTING);
+			}
+		});
+		
+		ImageButton optionButton = (ImageButton)findViewById(R.id.optionButton);
+		optionButton.setOnClickListener(new OnClickListener()
+		{			
+			@Override
+			public void onClick(View v)
+			{
+				openOptionsMenu();
 			}
 		});
 	}
@@ -206,6 +217,17 @@ implements Response.Listener<String>, Response.ErrorListener
 			});
 			dlg.show();
 		}
+		else if (R.id.action_post_modify == item.getItemId())
+		{
+			Intent i = new Intent(getBaseContext(), CommunityPostingActivity.class);
+			i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, this.communitySequence);
+			i.putExtra(Globals.EXTRA_KEY_POST_SEQUENCE, this.postSequence);
+			TextView contents = (TextView)findViewById(R.id.contents);
+			i.putExtra(Globals.EXTRA_KEY_POST_CONTENTS, contents.getText().toString());
+			
+			startActivityForResult(i, Globals.INTENT_REQ_POST_MODIFY);
+		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 

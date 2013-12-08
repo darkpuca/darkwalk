@@ -22,7 +22,7 @@ public class WalkHistory
 	public float TotalDistance, TotalSpeed;
 	public float ValidDistance;
 	public Vector<WalkLogItem> LogItems;
-	public boolean IsUploaded = false, IsWalking = false;
+	public boolean IsUploaded = false;
 	public Date StartTime, EndTime;
 	public String FileName;
 	private int AdTouchCount;
@@ -41,7 +41,6 @@ public class WalkHistory
 		this.ValidDistance = 0;
 		this.TotalSpeed = 0;
 		this.StartTime = new Date();
-		this.IsWalking = true;
 		this.weight = Globals.DEFAULT_WEIGHT;
 		this.heartStepDistance = RED_HEART_BY_DISTANCE;
 		this.AdTouchCount = 0;
@@ -54,7 +53,6 @@ public class WalkHistory
 		this.ValidDistance = 0;
 		this.TotalSpeed = 0;
 		this.StartTime = new Date();
-		this.IsWalking = true;
 		this.weight = weight; 
 		this.heartStepDistance = RED_HEART_BY_DISTANCE;
 	}
@@ -113,7 +111,6 @@ public class WalkHistory
 	public void Finish()
 	{
 		this.EndTime = new Date();
-		this.IsWalking = false;
 	}
 	
 	public WalkLogItem GetLastValidItem()
@@ -211,7 +208,12 @@ public class WalkHistory
 	
 	public void ReCalculate()
 	{
-		if (1 >= this.LogItems.size()) return;
+		if (1 >= this.LogItems.size())
+		{
+			// 로그 기록이 없을 경우도 등록할 필요 없음.
+			this.IsUploaded = true;
+			return;
+		}
 		
 		this.TotalDistance = 0;
 		this.ValidDistance = 0;
@@ -234,11 +236,16 @@ public class WalkHistory
 			prevLog = log;
 		}
 
+		// 저장된 값이 없을 경우 기본값 설정.
 		if (0 == this.weight)
 			this.weight = Globals.DEFAULT_WEIGHT;
 		
 		if (0 == this.heartStepDistance)
 			this.heartStepDistance = RED_HEART_BY_DISTANCE;
+		
+		// 하트가 0이면 등록할 필요 없으므로 등록됨으로 처리.
+		if (0 == this.RedHearts())
+			this.IsUploaded = true;
 	}
 	
 	private long WalkingCalories(Date toDate)
@@ -339,8 +346,6 @@ public class WalkHistory
 
 	public String GetXML()
 	{
-		if (false != this.IsWalking) return "";
-		
 		String xml = MyXmlWriter.GetWalkingDataXML(this);
 		if (0 < xml.length())
 			return xml;

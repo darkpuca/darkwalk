@@ -23,7 +23,18 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:visibility="gone" />
-
+    
+    <FrameLayout 
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/slide_top_bg" />
+    
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/slide_bottom_bg" />
     
     <RelativeLayout
         android:layout_width="match_parent"

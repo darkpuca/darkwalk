@@ -308,6 +308,8 @@ public class MyXmlParser
 						history.setHeartStepDistance(Integer.parseInt(parser.nextText()));
 					else if (tagName.equalsIgnoreCase("adTouchCount"))
 						history.setAdTouchCount(Integer.parseInt(parser.nextText()));
+					else if (tagName.equalsIgnoreCase("isUploaded"))
+						history.IsUploaded = Boolean.parseBoolean(parser.nextText());
 					else if (tagName.equalsIgnoreCase("location"))
 						logItem = history.new WalkLogItem();
 					else if (tagName.equalsIgnoreCase("date"))

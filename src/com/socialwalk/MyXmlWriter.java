@@ -118,6 +118,35 @@ public class MyXmlWriter
 		}
 	}
 
+	public static String CommunityPostModify(String contents)
+	{
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		
+		try
+		{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", true);
+			
+			serializer.startTag("", "request");
+			serializer.startTag("", "community_info");
+			serializer.startTag("", "content");
+			serializer.text(contents);
+			serializer.endTag("", "content");
+			serializer.endTag("", "community_info");
+			serializer.endTag("", "request");
+			
+			serializer.endDocument();
+			
+			return writer.toString();
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.getLocalizedMessage());
+			return "";
+		}
+	}
+
 	public static String ReplyPosting(String userSequence, int postSequence, String contents)
 	{
 		XmlSerializer serializer = Xml.newSerializer();
@@ -410,7 +439,11 @@ public class MyXmlWriter
 			serializer.startTag("", "adTouchCount");
 			serializer.text(Integer.toString(log.getAdTouchCount()));
 			serializer.endTag("", "adTouchCount");
-			
+
+			serializer.startTag("", "isUploaded");
+			serializer.text(Boolean.toString(log.IsUploaded));
+			serializer.endTag("", "isUploaded");
+
 			serializer.startTag("", "locations");
 			for (WalkLogItem item : log.LogItems)
 			{

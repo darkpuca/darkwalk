@@ -196,6 +196,19 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		reqQueue.add(req);		
 	}
 	
+	public void CommunityPostModify(Response.Listener<String> listener, Response.ErrorListener errorListener, int postSeq, String contents)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community_info/" + postSeq;
+		String xmlBody = MyXmlWriter.CommunityPostModify(contents);
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.PUT, urlString, listener, errorListener);
+		req.SetXMLBody(xmlBody);
+		reqQueue.add(req);		
+	}
 	
 	public void CommunityPostDelete(Response.Listener<String> listener, Response.ErrorListener errorListener, int postSequence)
 	{

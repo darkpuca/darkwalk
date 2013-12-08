@@ -174,15 +174,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 			startActivityForResult(i, Globals.INTENT_REQ_INTRO);
         }
     }
-
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
-
     
 	@Override
 	public void onBackPressed()
@@ -305,6 +296,14 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 		}
 		else if (Globals.INTENT_REQ_INTRO == requestCode)
 		{
+	        // check network connection
+			MainApplication app = (MainApplication)getApplication();
+	        if (!app.IsNetworkAvailable())
+	        {
+	        	Utils.GetDefaultTool().ShowFinishDialog(this, R.string.MSG_NETWORK_NOT_CONNECTED);
+				return;
+	        }
+	        
 			if (RESULT_OK == resultCode)
 			{
 				if (null != data)
@@ -330,14 +329,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 	
 	private final void startupProc()
 	{
-        // check network connection
-		MainApplication app = (MainApplication)getApplication();
-        if (!app.IsNetworkAvailable())
-        {
-        	Utils.GetDefaultTool().ShowFinishDialog(this, R.string.MSG_NETWORK_NOT_CONNECTED);
-			return;
-        }
-        
         // login
         if (!ServerRequestManager.IsLogin)
         {

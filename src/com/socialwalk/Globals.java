@@ -10,11 +10,13 @@ public class Globals
 	
 	public static final String[] sampleStrings = { "sample string1", "sample string2", "sample string3", "sample string4", "sample string5", "sample string6", "sample string7", "sample string8", "sample string9" };
 
-	public static final String URL_SERVER_DOMAIN = "http://218.145.31.240";
+	public static final String URL_SERVER_DOMAIN = "http://socialwalk.or.kr";
+//	public static final String URL_SERVER_DOMAIN = "http://218.145.31.240";
 	public static final String URL_SIGN_UP = URL_SERVER_DOMAIN + "/mobile/join_step1.php";
 	public static final String URL_FORGET_PASSWORD = URL_SERVER_DOMAIN + "/mobile/findpw.php";
 	public static final String URL_NOTICES = URL_SERVER_DOMAIN + "/mobile/notice.php";
 	public static final String URL_HELP = URL_SERVER_DOMAIN + "/mobile/qna.php";
+	public static final String URL_INFORM = URL_SERVER_DOMAIN + "/mobile/socialwalk.link.php";
 	public static final String URL_ABOUT = URL_SERVER_DOMAIN + "/mobile/socialwalk.php";
 	public static final String URL_SPONSOR = URL_SERVER_DOMAIN + "/mobile/sponsor.php";
 	public static final String URL_VOLUNTEERS = URL_SERVER_DOMAIN + "/mobile/socialwalk.group.php";
@@ -39,6 +41,7 @@ public class Globals
 	public static final String EXTRA_KEY_LOCATION = "location";
 	public static final String EXTRA_KEY_FILENAME = "filename";
 	public static final String EXTRA_KEY_POST_SEQUENCE = "postSeq";
+	public static final String EXTRA_KEY_POST_CONTENTS = "postContents";
 	public static final String EXTRA_KEY_WRITER_SEQUENCE = "writerSeq";
 	public static final String EXTRA_KEY_INTRO_AD_VISIT = "introAd";
 	public static final String EXTRA_KEY_IS_GLOBAL_PROJECT = "isGlobal"; 
@@ -75,6 +78,7 @@ public class Globals
 	public static final int INTENT_REQ_PROFILE = 1102;
 	public static final int INTENT_REQ_SETTING = 1103;
 	public static final int INTENT_REQ_COMMUNITY_DELETE = 1104;
+	public static final int INTENT_REQ_POST_MODIFY = 1105;
 
 	public static final long INTRO_WAITING = 3000;
 

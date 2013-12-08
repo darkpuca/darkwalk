@@ -1,6 +1,9 @@
 package com.socialwalk;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -9,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -165,11 +169,33 @@ implements Response.Listener<String>, Response.ErrorListener
 		{
 			if (Globals.ERROR_NONE == result.Code)
 			{
+				this.history.IsUploaded = true;
+				SaveHistory();
+				
 				ServerRequestManager.LoginAccount.Hearts.addRedPointByWalk(this.history.RedHeartByWalk());
 				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(this.history.RedHeartByTouch());
 				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(this.history.GreedHeartByTouch());
 
 			}
+		}
+	}
+
+	private void SaveHistory()
+	{
+		String strXml = this.history.GetXML();
+		try
+		{
+			File logDir = this.getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
+			File logFile = new File(logDir, this.history.FileName);
+
+			FileOutputStream fos = new FileOutputStream(logFile);
+			OutputStreamWriter osw = new OutputStreamWriter(fos);
+			osw.write(strXml);
+			osw.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
 		}
 	}	
 }

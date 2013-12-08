@@ -35,5 +35,15 @@
         android:layout_centerVertical="true"
         android:textSize="18sp"
         android:textColor="@color/GRAY" />
+    
+    <TextView
+        android:id="@+id/unregisted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/RED"
+        android:textSize="9sp"
+        android:text="미적립" />
 
 </RelativeLayout>

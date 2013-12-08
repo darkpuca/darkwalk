@@ -1,15 +1,14 @@
 	package com.socialwalk;
 
 import java.io.File;
-import java.text.Collator;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Locale;
 import java.util.Vector;
-
-import com.socialwalk.dataclass.WalkHistory;
-import com.socialwalk.request.ServerRequestManager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,13 +35,27 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.dataclass.WalkHistory;
+import com.socialwalk.request.ServerRequestManager;
+
 public class WalkHistoryActivity extends Activity
+implements Response.Listener<String>, Response.ErrorListener
 {
 	private static final String TAG = "SW-HISTORY";
+
+	private ServerRequestManager server;
+	private int reqType;
+	private static final int REQUEST_WALK_RESULT = 100;
+
+	private WalkHistory uploadHistory;
+
 	private ListView m_historyList;
-	private Vector<File> m_logFiles;
+//	private Vector<File> m_logFiles;
 	private HistoryAdapter m_historyAdapter;
-	ProgressDialog m_progDlg;
+	ProgressDialog progDlg;
 	
 	private final Comparator<WalkHistory> myComparator = new Comparator<WalkHistory>(){
 		@Override
@@ -59,6 +72,8 @@ public class WalkHistoryActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_walk_history);
 		
+		this.server = new ServerRequestManager();
+
 		m_historyList = (ListView)findViewById(R.id.historyList);
 
 		m_historyList.setOnItemClickListener(new OnItemClickListener()
@@ -87,9 +102,9 @@ public class WalkHistoryActivity extends Activity
 			}
 		});
 		
-		m_progDlg = new ProgressDialog(WalkHistoryActivity.this);
-		m_progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		m_progDlg.setCancelable(false);
+		progDlg = new ProgressDialog(WalkHistoryActivity.this);
+		progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progDlg.setCancelable(false);
 
 		
 		Handler handler = new Handler();
@@ -98,8 +113,8 @@ public class WalkHistoryActivity extends Activity
 			@Override
 			public void run()
 			{
-				m_progDlg.setMessage(getResources().getString(R.string.MSG_LOADING));
-				m_progDlg.show();
+				progDlg.setMessage(getResources().getString(R.string.MSG_LOADING));
+				progDlg.show();
 			}
 		});
 		
@@ -112,12 +127,10 @@ public class WalkHistoryActivity extends Activity
 		@Override
 		public void run()
 		{
-			m_logFiles = GetLogFiles();
-
-			if (BuildHistoryAdapter(m_logFiles))
+			if (BuildHistoryAdapter())
 				m_historyList.setAdapter(m_historyAdapter);
 			
-			m_progDlg.dismiss();
+			progDlg.dismiss();
 		}
 	};
 
@@ -128,25 +141,37 @@ public class WalkHistoryActivity extends Activity
         return true;
     }
 
+    
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item)
 	{
 		AdapterContextMenuInfo menuInfo = (AdapterContextMenuInfo)item.getMenuInfo();
-		File logFile = m_logFiles.get(menuInfo.position);
+		WalkHistory history = m_historyAdapter.getItem(menuInfo.position);
+		if (null == history) return false;
 
 		switch (item.getItemId())
 		{
+		case R.id.action_upload:
+			this.uploadHistory = history;
+			if (!progDlg.isShowing()) progDlg.show();
+
+			reqType = REQUEST_WALK_RESULT;
+			server.WalkResult(this, this, this.uploadHistory);
+			return true;
 		case R.id.action_detail:
 			Intent i = new Intent(getBaseContext(), WalkDetailActivity.class);
-			i.putExtra(Globals.EXTRA_KEY_FILENAME, logFile.getName());
+			i.putExtra(Globals.EXTRA_KEY_FILENAME, history.FileName);
 			startActivity(i);
 			return true;
 			
 		case R.id.action_delete:
-			Log.d(TAG, "selected log file " + logFile.getPath());
-			m_historyAdapter.remove(m_historyAdapter.getItem(menuInfo.position));
+			Log.d(TAG, "selected log file " + history.FileName);
+			File dataDir = getApplicationContext().getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
+			File logFile = new File(dataDir.getPath(), history.FileName);
 			logFile.delete();
-			m_logFiles.remove(logFile);
+
+			m_historyAdapter.remove(m_historyAdapter.getItem(menuInfo.position));
 			return true;
 		}
 		return false;
@@ -188,26 +213,48 @@ public class WalkHistoryActivity extends Activity
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo)
 	{
-		super.onCreateContextMenu(menu, v, menuInfo);
+		//super.onCreateContextMenu(menu, v, menuInfo);
+		
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo)menuInfo;
+		WalkHistory history = this.m_historyAdapter.getItem(info.position);
+		if (null == history) return;
+
 		getMenuInflater().inflate(R.menu.walk_history_popup, menu);
+		
+		if (history.IsUploaded)
+			menu.getItem(0).setEnabled(false);
 	}
 	
 	private void ClearHistories()
 	{
-		for (File file : m_logFiles)
-			file.delete();
+		File dataDir = getApplicationContext().getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
+
+		for (WalkHistory history : m_historyAdapter.m_histories)
+		{
+			File logFile = new File(dataDir.getPath(), history.FileName);
+			logFile.delete();
+		}
 		
 		m_historyAdapter.clear();
 	}
 
-	private boolean BuildHistoryAdapter(Vector<File> files)
+	private boolean BuildHistoryAdapter()
 	{
 		Vector<WalkHistory> histories = new Vector<WalkHistory>();
+		
+		Vector<File> files = GetLogFiles();
+
 		for (File file : files)
 		{
 			MyXmlParser parser = new MyXmlParser(file);
 			WalkHistory history = parser.GetWalkHistory();
+			if (null == history)
+			{
+				file.delete();
+				continue;
+			}
 			history.FileName = file.getName();
+			history.ReCalculate();			
 			
 			Log.d(TAG, "history log count: " + history.LogItems.size());
 			histories.add(history);
@@ -250,7 +297,7 @@ public class WalkHistoryActivity extends Activity
 	{
 		public TextView logDate;
 		public TextView distance;
-		public TextView hearts;
+		public TextView hearts, unregisted;
 	}
 
 	public class HistoryAdapter extends ArrayAdapter<WalkHistory>
@@ -282,6 +329,7 @@ public class WalkHistoryActivity extends Activity
 				viewContainer.logDate = (TextView)rowView.findViewById(R.id.logDate);
 				viewContainer.hearts = (TextView)rowView.findViewById(R.id.hearts);
 				viewContainer.distance = (TextView)rowView.findViewById(R.id.distance);
+				viewContainer.unregisted = (TextView)rowView.findViewById(R.id.unregisted);
 				
 				rowView.setTag(viewContainer);
 			}
@@ -297,11 +345,70 @@ public class WalkHistoryActivity extends Activity
 			viewContainer.logDate.setText(dateString);
 			viewContainer.hearts.setText(history.RedHeartString() + getResources().getString(R.string.HEART));
 			viewContainer.distance.setText(history.TotalDistanceString());
+			viewContainer.unregisted.setVisibility(history.IsUploaded ? View.INVISIBLE : View.VISIBLE);
 			
 			return rowView;
 		}
-
-		
-		
 	}
+
+	public void onErrorResponse(VolleyError e)
+	{
+		if (progDlg.isShowing())
+			progDlg.dismiss();
+
+		e.printStackTrace();
+	}
+
+	@Override
+	public void onResponse(String response)
+	{
+		if (progDlg.isShowing())
+			progDlg.dismiss();
+
+		if (0 == response.length()) return;
+		
+		MyXmlParser parser = new MyXmlParser(response);
+		SWResponse result = parser.GetResponse();
+		if (null == result) return;
+		
+		if (REQUEST_WALK_RESULT == this.reqType)
+		{
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				if (null == this.uploadHistory) return;
+				
+				this.uploadHistory.IsUploaded = true;
+				SaveUploadedHistory();
+				
+				ServerRequestManager.LoginAccount.Hearts.addRedPointByWalk(this.uploadHistory.RedHeartByWalk());
+				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(this.uploadHistory.RedHeartByTouch());
+				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(this.uploadHistory.GreedHeartByTouch());
+				
+				this.uploadHistory = null;
+				
+				this.m_historyAdapter.notifyDataSetChanged();
+			}
+		}
+	}
+
+	private void SaveUploadedHistory()
+	{
+		if (null == this.uploadHistory) return;
+		
+		String strXml = this.uploadHistory.GetXML();
+		try
+		{
+			File logDir = this.getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
+			File logFile = new File(logDir, this.uploadHistory.FileName);
+
+			FileOutputStream fos = new FileOutputStream(logFile);
+			OutputStreamWriter osw = new OutputStreamWriter(fos);
+			osw.write(strXml);
+			osw.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}	
 }

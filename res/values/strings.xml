@@ -5,6 +5,7 @@
     <string name="ACTION_MORE">더보기</string>
     <string name="ACTION_SETTINGS">설정</string>
     <string name="ACTION_DELETE_ALL">전체 삭제</string>
+    <string name="ACTION_POST_MODIFY">글수정</string>
     <string name="ACTION_POST_DELETE">글삭제</string>
     <string name="ACTION_COMMUNITY_DELETE">커뮤니티 폐쇄</string>
     <string name="APP_NAME">소셜워크</string>
@@ -96,6 +97,7 @@
     <string name="CONTINUE">계속</string>
     <string name="DETAIL">상세정보</string>
     <string name="DELETE">삭제</string>
+    <string name="UPLOAD">서버 적립</string>
     <string name="BY_GROUP">지역</string>
     <string name="TOTAL">전체</string>
     <string name="SHOW_ALL">모두보기</string>
@@ -131,6 +133,8 @@
     <string name="DATA_WARNING">데이터모드 경고</string>
     <string name="SLIDE_OPTION">슬라이드 사용</string>
     <string name="SOCIALWALK_COPYTITLE">공공을 위한 사회적 걸음</string>
+    <string name="SOCIALWALK_COPYTITLE2">SOCIAL WALK</string>
+    <string name="SOCIALWALK_PROMOTION">인텔SSD 사용자모임에서 함께 응원합니다.</string>
     <string name="JOIN_REQUEST_MESSAGE">가입 신청 메세지</string>
     <string name="ORGANIZAION">단체</string>
     <string name="MEMBER">소속</string>

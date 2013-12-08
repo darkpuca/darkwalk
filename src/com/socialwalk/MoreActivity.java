@@ -11,7 +11,7 @@ import com.socialwalk.request.ServerRequestManager;
 public class MoreActivity extends Activity
 implements View.OnClickListener
 {
-	private RelativeLayout noticeLayout, profileLayout, helpLayout, infoLayout, sponsorLayout;
+	private RelativeLayout noticeLayout, profileLayout, helpLayout, informLayout, infoLayout, sponsorLayout;
 	private RelativeLayout volunteerLayout, settingsLayout, qnaLayout, heartmallLayout;
 	
 	
@@ -24,6 +24,7 @@ implements View.OnClickListener
 		this.noticeLayout = (RelativeLayout)findViewById(R.id.noticeLayout);
 		this.profileLayout = (RelativeLayout)findViewById(R.id.profileLayout);
 		this.helpLayout = (RelativeLayout)findViewById(R.id.helpLayout);
+		this.informLayout = (RelativeLayout)findViewById(R.id.informLayout);
 		this.infoLayout = (RelativeLayout)findViewById(R.id.infoLayout);
 		this.sponsorLayout = (RelativeLayout)findViewById(R.id.sponsorLayout);
 		this.volunteerLayout = (RelativeLayout)findViewById(R.id.volunteerLayout);
@@ -34,6 +35,7 @@ implements View.OnClickListener
 		this.noticeLayout.setOnClickListener(this);
 		this.profileLayout.setOnClickListener(this);
 		this.helpLayout.setOnClickListener(this);
+		this.informLayout.setOnClickListener(this);
 		this.infoLayout.setOnClickListener(this);
 		this.sponsorLayout.setOnClickListener(this);
 		this.volunteerLayout.setOnClickListener(this);
@@ -72,6 +74,12 @@ implements View.OnClickListener
 		{
 			Intent i = new Intent(getBaseContext(), WebPageActivity.class);
 			i.putExtra(Globals.EXTRA_KEY_URL, Globals.URL_HELP);
+			startActivity(i);
+		}
+		else if (this.informLayout.equals(v))
+		{
+			Intent i = new Intent(getBaseContext(), WebPageActivity.class);
+			i.putExtra(Globals.EXTRA_KEY_URL, Globals.URL_INFORM);
 			startActivity(i);
 		}
 		else if (this.infoLayout.equals(v))

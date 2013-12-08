@@ -13,7 +13,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.android.volley.RequestQueue;
 import com.socialwalk.dataclass.WalkHistory;
+import com.socialwalk.request.RequestManager;
 import com.socialwalk.request.ServerRequestManager;
 
 public class Utils
@@ -43,7 +45,7 @@ public class Utils
 		.show();
 	}
 
-	public void ShowFinishDialog(Context context, int messageId)
+	public void ShowFinishDialog(final Context context, int messageId)
 	{
 		AlertDialog.Builder closeDlg = new AlertDialog.Builder(context);
 		closeDlg.setCancelable(false);
@@ -54,7 +56,10 @@ public class Utils
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
-//				finish();
+				RequestQueue reqQueue = RequestManager.getRequestQueue();
+				if (null != reqQueue)
+					reqQueue.cancelAll(context);
+				
 				System.exit(0);
 			}
 		});
