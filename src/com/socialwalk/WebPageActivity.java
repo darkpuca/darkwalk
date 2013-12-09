@@ -4,14 +4,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Browser;
 import android.util.Log;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 public class WebPageActivity extends Activity
 {
@@ -70,10 +72,14 @@ public class WebPageActivity extends Activity
 	
 	private class WebCallBack extends WebViewClient
 	{
-
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url)
 		{
+			if (("kakaolink").equals(url.substring(0,9))){
+    			loadkakao(url);
+    			return true;
+    		}
+			
 //			Toast.makeText(getBaseContext(), url, Toast.LENGTH_SHORT).show();
 			String[] names = url.split("/");
 			String targetName = names[names.length-1];
@@ -112,5 +118,14 @@ public class WebPageActivity extends Activity
 			
 			super.onPageFinished(view, url);
 		}
+		
+		//for Enabling kakaotalk link
+	    public void loadkakao(String url)
+	    {
+	    	Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+	    	intent.addCategory(Intent.CATEGORY_BROWSABLE);
+	    	intent.putExtra(Browser.EXTRA_APPLICATION_ID, getPackageName());
+	    	startActivity(intent);
+	    }
 	}
 }

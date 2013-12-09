@@ -43,8 +43,8 @@
     <string name="LOGIN">로그인</string>
     <string name="LOGOUT">로그아웃</string>
     <string name="USER_ID">사용자 ID</string>
-    <string name="PASSWORD">비밀번호</string>
-    <string name="PASSWORD_CONFIRM">비밀번호 확인</string>
+    <string name="PASSWORD">새 비밀번호</string>
+    <string name="PASSWORD_CONFIRM">새 비밀번호 확인</string>
     <string name="SIGN_UP">회원가입</string>
     <string name="FIND_PASSWORD"><u>비밀번호 초기화</u></string>
     <string name="AUTO_LOGIN">자동 로그인</string>

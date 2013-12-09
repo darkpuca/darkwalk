@@ -150,6 +150,8 @@ implements Response.Listener<String>, Response.ErrorListener
 		if (progDlg.isShowing())
 			progDlg.dismiss();
 
+		SaveUnregistedHistory();
+		
 		e.printStackTrace();
 	}
 
@@ -159,29 +161,39 @@ implements Response.Listener<String>, Response.ErrorListener
 		if (progDlg.isShowing())
 			progDlg.dismiss();
 
-		if (0 == response.length()) return;
+		if (0 == response.length())
+		{
+			SaveUnregistedHistory();
+			return;
+		}
 		
 		MyXmlParser parser = new MyXmlParser(response);
 		SWResponse result = parser.GetResponse();
-		if (null == result) return;
+		if (null == result)
+		{
+			SaveUnregistedHistory();
+			return;
+		}
 		
 		if (REQUEST_WALK_RESULT == this.reqType)
 		{
 			if (Globals.ERROR_NONE == result.Code)
 			{
-				this.history.IsUploaded = true;
-				SaveHistory();
-				
 				ServerRequestManager.LoginAccount.Hearts.addRedPointByWalk(this.history.RedHeartByWalk());
 				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(this.history.RedHeartByTouch());
 				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(this.history.GreedHeartByTouch());
-
+			}
+			else
+			{
+				SaveUnregistedHistory();
 			}
 		}
 	}
 
-	private void SaveHistory()
+	private void SaveUnregistedHistory()
 	{
+		this.history.IsUploaded = false;
+
 		String strXml = this.history.GetXML();
 		try
 		{

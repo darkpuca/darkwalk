@@ -22,7 +22,7 @@ public class WalkHistory
 	public float TotalDistance, TotalSpeed;
 	public float ValidDistance;
 	public Vector<WalkLogItem> LogItems;
-	public boolean IsUploaded = false;
+	public boolean IsUploaded = true;
 	public Date StartTime, EndTime;
 	public String FileName;
 	private int AdTouchCount;
