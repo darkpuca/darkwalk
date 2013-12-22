@@ -187,93 +187,104 @@
            	android:layout_alignParentTop="true"
            	android:padding="8dp"
            	android:background="@color/TRANSPARENT" >
-            <ImageView
-                android:id="@+id/imgRed"
-                android:src="@drawable/main_red_heart"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true" />
-            <TextView
-                android:id="@+id/redHeart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/imgRed"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="4dp"
-                android:textSize="22sp"
-                android:textColor="@color/LIGHT_RED"
-                android:textStyle="bold" />
-            <TextView
-                android:id="@+id/redBrace1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/redHeart"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="4dp"
-                android:textSize="18sp"
-                android:textColor="@color/LIGHT_RED"
-                android:text="(" />
-            <ImageView
-                android:id="@+id/walkRedIcon"
-                android:src="@drawable/main_walk_heart_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_toRightOf="@+id/redBrace1"
-                android:layout_centerVertical="true" />
-            <TextView
-                android:id="@+id/redHeartWalk"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/walkRedIcon"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="4dp"
-                android:textSize="18sp"
-                android:textColor="@color/LIGHT_RED" />
-            <ImageView
-                android:id="@+id/touchRedIcon"
-                android:src="@drawable/main_touch_heart_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_toRightOf="@+id/redHeartWalk"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="4dp" />
-            <TextView
-                android:id="@+id/redHeartTouch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/touchRedIcon"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="4dp"
-                android:textSize="18sp"
-                android:textColor="@color/LIGHT_RED" />
-            <TextView
-                android:id="@+id/redBrace2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/redHeartTouch"
-                android:layout_centerVertical="true"
-                android:textSize="18sp"
-                android:textColor="@color/LIGHT_RED"
-                android:text=")" />
-            <TextView
-                android:id="@+id/greenHeart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="4dp"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@color/LIGHT_GREEN" />
-            <ImageView
-                android:id="@+id/imgGreen"
-                android:src="@drawable/main_green_heart"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_toLeftOf="@+id/greenHeart"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="8dp" />
+			<RelativeLayout
+			    android:id="@+id/redHeartLayout"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_alignParentTop="true" >
+	            <ImageView
+	                android:id="@+id/imgRed"
+	                android:src="@drawable/main_red_heart"
+	                android:layout_width="22dp"
+	                android:layout_height="22dp"
+	                android:layout_alignParentLeft="true"
+	                android:layout_centerVertical="true" />
+	            <TextView
+	                android:id="@+id/redHeart"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_toRightOf="@+id/imgRed"
+	                android:layout_centerVertical="true"
+	                android:layout_marginLeft="4dp"
+	                android:textSize="22sp"
+	                android:textColor="@color/LIGHT_RED"
+	                android:textStyle="bold" />
+	            <TextView
+	                android:id="@+id/redBrace1"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_toRightOf="@+id/redHeart"
+	                android:layout_centerVertical="true"
+	                android:layout_marginLeft="4dp"
+	                android:textSize="18sp"
+	                android:textColor="@color/LIGHT_RED"
+	                android:text="(" />
+	            <ImageView
+	                android:id="@+id/walkRedIcon"
+	                android:src="@drawable/main_walk_heart_icon"
+	                android:layout_width="20dp"
+	                android:layout_height="20dp"
+	                android:layout_toRightOf="@+id/redBrace1"
+	                android:layout_centerVertical="true" />
+	            <TextView
+	                android:id="@+id/redHeartWalk"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_toRightOf="@+id/walkRedIcon"
+	                android:layout_centerVertical="true"
+	                android:layout_marginLeft="4dp"
+	                android:textSize="18sp"
+	                android:textColor="@color/LIGHT_RED" />
+	            <ImageView
+	                android:id="@+id/touchRedIcon"
+	                android:src="@drawable/main_touch_heart_icon"
+	                android:layout_width="20dp"
+	                android:layout_height="20dp"
+	                android:layout_toRightOf="@+id/redHeartWalk"
+	                android:layout_centerVertical="true"
+	                android:layout_marginLeft="4dp" />
+	            <TextView
+	                android:id="@+id/redHeartTouch"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_toRightOf="@+id/touchRedIcon"
+	                android:layout_centerVertical="true"
+	                android:layout_marginLeft="4dp"
+	                android:textSize="18sp"
+	                android:textColor="@color/LIGHT_RED" />
+	            <TextView
+	                android:id="@+id/redBrace2"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_toRightOf="@+id/redHeartTouch"
+	                android:layout_centerVertical="true"
+	                android:textSize="18sp"
+	                android:textColor="@color/LIGHT_RED"
+	                android:text=")" />
+			</RelativeLayout>
+			<RelativeLayout
+			    android:id="@+id/greenHeartLayout"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_below="@+id/redHeartLayout" >
+	            <ImageView
+	                android:id="@+id/imgGreen"
+	                android:src="@drawable/main_green_heart"
+	                android:layout_width="22dp"
+	                android:layout_height="22dp"
+	                android:layout_alignParentLeft="true"
+	                android:layout_centerVertical="true" />
+	            <TextView
+	                android:id="@+id/greenHeart"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_toRightOf="@+id/imgGreen"
+	                android:layout_centerVertical="true"
+	                android:layout_marginLeft="4dp"
+	                android:textSize="22sp"
+	                android:textStyle="bold"
+	                android:textColor="@color/LIGHT_GREEN" />
+			</RelativeLayout>
         </RelativeLayout>    
 
 		<RelativeLayout
@@ -282,7 +293,7 @@
 			android:layout_height="80dp"
 			android:layout_alignParentLeft="true"
 			android:layout_above="@+id/layoutStartButton"			
-			android:layout_marginBottom="180dp"
+			android:layout_marginBottom="170dp"
 			android:layout_marginLeft="16dp"
 			android:padding="4dp"
 			android:background="@drawable/arounders_bg" >

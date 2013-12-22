@@ -78,6 +78,14 @@ implements View.OnClickListener
 		}
 		else if (this.informLayout.equals(v))
 		{
+//			if (null == ServerRequestManager.LoginAccount) return;
+//			if (false == ServerRequestManager.IsLogin) return;
+//			
+//			String urlString = Globals.URL_INFORM + "?user_seq=" + ServerRequestManager.LoginAccount.Sequence;
+//			
+//			Intent i = new Intent(getBaseContext(), WebPageActivity.class);
+//			i.putExtra(Globals.EXTRA_KEY_URL, urlString);
+//			startActivity(i);
 			Intent i = new Intent(getBaseContext(), WebPageActivity.class);
 			i.putExtra(Globals.EXTRA_KEY_URL, Globals.URL_INFORM);
 			startActivity(i);
