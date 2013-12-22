@@ -193,13 +193,12 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		{
 			if (0 == tvKeyword.getText().length())
 			{
-				this.noResultMessage.setVisibility(View.VISIBLE);
 				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_EMPTY_KEYWORD);
 			}
 			else
 			{
 				this.keyword = this.tvKeyword.getText().toString();
-				noResultMessage.setVisibility(View.GONE);
+//				noResultMessage.setVisibility(View.GONE);
 				requestSearches(this.keyword);
 			}
 		}
@@ -310,6 +309,8 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 				
 				for (Community item : recvItems.Items)
 					this.communityAdapter.add(item);
+				
+				this.resultList.setAdapter(communityAdapter);
 			}
 		}
 		else if (REQUEST_MORE_ITEMS == reqType)
@@ -330,7 +331,7 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 				Communities recvItems = parser.GetCommunities();
 				if (null == recvItems) return;
 
-				this.noResultMessage.setVisibility(View.INVISIBLE);
+//				this.noResultMessage.setVisibility(View.INVISIBLE);
 				
 				this.searchCount = recvItems.TotalCount;
 				
@@ -338,10 +339,15 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 
 				for (Community item : recvItems.Items)
 					this.searchAdapter.add(item);
+
+				this.resultList.setAdapter(searchAdapter);
 			}
 			else if (Globals.ERROR_NO_RESULT == result.Code)
 			{
-				noResultMessage.setVisibility(View.VISIBLE);			
+//				if (0 == this.communityAdapter.getCount())
+//					noResultMessage.setVisibility(View.VISIBLE);
+				
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_NO_SEARCH_RESULT);
 			}
 		}
 		else if (REQUEST_MORE_SEARCH == reqType)

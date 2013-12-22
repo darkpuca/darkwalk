@@ -106,7 +106,7 @@
     <string name="VIEW_COUNT">조회수</string>
     <string name="REPLY_COUNT">댓글수</string>
     <string name="SUBJECT">제목</string>
-    <string name="POSTING">글쓰기</string>
+    <string name="POSTING">글등록</string>
     <string name="REPLY_POSTING">댓글쓰기</string>
     <string name="USER_UPPER">USER</string>
     <string name="GROUP_UPPER">GROUP</string>

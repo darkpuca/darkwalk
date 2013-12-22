@@ -70,7 +70,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 		Bitmap newBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.main_character_bg);
 		this.characterBgView.setImageBitmap(newBitmap );
         
-        
         m_aroundersLayout = (RelativeLayout)findViewById(R.id.layoutArounders);
         m_aroundersLayout.setVisibility(View.GONE);
         m_aroundersLayout.setOnClickListener(this);
@@ -341,6 +340,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
         	Log.d("DEBUG", "update user information");
         	updateUserInformation();
         }
+        
+        //m_server.AroundersItems(MainActivity.this, MainActivity.this, 37.48454f, 127.03394f);
 	}
 
 

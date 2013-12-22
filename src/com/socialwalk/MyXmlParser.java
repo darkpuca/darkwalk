@@ -1071,6 +1071,7 @@ public class MyXmlParser
 					{
 						if (null != items && null != item)
 						{
+							item.setSequence(item.getSequenceFromLocation());
 							items.Items.add(item);
 							item = null;
 						}

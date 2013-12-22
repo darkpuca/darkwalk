@@ -9,7 +9,10 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,15 +31,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
 import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.dataclass.NeoClickItems;
-import com.socialwalk.dataclass.WalkHistory;
-import com.socialwalk.dataclass.WalkHistoryManager;
 import com.socialwalk.dataclass.NeoClickItems.NeoClickItem;
 import com.socialwalk.request.ImageCacheManager;
 import com.socialwalk.request.ServerRequestManager;
@@ -56,7 +56,7 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 	private static final int REQUEST_NEOCLICK = 100;
 	private static final int REQUEST_ACCUMULATE_VISIT = 101;
 	private static final int REQUEST_ACCUMULATE_START = 102;
-
+	
 	private NeoClickItem currentNeoClick = null;
 	
 //	private KeyguardManager.KeyguardLock keyLock;

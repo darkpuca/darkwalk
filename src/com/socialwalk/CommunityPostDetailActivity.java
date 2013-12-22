@@ -217,16 +217,16 @@ implements Response.Listener<String>, Response.ErrorListener
 			});
 			dlg.show();
 		}
-//		else if (R.id.action_post_modify == item.getItemId())
-//		{
-//			Intent i = new Intent(getBaseContext(), CommunityPostingActivity.class);
-//			i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, this.communitySequence);
-//			i.putExtra(Globals.EXTRA_KEY_POST_SEQUENCE, this.postSequence);
-//			TextView contents = (TextView)findViewById(R.id.contents);
-//			i.putExtra(Globals.EXTRA_KEY_POST_CONTENTS, contents.getText().toString());
-//			
-//			startActivityForResult(i, Globals.INTENT_REQ_POST_MODIFY);
-//		}
+		else if (R.id.action_post_modify == item.getItemId())
+		{
+			Intent i = new Intent(getBaseContext(), CommunityPostingActivity.class);
+			i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, this.communitySequence);
+			i.putExtra(Globals.EXTRA_KEY_POST_SEQUENCE, this.postSequence);
+			TextView contents = (TextView)findViewById(R.id.contents);
+			i.putExtra(Globals.EXTRA_KEY_POST_CONTENTS, contents.getText().toString());
+			
+			startActivityForResult(i, Globals.INTENT_REQ_POST_MODIFY);
+		}
 		
 		return super.onOptionsItemSelected(item);
 	}
@@ -237,6 +237,13 @@ implements Response.Listener<String>, Response.ErrorListener
 		if (Globals.INTENT_REQ_POSTING == requestCode && RESULT_OK == resultCode)
 		{
 			refreshReplies();
+		}
+		else if (Globals.INTENT_REQ_POST_MODIFY == requestCode && RESULT_OK == resultCode)
+		{
+			if (!progDlg.isShowing()) progDlg.show();
+			
+			this.reqType = REQUEST_POST_DETAIL;
+			this.m_server.CommunityPostDetail(this, this, this.postSequence);
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);

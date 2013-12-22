@@ -1,6 +1,8 @@
 package com.socialwalk.dataclass;
 
+import java.nio.ByteBuffer;
 import java.util.Date;
+import java.util.EmptyStackException;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
@@ -67,6 +69,11 @@ public class AroundersItems
 		{
 			return this.sequence;
 		}
+		
+		public void setSequence(String seq)
+		{
+			this.sequence = seq;
+		}
 
 		public String getIconURL()
 		{
@@ -75,8 +82,8 @@ public class AroundersItems
 
 		public void setIconURL(String iconURL)
 		{
-			this.sequence = GetSequenceFromUrl(iconURL);
 			this.iconURL = iconURL;
+//			this.sequence = GetSequenceFromUrl(this.iconURL);
 		}
 
 		public String getTargetURL()
@@ -86,8 +93,15 @@ public class AroundersItems
 
 		public void setTargetURL(String targetURL)
 		{
-//			this.sequence = GetSequenceFromUrl(targetURL);
 			this.targetURL = targetURL;
+		}
+		
+		public String getSequenceFromLocation()
+		{
+			if (0 == this.Latitude || 0 == this.Longitude) return "";
+			
+			String seq = Double.toHexString(this.Latitude) + Double.toHexString(this.Longitude);
+			return seq;
 		}
 
 		

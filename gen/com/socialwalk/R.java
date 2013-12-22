@@ -428,15 +428,16 @@ containing a value of this type.
         public static final int yellow_bg_selector=0x7f0200da;
     }
     public static final class id {
-        public static final int actionMore=0x7f040141;
-        public static final int actionSetting=0x7f040142;
+        public static final int actionMore=0x7f040142;
+        public static final int actionSetting=0x7f040143;
         public static final int action_community_delete=0x7f04013f;
-        public static final int action_delete=0x7f040143;
-        public static final int action_delete_all=0x7f040144;
-        public static final int action_detail=0x7f040146;
-        public static final int action_post_delete=0x7f040140;
+        public static final int action_delete=0x7f040144;
+        public static final int action_delete_all=0x7f040145;
+        public static final int action_detail=0x7f040147;
+        public static final int action_post_delete=0x7f040141;
+        public static final int action_post_modify=0x7f040140;
         public static final int action_settings=0x7f04013e;
-        public static final int action_upload=0x7f040145;
+        public static final int action_upload=0x7f040146;
         public static final int adCompany=0x7f040073;
         public static final int adDistance=0x7f040076;
         public static final int adPromo=0x7f040075;

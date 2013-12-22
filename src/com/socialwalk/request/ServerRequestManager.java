@@ -605,6 +605,9 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{
+		if (null != listener)
+			listener.onFinishAutoLogin(false);
+		
 		error.printStackTrace();
 	}
 
