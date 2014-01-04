@@ -85,6 +85,7 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 	@Override
 	public void onAttachedToWindow()
 	{
+//		getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG | WindowManager.LayoutParams.TYPE_KEYGUARD);
 		getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG | WindowManager.LayoutParams.TYPE_KEYGUARD);
 		super.onAttachedToWindow();
 	}
@@ -96,9 +97,12 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 		
 //		Log.d("DEBUG", "phone state: " + LockReceiver.IsPhoneCalling);
 		
+//		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | 
+//				WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+//				WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | 
-				WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
 				WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
+
 		getWindow().addFlags(flags);
 		
 		setContentView(R.layout.activity_slide);
@@ -411,8 +415,10 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 	{
 		if (!MainApplication.IsSlideActive) finish();
 		
+//		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | 
+//				WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+//				WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | 
-				WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
 				WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
 		
 		getWindow().addFlags(flags);
@@ -638,6 +644,7 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
                 	break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
                     Log.d("DEBUG", "call off hook. iscalling: " + LockReceiver.IsPhoneCalling);
+                    LockReceiver.IsPhoneCalling = true;
                     moveTaskToBack(true);
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:

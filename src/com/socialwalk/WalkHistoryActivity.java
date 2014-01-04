@@ -16,6 +16,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -38,6 +39,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.dataclass.DBAdapter;
 import com.socialwalk.dataclass.WalkHistory;
 import com.socialwalk.request.ServerRequestManager;
 
@@ -53,15 +55,16 @@ implements Response.Listener<String>, Response.ErrorListener
 	private WalkHistory uploadHistory;
 
 	private ListView m_historyList;
-//	private Vector<File> m_logFiles;
 	private HistoryAdapter m_historyAdapter;
 	ProgressDialog progDlg;
+	
+	private DBAdapter db;
 	
 	private final Comparator<WalkHistory> myComparator = new Comparator<WalkHistory>(){
 		@Override
 		public int compare(WalkHistory lhs, WalkHistory rhs)
 		{
-			return rhs.EndTime.compareTo(lhs.EndTime);
+			return rhs.StartTime.compareTo(lhs.StartTime);
 		}
 	};
 
@@ -73,6 +76,8 @@ implements Response.Listener<String>, Response.ErrorListener
 		setContentView(R.layout.activity_walk_history);
 		
 		this.server = new ServerRequestManager();
+		
+		this.db = new DBAdapter(this);
 
 		m_historyList = (ListView)findViewById(R.id.historyList);
 
@@ -153,11 +158,12 @@ implements Response.Listener<String>, Response.ErrorListener
 		switch (item.getItemId())
 		{
 		case R.id.action_upload:
-			this.uploadHistory = history;
 			if (!progDlg.isShowing()) progDlg.show();
 
 			reqType = REQUEST_WALK_RESULT;
-			server.WalkResult(this, this, this.uploadHistory);
+			WalkHistory targetHistory = Utils.GetDefaultTool().WalkHistoryFromFile(this, history.FileName);
+			this.uploadHistory = history;
+			server.WalkResult(this, this, targetHistory);
 			return true;
 		case R.id.action_detail:
 			Intent i = new Intent(getBaseContext(), WalkDetailActivity.class);
@@ -167,11 +173,7 @@ implements Response.Listener<String>, Response.ErrorListener
 			
 		case R.id.action_delete:
 			Log.d(TAG, "selected log file " + history.FileName);
-			File dataDir = getApplicationContext().getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
-			File logFile = new File(dataDir.getPath(), history.FileName);
-			logFile.delete();
-
-			m_historyAdapter.remove(m_historyAdapter.getItem(menuInfo.position));
+			DeleteHistory(history);
 			return true;
 		}
 		return false;
@@ -237,12 +239,39 @@ implements Response.Listener<String>, Response.ErrorListener
 		
 		m_historyAdapter.clear();
 	}
+	
+	private void DeleteHistory(WalkHistory history)
+	{
+		db.open();
+		db.deleteWalkHistory(history.FileName);
+		db.close();
+		
+		File dataDir = getApplicationContext().getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
+		File logFile = new File(dataDir.getPath(), history.FileName);
+		logFile.delete();
+		
+		m_historyAdapter.remove(history);
+	}
 
 	private boolean BuildHistoryAdapter()
 	{
 		Vector<WalkHistory> histories = new Vector<WalkHistory>();
+				
+//		getHistoriesFromFiles(histories);
+		getHistoriesFromDB(histories);
 		
-		Vector<File> files = GetLogFiles();
+		if (0 < histories.size())
+		{
+			m_historyAdapter = new HistoryAdapter(this, histories);
+//			m_historyAdapter.sort(myComparator);
+		}
+		
+		return true;
+	}
+
+	private void getHistoriesFromFiles(Vector<WalkHistory> histories)
+	{
+		Vector<File> files = getLogFiles();
 
 		for (File file : files)
 		{
@@ -259,17 +288,9 @@ implements Response.Listener<String>, Response.ErrorListener
 			Log.d(TAG, "history log count: " + history.LogItems.size());
 			histories.add(history);
 		}
-		
-		if (0 < histories.size())
-		{
-			m_historyAdapter = new HistoryAdapter(this, histories);
-			m_historyAdapter.sort(myComparator);
-		}
-		
-		return true;
 	}
 
-	private Vector<File> GetLogFiles()
+	private Vector<File> getLogFiles()
 	{
 		File dataDir = getApplicationContext().getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
 		File[] dataFiles = dataDir.listFiles();
@@ -289,7 +310,96 @@ implements Response.Listener<String>, Response.ErrorListener
 		return logFiles;
 	}
 	
+	private void getHistoriesFromDB(Vector<WalkHistory> histories)
+	{
+		if (false == isValidHistoryRecords())
+			updateHistoryRecordsFromFiles();
+		
+		db.open();
+		
+//		db.clearWalkHistoreis();
+		Cursor c = db.getUserWalkHistories();
+		
+		if (c.moveToFirst())
+		{
+			do
+			{
+				WalkHistory history = new WalkHistory();
+				history.StartTime.setTime(c.getLong(0));
+				history.FileName = c.getString(1);
+				history.IsUploaded = (c.getInt(2) == 1);
+				history.ValidDistance = c.getFloat(3);
+				history.setWeight(c.getInt(4));
+				history.setHeartStepDistance(c.getInt(5));
+				history.setAdTouchCount(c.getInt(6));
+				
+				histories.add(history);
+				
+			} while (c.moveToNext());
+		}
+		else
+		{
+			// 파일 정보와 비교하여 db 정보 갱신.
+			updateHistoryRecordsFromFiles();
+		}
+		
+		db.close();
+	}
+	
+	private boolean isValidHistoryRecords()
+	{
+		File dataDir = getApplicationContext().getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
+		File[] dataFiles = dataDir.listFiles();
+		
+		// 파일이 없을 경우는 정상.
+		if (0 == dataFiles.length) return true;
+		
+		db.open();
+		
+		Cursor c = db.getUserWalkHistories();
+		boolean ret = (c.getCount() == dataFiles.length);
+		
+		db.close();
+		
+		return ret;
+	}
 
+	private void updateHistoryRecordsFromFiles()
+	{
+		File dataDir = getApplicationContext().getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
+		File[] dataFiles = dataDir.listFiles();
+
+		if (0 == dataFiles.length) return;
+	
+		db.open();
+		
+		for (File file : dataFiles)
+		{
+			String path = file.getPath();
+			String ext =  path.substring(path.lastIndexOf(".") + 1, path.length());
+			if (ext.equalsIgnoreCase("log"))
+			{
+				file.getName();
+				Cursor c = db.getUserWalkHistory(file.getName());
+				if (null == c || 0 == c.getCount())	// 레코드가 없을 경우에만 추가.
+				{
+					MyXmlParser parser = new MyXmlParser(file);
+					WalkHistory history = parser.GetWalkHistory();
+					if (null == history)
+					{
+						file.delete();
+						continue;
+					}
+					history.FileName = file.getName();
+					history.ReCalculate();			
+
+					db.insertWalkHistory(history);
+				}				
+			}
+		}
+		
+		db.close();
+	}
 
 
 
@@ -377,12 +487,20 @@ implements Response.Listener<String>, Response.ErrorListener
 			{
 				if (null == this.uploadHistory) return;
 				
-				this.uploadHistory.IsUploaded = true;
-				SaveUploadedHistory();
+				db.open();
+				db.updateWalkHistory(this.uploadHistory.FileName, true);
+				db.close();
 				
-				ServerRequestManager.LoginAccount.Hearts.addRedPointByWalk(this.uploadHistory.RedHeartByWalk());
-				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(this.uploadHistory.RedHeartByTouch());
-				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(this.uploadHistory.GreedHeartByTouch());
+				this.uploadHistory.IsUploaded = true;
+				
+				WalkHistory targetHistory = Utils.GetDefaultTool().WalkHistoryFromFile(this, this.uploadHistory.FileName);
+				targetHistory.IsUploaded = true;
+				
+//				SaveUploadedHistory(targetHistory);
+				
+				ServerRequestManager.LoginAccount.Hearts.addRedPointByWalk(targetHistory.RedHeartByWalk());
+				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(targetHistory.RedHeartByTouch());
+				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(targetHistory.GreedHeartByTouch());
 				
 				this.uploadHistory = null;
 				
@@ -391,15 +509,15 @@ implements Response.Listener<String>, Response.ErrorListener
 		}
 	}
 
-	private void SaveUploadedHistory()
+	private void SaveUploadedHistory(WalkHistory history)
 	{
-		if (null == this.uploadHistory) return;
+		if (null == history) return;
 		
-		String strXml = this.uploadHistory.GetXML();
+		String strXml = history.GetXML();
 		try
 		{
 			File logDir = this.getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
-			File logFile = new File(logDir, this.uploadHistory.FileName);
+			File logFile = new File(logDir, history.FileName);
 
 			FileOutputStream fos = new FileOutputStream(logFile);
 			OutputStreamWriter osw = new OutputStreamWriter(fos);

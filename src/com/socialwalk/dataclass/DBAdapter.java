@@ -2,6 +2,8 @@ package com.socialwalk.dataclass;
 
 import java.util.Date;
 
+import com.socialwalk.request.ServerRequestManager;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,24 +15,28 @@ import android.util.Log;
 public class DBAdapter
 {
 	private static final String KEY_USER_SEQ = "user_seq";
-	private static final String KEY_DATE = "_date";
+	private static final String KEY_START_TIME = "start_time";
 	private static final String KEY_FILENAME = "filename";
-	private static final String KEY_REGISTED = "registed";
+	private static final String KEY_UPLOADED = "is_uploaded";
 	private static final String KEY_DISTANCE = "distance";
-	private static final String KEY_HEARTS = "hearts";
+	private static final String KEY_WEIGHT = "weight";
+	private static final String KEY_HEART_STEP = "heart_step";
+	private static final String KEY_AD_TOUCH = "ad_touch";
 	private static final String TAG = "DBAdapter";
 	
 	private static final String DATABASE_NAME = "swDB";
 	private static final String DATABASE_TABLE = "walk_history";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 3;
 	
-	private static final String DATABASE_CREATE = 
-			"CREATE  TABLE walk_history (user_seq TEXT PRIMARY KEY NOT NULL UNIQUE, "
-			+ "_date INTEGER NOT NULL, "
-			+ "filename TEXT NOT NULL, "
-			+ "registed BOOL NOT NULL, "
-			+ "distance DOUBLE NOT NULL, "
-			+ "hearts INTEGER NOT NULL)";
+	private static final String DATABASE_CREATE =
+			"CREATE TABLE walk_history (user_seq TEXT NOT NULL , "
+			+ "start_time INTEGER NOT NULL , "
+			+ "filename TEXT NOT NULL , "
+			+ "is_uploaded BOOL NOT NULL , "
+			+ "distance DOUBLE NOT NULL , "
+			+ "weight INTEGER NOT NULL , "
+			+ "heart_step INTEGER NOT NULL , "
+			+ "ad_touch INTEGER NOT NULL )";
 	
 	private final Context context;
 	
@@ -69,7 +75,7 @@ public class DBAdapter
 		{
 			Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
 					+ newVersion + ", which will destroy all old data");
-			db.execSQL("DROP TABLE IF EXISTS contacts");
+			db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
 			onCreate(db);
 		}
 	}
@@ -86,40 +92,85 @@ public class DBAdapter
 		DBHelper.close();
 	}
 	
-	public long insertWalkHistory(String user_seq, Date date, String filename, boolean registed, double distance, int hearts)
+	public long insertWalkHistory(WalkHistory history)
 	{
 		ContentValues initialValues = new ContentValues();
-		initialValues.put(KEY_USER_SEQ, user_seq);
-		initialValues.put(KEY_DATE, date.getTime());
-		initialValues.put(KEY_FILENAME, filename);
-		initialValues.put(KEY_REGISTED, registed);
-		initialValues.put(KEY_DISTANCE, distance);
-		initialValues.put(KEY_HEARTS, hearts);
+		initialValues.put(KEY_USER_SEQ, ServerRequestManager.LoginAccount.Sequence);
+		initialValues.put(KEY_START_TIME, history.StartTime.getTime());
+		initialValues.put(KEY_FILENAME, history.FileName);
+		initialValues.put(KEY_UPLOADED, true == history.IsUploaded ? 1:0);
+		initialValues.put(KEY_DISTANCE, history.ValidDistance);
+		initialValues.put(KEY_WEIGHT, history.getWeight());
+		initialValues.put(KEY_HEART_STEP, history.getHeartStepDistance());
+		initialValues.put(KEY_AD_TOUCH, history.getAdTouchCount());
 		
-		return db.insert(DATABASE_TABLE, null,  initialValues);
+		try
+		{
+			long ret = db.insert(DATABASE_TABLE, null,  initialValues);
+			return ret;
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return 0;
 	}
 	
-	public boolean deleteWalkHistory(String user_seq, Date date)
+	public boolean deleteWalkHistory(String filename)
 	{
-		String sqlWhere = KEY_USER_SEQ + "=" + user_seq + " AND "
-				+ KEY_DATE + "=" + Long.toString(date.getTime());
+		String sqlWhere = KEY_USER_SEQ + "=" + ServerRequestManager.LoginAccount.Sequence + " AND "
+				+ KEY_FILENAME + "='" + filename + "'";
 		
 		return db.delete(DATABASE_TABLE, sqlWhere, null) > 0;
 	}
 	
-	public Cursor getAllWalkHistories()
+	public void clearWalkHistoreis()
 	{
-		String[] columns = new String[] {KEY_USER_SEQ, KEY_DATE, KEY_FILENAME, KEY_REGISTED, KEY_DISTANCE, KEY_HEARTS};
-		return db.query(DATABASE_TABLE, columns, null, null, null, null, KEY_DATE + " DESC");
+		String sql = "DELETE FROM " + DATABASE_TABLE
+				+ " WHERE " + KEY_USER_SEQ + "=" + ServerRequestManager.LoginAccount.Sequence;
+		db.execSQL(sql);
 	}
 	
-	public boolean updateWalkHistory(String user_seq, Date date, boolean registed)
+	public Cursor getUserWalkHistories()
+	{
+		String[] columns = new String[] {KEY_START_TIME, KEY_FILENAME, KEY_UPLOADED, KEY_DISTANCE, KEY_WEIGHT, KEY_HEART_STEP, KEY_AD_TOUCH};
+		String sqlWhere = KEY_USER_SEQ + "=" + ServerRequestManager.LoginAccount.Sequence;
+		
+		Cursor c = db.query(DATABASE_TABLE, columns, sqlWhere, null, null, null, KEY_START_TIME + " DESC");
+		
+		return c;
+	}
+	
+	public Cursor getUserWalkHistory(String filename)
+	{
+		String[] columns = new String[] {KEY_START_TIME, KEY_FILENAME, KEY_UPLOADED, KEY_DISTANCE, KEY_WEIGHT, KEY_HEART_STEP, KEY_AD_TOUCH};
+		String sqlWhere = KEY_USER_SEQ + "=" + ServerRequestManager.LoginAccount.Sequence + " AND "
+				+ KEY_FILENAME + "='" + filename + "'";
+
+		try
+		{
+			Cursor myCursor = db.query(true, DATABASE_TABLE, columns, sqlWhere, null, null, null, null, null);
+			if (null != myCursor)
+				myCursor.moveToFirst();
+			
+			return myCursor;		
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public boolean updateWalkHistory(String filename, boolean uploaded)
 	{
 		ContentValues args = new ContentValues();
-		args.put(KEY_REGISTED, registed);
+		args.put(KEY_UPLOADED, true == uploaded ? 1:0);
 		
-		String sqlWhere = KEY_USER_SEQ + "=" + user_seq + " AND "
-				+ KEY_DATE + "=" + Long.toString(date.getTime());
+		String sqlWhere = KEY_USER_SEQ + "=" + ServerRequestManager.LoginAccount.Sequence + " AND "
+				+ KEY_FILENAME + "='" + filename + "'";
 		
 		return db.update(DATABASE_TABLE, args, sqlWhere, null) > 0; 
 	}

@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.dataclass.DBAdapter;
 import com.socialwalk.dataclass.WalkHistory;
 import com.socialwalk.dataclass.WalkHistoryManager;
 import com.socialwalk.request.ServerRequestManager;
@@ -34,6 +35,8 @@ implements Response.Listener<String>, Response.ErrorListener
 	private String historyFileName;
 	private WalkHistory history;
 	private ProgressDialog progDlg;
+
+	private DBAdapter db;
 
 	private static final int REQUEST_WALK_RESULT = 100;
 	
@@ -53,6 +56,11 @@ implements Response.Listener<String>, Response.ErrorListener
 			history = Utils.GetDefaultTool().WalkHistoryFromFile(WalkResultActivity.this, historyFileName);
 			if(null != history)
 			{
+				// database 등록.
+				db.open();
+				db.insertWalkHistory(history);
+				db.close();
+				
 				if (0 < history.RedHearts()) // 하트 적립이 0인 경우는 전송하지 않음. 
 				{
 					progDlg.show();
@@ -74,6 +82,8 @@ implements Response.Listener<String>, Response.ErrorListener
 		setContentView(R.layout.activity_walk_result);
 		
 		this.server = new ServerRequestManager();
+		
+		this.db = new DBAdapter(this);
 		
 		Button btnClose = (Button)findViewById(R.id.btnClose);
 		btnClose.setOnClickListener(new OnClickListener()
@@ -179,6 +189,10 @@ implements Response.Listener<String>, Response.ErrorListener
 		{
 			if (Globals.ERROR_NONE == result.Code)
 			{
+				db.open();
+				db.updateWalkHistory(this.historyFileName, true);
+				db.close();
+				
 				ServerRequestManager.LoginAccount.Hearts.addRedPointByWalk(this.history.RedHeartByWalk());
 				ServerRequestManager.LoginAccount.Hearts.addRedPointByTouch(this.history.RedHeartByTouch());
 				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(this.history.GreedHeartByTouch());
@@ -193,6 +207,11 @@ implements Response.Listener<String>, Response.ErrorListener
 	private void SaveUnregistedHistory()
 	{
 		this.history.IsUploaded = false;
+		
+		// record에 미등록으로 변경.
+		db.open();
+		db.updateWalkHistory(this.historyFileName, false);
+		db.close();
 
 		String strXml = this.history.GetXML();
 		try
