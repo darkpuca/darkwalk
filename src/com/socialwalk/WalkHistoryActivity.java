@@ -454,7 +454,7 @@ implements Response.Listener<String>, Response.ErrorListener
 			String dateString = sdf.format(history.StartTime);
 			viewContainer.logDate.setText(dateString);
 			viewContainer.hearts.setText(history.RedHeartString() + getResources().getString(R.string.HEART));
-			viewContainer.distance.setText(history.TotalDistanceString());
+			viewContainer.distance.setText(history.ValidDistanceString());
 			viewContainer.unregisted.setVisibility(history.IsUploaded ? View.INVISIBLE : View.VISIBLE);
 			
 			return rowView;

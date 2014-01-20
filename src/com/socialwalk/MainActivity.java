@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -28,6 +29,14 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
+import com.fsn.cauly.CaulyAdInfo;
+import com.fsn.cauly.CaulyAdInfoBuilder;
+import com.fsn.cauly.CaulyAdView;
+import com.fsn.cauly.CaulyAdViewListener;
+import com.fsn.cauly.CaulyInterstitialAd;
+import com.fsn.cauly.CaulyInterstitialAdListener;
+import com.fsn.cauly.Logger;
+import com.fsn.cauly.Logger.LogLevel;
 import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.dataclass.AroundersItems;
 import com.socialwalk.dataclass.AroundersItems.AroundersItem;
@@ -37,6 +46,7 @@ import com.socialwalk.request.ServerRequestManager.ServerRequestListener;
 
 public class MainActivity extends Activity
 implements Response.Listener<String>, Response.ErrorListener, OnClickListener, ServerRequestListener
+, CaulyAdViewListener, CaulyInterstitialAdListener
 {	
 	private ServerRequestManager m_server = null;
 	private LocationManager m_locationManager;
@@ -54,6 +64,11 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 	private static final int REQUEST_MAIN_ACCUMULATE = 201;
 	private static final int REQUEST_INTRO_ACCUMULATE = 202;
 	
+	private CaulyAdView caulyAdView;
+
+	// 광고 요청을 위한 App Code
+	private static final String CAULY_APP_CODE = "0yM85YHh";
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -65,6 +80,29 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
         
         m_locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         m_locationListener = new MyLocationListener();
+        
+        // cauly 광고 설정 시작.
+        Logger.setLogLevel(LogLevel.Debug);
+        
+        CaulyAdInfo caulyAdInfo = 
+        		new CaulyAdInfoBuilder(CAULY_APP_CODE).
+        		effect("RightSlide").
+        		bannerHeight("Proportional").
+        		build();
+        
+        // CaulyAdInfo를 이용, CaulyAdView 생성.
+        caulyAdView = new CaulyAdView(this); 
+        caulyAdView.setAdInfo(caulyAdInfo); 
+        caulyAdView.setAdViewListener(this);
+        
+        RelativeLayout rootView = (RelativeLayout) findViewById(R.id.mainLayout);
+        
+        // 예시 : 화면 하단에 배너 부착
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); 
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM); 
+        rootView.addView(caulyAdView, params);
+        
+        // cauly 광고 설정 끝.
         
         this.characterBgView = (ImageView)findViewById(R.id.mainBgImage);
 		Bitmap newBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.main_character_bg);
@@ -553,5 +591,59 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 	public void onFinishAutoLogin(boolean isLogin)
 	{
 		startupProc();
+	}
+	
+	
+	/****************************************************************
+	* cauly 광고 listener functions
+	****************************************************************/
+	@Override
+	public void onReceiveAd(CaulyAdView adView, boolean isChargeableAd)
+	{
+		// 광고 수신 성공 & 노출된 경우 호출됨.
+		// 수신된 광고가 무료 광고인 경우 isChargeableAd 값이 false 임.
+		if (isChargeableAd == false)
+			Log.d("CaulyExample", "free banner AD received.");
+		else
+			Log.d("CaulyExample", "normal banner AD received.");
+		
+	}
+
+	@Override
+	public void onFailedToReceiveAd(CaulyAdView adView, int errorCode, String errorMsg)
+	{
+		Log.d("CaulyExample", "failed to receive banner AD.");
+		
+	}
+
+	@Override
+	public void onShowLandingScreen(CaulyAdView adView)
+	{
+		Log.d("CaulyExample", "banner AD landing screen opened.");
+	}
+
+	@Override
+	public void onCloseLandingScreen(CaulyAdView adView)
+	{
+		Log.d("CaulyExample", "banner AD landing screen closed.");		
+	}
+
+	@Override
+	public void onClosedInterstitialAd(CaulyInterstitialAd arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onFailedToReceiveInterstitialAd(CaulyInterstitialAd arg0,
+			int arg1, String arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onReceiveInterstitialAd(CaulyInterstitialAd arg0, boolean arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 }

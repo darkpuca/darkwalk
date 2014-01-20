@@ -153,7 +153,13 @@ public class WalkHistory
 		
 		return strRet;
 	}
-	
+
+	public String ValidDistanceString()
+	{
+		String strRet = String.format(Locale.US,  "%.2f km", this.ValidDistance / 1000);
+		return strRet;
+	}
+
 	public long TotalWalkingSecondsFromNow()
 	{
 		Date now = new Date();
