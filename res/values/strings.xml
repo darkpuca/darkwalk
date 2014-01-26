@@ -221,6 +221,7 @@
     <string name="MSG_MEMBER_DENY_CONFIRM">선택한 사용자를 거절하시겠습니까?</string>
     <string name="MSG_COMMUNITY_MEMBER_EXIST">커뮤니티 멤버가 있으면 폐쇄할 수 없습니다.</string>
     <string name="MSG_COMMUNITY_SECESSION_CONFIRM">가입된 커뮤니티에서 탈퇴하시겠습니까?</string>
+    <string name="MSG_RECEIVE_USER_DATA">사용자 정보를 수신중입니다.</string>
     
     <color name="WALK_INFO_PANEL_BG">#80000000</color>
     <color name="SLIDE_WALK_STATE">#80000000</color>

@@ -1014,6 +1014,7 @@ containing a value of this type.
         public static final int MSG_PAGE_LOADING=0x7f0700e0;
         public static final int MSG_PASSWORD_MISSMATCH=0x7f0700e6;
         public static final int MSG_POST_DELETE_CONFIRM=0x7f0700e4;
+        public static final int MSG_RECEIVE_USER_DATA=0x7f0700f4;
         public static final int MSG_REPLY_DELETE_CONFIRM=0x7f0700e5;
         public static final int MSG_SECESSION_CONFIRM=0x7f0700ed;
         public static final int MSG_SEND_DATA=0x7f0700e9;
@@ -1119,7 +1120,7 @@ containing a value of this type.
         public static final int WRITE=0x7f070089;
         public static final int WRITER=0x7f07007e;
         public static final int WRITE_REPLY=0x7f07008a;
-        public static final int action_settings=0x7f0700f4;
+        public static final int action_settings=0x7f0700f5;
         public static final int com_facebook_choose_friends=0x7f07000f;
         public static final int com_facebook_dialogloginactivity_ok_button=0x7f070000;
         public static final int com_facebook_internet_permission_error_message=0x7f070013;

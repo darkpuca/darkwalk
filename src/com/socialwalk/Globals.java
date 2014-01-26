@@ -81,6 +81,7 @@ public class Globals
 	public static final int INTENT_REQ_POST_MODIFY = 1105;
 
 	public static final long INTRO_WAITING = 3000;
+	public static final long CAULY_WAITING = 3000;
 
 	public static final String AD_TYPE_SLIDE = "slide";
 	public static final String AD_TYPE_INTRO = "intro";
