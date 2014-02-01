@@ -29,6 +29,7 @@ implements Response.Listener<String>,Response.ErrorListener , OnClickListener
 	private Button btnJoin;
 	private TextView tvMessage;
 	private int communitySeq;
+	private String communityName;
 
 	private ProgressDialog progDlg;
 
@@ -47,6 +48,7 @@ implements Response.Listener<String>,Response.ErrorListener , OnClickListener
 		progDlg.setMessage(getResources().getString(R.string.MSG_LOADING));
 
 		this.communitySeq = getIntent().getIntExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, 0);
+		this.communityName = getIntent().getStringExtra(Globals.EXTRA_KEY_COMMUNITY_NAME);
 		
 		this.btnJoin = (Button)findViewById(R.id.btnJoin);
 		btnJoin.setOnClickListener(this);
@@ -127,6 +129,7 @@ implements Response.Listener<String>,Response.ErrorListener , OnClickListener
 			{
 				Intent i = new Intent();
 				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, this.communitySeq);
+				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME,  this.communityName);
 				setResult(RESULT_OK, i);
 				finish();
 			}

@@ -94,6 +94,10 @@ public class DBAdapter
 	
 	public long insertWalkHistory(WalkHistory history)
 	{
+		if (null == history) return 0;
+		
+		if (isExistWalkHistory(history.FileName)) return 0;
+		
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_USER_SEQ, ServerRequestManager.LoginAccount.Sequence);
 		initialValues.put(KEY_START_TIME, history.StartTime.getTime());
@@ -162,6 +166,14 @@ public class DBAdapter
 		}
 		
 		return null;
+	}
+	
+	public boolean isExistWalkHistory(String filename)
+	{
+		Cursor c = getUserWalkHistory(filename);
+		if (null == c) return false;
+		
+		return (0 < c.getCount()); 
 	}
 	
 	public boolean updateWalkHistory(String filename, boolean uploaded)

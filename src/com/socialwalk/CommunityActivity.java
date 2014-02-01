@@ -62,6 +62,7 @@ implements Response.Listener<String>, Response.ErrorListener
 		ListView postList = (ListView)findViewById(R.id.postList);
 		postList.setAdapter(m_adapter);
 		
+		// 글쓰기 버튼.
 		RelativeLayout writeLayout = (RelativeLayout)findViewById(R.id.writeButtonLayout);
 		writeLayout.setOnClickListener(new OnClickListener()
 		{			
@@ -75,12 +76,25 @@ implements Response.Listener<String>, Response.ErrorListener
 			}
 		});
 		
+		// 상단 타이틀 업데이트.
+		if (getIntent().hasExtra(Globals.EXTRA_KEY_COMMUNITY_NAME))
+		{
+			String title = getIntent().getStringExtra(Globals.EXTRA_KEY_COMMUNITY_NAME);
+			if (0 < title.length())
+			{
+				TextView titleLabel = (TextView)findViewById(R.id.titleLabel);
+				titleLabel.setText(title);			
+			}
+		}
+		
+		// 글목록 갱신.
 		if (getIntent().hasExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE))
 		{
 			communitySequence = getIntent().getExtras().getInt(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE);
 			refreshPosts();
 		}
 		
+		// 글목록 항목 선택.
 		postList.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
@@ -187,8 +201,6 @@ implements Response.Listener<String>, Response.ErrorListener
 			}
 		}
 	}
-	
-	
 	
 
 	

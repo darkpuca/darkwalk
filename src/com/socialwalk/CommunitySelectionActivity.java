@@ -138,6 +138,7 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 		int commSeq = selItem.Sequence;
 		Intent i = new Intent(this, CommunityJoinActivity.class);
 		i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, commSeq);
+		i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, selItem.Name);
 		startActivityForResult(i, INTENT_REQ_COMMUNITY_JOIN);
 	}
 
@@ -167,8 +168,11 @@ implements OnItemClickListener, Response.Listener<String>, Response.ErrorListene
 			if (RESULT_OK == resultCode)
 			{
 				int commSeq = data.getIntExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, 0);
+				String commName = data.getStringExtra(Globals.EXTRA_KEY_COMMUNITY_NAME);
+				
 				Intent i = new Intent();
 				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, commSeq);
+				i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, commName);
 				setResult(RESULT_OK, i);
 
 				finish();

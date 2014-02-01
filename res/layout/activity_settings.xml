@@ -140,68 +140,6 @@
                     android:text="@string/VERSION" />
             </RelativeLayout>
             
-            <LinearLayout
-                android:id="@+id/totalHeartsLayout"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/versionLayout"
-                android:layout_margin="32dp"
-                android:padding="16dp"
-                android:background="@drawable/innerframe_shape_yellow" >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="4dp"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/DARK_GRAY"
-                    android:text="@string/TOTAL_ACCUMULATED_HEARTS" />
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="24dp"
-                    android:layout_marginRight="24dp" >
-                    <ImageView
-                        android:id="@+id/totalRedHeartsLabel"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/main_red_heart" />
-                    <TextView
-                        android:id="@+id/totalRedHearts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/LIGHT_RED" />
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="24dp"
-                    android:layout_marginRight="24dp" >
-                    <ImageView
-                        android:id="@+id/totalGreedHeartsLabel"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/main_green_heart" />
-                    <TextView
-                        android:id="@+id/totalGreenHearts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/LIGHT_GREEN" />
-                </RelativeLayout>
-			</LinearLayout>
-            
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="70dp"

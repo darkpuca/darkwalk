@@ -56,6 +56,10 @@
     <string name="NOTICE">공지사항</string>
     <string name="PROFILE">마이페이지</string>
     <string name="HELP">FAQ</string>
+    <string name="BENEFICIARY">후원프로젝트</string>
+    <string name="COMMUNITY">커뮤니티</string>
+    <string name="HISTORY">히스토리</string>
+    <string name="MORE">더보기</string>
     <string name="SOCIALWALK_INFORM">소셜워크 알리기</string>
     <string name="SOCIALWALK_INFO">소셜워크 소개</string>
     <string name="HEART_MALL">하트몰</string>
@@ -98,7 +102,8 @@
     <string name="DETAIL">상세정보</string>
     <string name="DELETE">삭제</string>
     <string name="UPLOAD">서버 적립</string>
-    <string name="BY_GROUP">지역</string>
+    <string name="BY_LOCAL">지역</string>
+    <string name="BY_GROUP">단체</string>
     <string name="TOTAL">전체</string>
     <string name="SHOW_ALL">모두보기</string>
     <string name="EDIT_PROFILE">프로필 수정</string>
@@ -161,7 +166,7 @@
     <string name="BENEFIT_DATE">후원일</string>
     <string name="BENEFIT_MONEY">후원금액</string>
     <string name="CURRENT_MONEY">현재 모금액</string>
-    <string name="TARGET_MONEY">목표금액</string>
+    <string name="TARGET_MONEY">치료 지원비</string>
     <string name="MAN_UNIT">명</string>
     <string name="VERSION">버전</string>
     <string name="PARTICIPANTS">참여인원</string>
@@ -180,7 +185,6 @@
     <string name="MSG_EMPTY_GROUP_NAME">그룹 이름을 입력해 주십시오.</string>
     <string name="MSG_EMPTY_SUBJECT">제목을 입력해 주십시요.</string>
     <string name="MSG_EMPTY_CONTENTS">내용을 입력해 주십시요.</string>
-    <string name="MSG_EMPTY_EMAIL">이메일 주소를 입력해 주십시요.</string>
     <string name="MSG_EMPTY_NAME">이름을 입력해 주십시요.</string>
     <string name="MSG_CHECK_DUPLICATE">먼저 중복 확인을 해주십시요.</string>
     <string name="MSG_DUPLICATE_GROUP_NAME">동일한 그룹 이름이 있습니다. 다시 입력해 주십시오.</string>

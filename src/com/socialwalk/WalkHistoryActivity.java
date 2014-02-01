@@ -60,13 +60,13 @@ implements Response.Listener<String>, Response.ErrorListener
 	
 	private DBAdapter db;
 	
-	private final Comparator<WalkHistory> myComparator = new Comparator<WalkHistory>(){
-		@Override
-		public int compare(WalkHistory lhs, WalkHistory rhs)
-		{
-			return rhs.StartTime.compareTo(lhs.StartTime);
-		}
-	};
+//	private final Comparator<WalkHistory> myComparator = new Comparator<WalkHistory>(){
+//		@Override
+//		public int compare(WalkHistory lhs, WalkHistory rhs)
+//		{
+//			return rhs.StartTime.compareTo(lhs.StartTime);
+//		}
+//	};
 
 
 	@Override
@@ -81,6 +81,7 @@ implements Response.Listener<String>, Response.ErrorListener
 
 		m_historyList = (ListView)findViewById(R.id.historyList);
 
+		// 히스토리 항목 선택하면 히스토리 상세 전환.
 		m_historyList.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
@@ -94,8 +95,10 @@ implements Response.Listener<String>, Response.ErrorListener
 			}
 		});
 		
+		// 리스트 항목 팝업 등록.
 		registerForContextMenu(m_historyList);
 		
+		// 랭킹보기 화면 전환.
 		RelativeLayout rankingLayout = (RelativeLayout)findViewById(R.id.rankButtonLayout);
 		rankingLayout.setOnClickListener(new OnClickListener()
 		{			
@@ -107,11 +110,12 @@ implements Response.Listener<String>, Response.ErrorListener
 			}
 		});
 		
+		// prepare progress dialog 
 		progDlg = new ProgressDialog(WalkHistoryActivity.this);
 		progDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progDlg.setCancelable(false);
 
-		
+		// 히스토리 항목 준비중 progress 표시.
 		Handler handler = new Handler();
 		handler.post(new Runnable()
 		{			
@@ -231,12 +235,19 @@ implements Response.Listener<String>, Response.ErrorListener
 	{
 		File dataDir = getApplicationContext().getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
 
+		// 히스토리 파일 삭제.
 		for (WalkHistory history : m_historyAdapter.m_histories)
 		{
 			File logFile = new File(dataDir.getPath(), history.FileName);
 			logFile.delete();
 		}
 		
+		// db항목 삭제.
+		db.open();
+		db.clearWalkHistoreis();
+		db.close();
+		
+		// 아답타 등록 항목 삭제.
 		m_historyAdapter.clear();
 	}
 	

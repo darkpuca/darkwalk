@@ -11,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -94,6 +95,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
         setContentView(R.layout.activity_main);
         
         m_server = new ServerRequestManager();
+        
+        // 자동 로그인 처리.
         this.isAutologinRun = m_server.AutoLogin(this, this);
         
         m_locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -114,11 +117,12 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
         		progDlg.show();
         }
 
-        
+        // 캐릭터 배경이미지 동적 연결.
         this.characterBgView = (ImageView)findViewById(R.id.mainBgImage);
 		Bitmap newBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.main_character_bg);
 		this.characterBgView.setImageBitmap(newBitmap );
         
+		// 어라운더스 광고 연동.
         m_aroundersLayout = (RelativeLayout)findViewById(R.id.layoutArounders);
         m_aroundersLayout.setVisibility(View.GONE);
         m_aroundersLayout.setOnClickListener(this);
@@ -127,8 +131,9 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 		m_startLayout = (RelativeLayout)findViewById(R.id.layoutStartButton);
 		m_startLayout.setOnClickListener(this);
         
-        ImageButton btnSponsor = (ImageButton)findViewById(R.id.btnSponsor);
-        btnSponsor.setOnClickListener(new OnClickListener()
+		// '후원프로젝트' 전환.
+		RelativeLayout layoutBeneficialy = (RelativeLayout)findViewById(R.id.layoutBeneficiary);
+        layoutBeneficialy.setOnClickListener(new OnClickListener()
         {			
 			@Override
 			public void onClick(View v)
@@ -138,8 +143,9 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 			}
 		});
         
-        ImageButton btnGroup = (ImageButton)findViewById(R.id.btnGroup);
-        btnGroup.setOnClickListener(new OnClickListener()
+        // '커뮤니티' 화면 이동.
+        RelativeLayout layoutCommunity = (RelativeLayout)findViewById(R.id.layoutCommunity);
+        layoutCommunity.setOnClickListener(new OnClickListener()
         {			
 			@Override
 			public void onClick(View v)
@@ -147,8 +153,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 				if (null == ServerRequestManager.LoginAccount) return;
 				
 				int commSeq = ServerRequestManager.LoginAccount.CommunitySeq;
-//				commId = 0;	// test value
-				if (0 == commSeq)
+				if (0 == commSeq)	// 가입한 커뮤니티가 없으면 커뮤니티 검색 화면 이동 확인.
 				{
 					AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
 					dlg.setCancelable(true);
@@ -177,13 +182,15 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 				{
 					Intent i = new Intent(getBaseContext(), CommunityActivity.class);
 					i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, commSeq);
+					i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, ServerRequestManager.LoginAccount.CommunityName);
 					startActivity(i);
 				}
 			}
 		});
         
-        ImageButton btnHistory = (ImageButton)findViewById(R.id.btnHistory);
-        btnHistory.setOnClickListener(new OnClickListener()
+        // 히스토리 화면 전환.
+        RelativeLayout layoutHistory = (RelativeLayout)findViewById(R.id.layoutHistory);
+        layoutHistory.setOnClickListener(new OnClickListener()
         {			
 			@Override
 			public void onClick(View v)
@@ -193,8 +200,9 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 			}
 		});
         
-        ImageButton btnMore = (ImageButton)findViewById(R.id.btnMore);
-        btnMore.setOnClickListener(new OnClickListener()
+        // 더보기 화면 전환.
+        RelativeLayout layoutMore = (RelativeLayout)findViewById(R.id.layoutMore);
+        layoutMore.setOnClickListener(new OnClickListener()
         {			
 			@Override
 			public void onClick(View v)
@@ -204,6 +212,19 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 			}
 		});
         
+        // 사용자면 터치 > 프로필 화면 이동.
+        RelativeLayout nameLayout = (RelativeLayout)findViewById(R.id.layoutUserName);
+        nameLayout.setOnClickListener(new OnClickListener()
+        {			
+			@Override
+			public void onClick(View v)
+			{
+				Intent i = new Intent(getBaseContext(), ProfileActivity.class);
+				startActivityForResult(i, Globals.INTENT_REQ_PROFILE);
+			}
+		});
+        
+        // '후원하기' 기능 준비중.
         RelativeLayout supportLayout = (RelativeLayout)findViewById(R.id.supportLayout);
         supportLayout.setOnClickListener(new OnClickListener()
         {			
@@ -215,6 +236,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 			}
 		});
         
+        // 소셜워크 진행중이면 걷기 화면으로 전환.
         if (!WalkService.IsStarted)
         {
         	// show intro activity
@@ -242,6 +264,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 	@Override
 	public void onBackPressed()
 	{
+		// 메인에서 'back'버튼 선택하면 확인 메세지.
 		AlertDialog.Builder exitDlg = new AlertDialog.Builder(this);
 		exitDlg.setCancelable(true);
 		exitDlg.setTitle(R.string.TITLE_INFORMATION);
@@ -403,11 +426,29 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
         {
         	Log.d("DEBUG", "update user information");
         	updateUserInformation();
+        	
+        	versionCheck();
         }
         
         //m_server.AroundersItems(MainActivity.this, MainActivity.this, 37.48454f, 127.03394f);
 	}
 
+
+	private void versionCheck()
+	{
+		try
+		{
+			PackageInfo pkgInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			int verCode = pkgInfo.versionCode;		
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		
+	}
 
 	@Override
 	public void onErrorResponse(VolleyError error)

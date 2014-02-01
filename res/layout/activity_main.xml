@@ -14,59 +14,106 @@
         android:layout_alignParentTop="true"
         android:padding="6dp"
         android:background="@color/DARK_GRAY" >
-
-        <ImageButton
-            android:id="@+id/btnMain"
-            android:src="@drawable/topbar_main_selector"
-            android:scaleType="fitCenter"
-            android:background="@color/TRANSPARENT"
+        <RelativeLayout
+            android:id="@+id/layoutBeneficiary"
             android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
             android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="@dimen/TOPBAR_ICON_SIZE" 
-            android:visibility="gone" />
-        
-        <ImageButton
-            android:id="@+id/btnSponsor"
-            android:src="@drawable/topbar_heart_selector"
-            android:scaleType="fitCenter"
             android:background="@color/TRANSPARENT"
+            android:layout_height="@dimen/TOPBAR_ICON_SIZE" >
+            <TextView
+                android:id="@+id/labelBeneficiary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="@color/WHITE"
+                android:text="@string/BENEFICIARY" />"
+            <ImageView
+                android:src="@drawable/topbar_heart_selector"
+                android:scaleType="fitCenter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/labelBeneficiary" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/layoutCommunity"
             android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
             android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="@dimen/TOPBAR_ICON_SIZE" />
-        <ImageButton
-            android:id="@+id/btnGroup"
-            android:src="@drawable/topbar_group_selector"
-            android:scaleType="fitCenter"
             android:background="@color/TRANSPARENT"
+            android:layout_height="@dimen/TOPBAR_ICON_SIZE" >
+            <TextView
+                android:id="@+id/labelCommunity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="@color/WHITE"
+                android:text="@string/COMMUNITY" />
+            <ImageView
+                android:src="@drawable/topbar_group_selector"
+                android:scaleType="fitCenter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/labelCommunity" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/layoutHistory"
             android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
             android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="@dimen/TOPBAR_ICON_SIZE" />
-        <ImageButton
-            android:id="@+id/btnHistory"
-            android:src="@drawable/topbar_history_selector"
-            android:scaleType="fitCenter"
             android:background="@color/TRANSPARENT"
+            android:layout_height="@dimen/TOPBAR_ICON_SIZE" >
+            <TextView
+                android:id="@+id/labelHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="@color/WHITE"
+                android:text="@string/HISTORY" />
+            <ImageView
+                android:src="@drawable/topbar_history_selector"
+                android:scaleType="fitCenter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/labelHistory" />
+        </RelativeLayout>
+		<RelativeLayout
+            android:id="@+id/layoutMore"
             android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
             android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="@dimen/TOPBAR_ICON_SIZE" />        
-        <ImageButton
-            android:id="@+id/btnMore"
-            android:src="@drawable/topbar_more_selector"
-            android:scaleType="fitCenter"
             android:background="@color/TRANSPARENT"
-            android:layout_marginLeft="@dimen/TOPBAR_ICON_SIDE_MARGIN"
-            android:layout_marginRight="@dimen/TOPBAR_ICON_SIDE_MARGIN"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="@dimen/TOPBAR_ICON_SIZE" />
+            android:layout_height="@dimen/TOPBAR_ICON_SIZE" >
+            <TextView
+                android:id="@+id/labelMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="@color/WHITE"
+                android:text="@string/MORE" />
+            <ImageView
+                android:src="@drawable/topbar_more_selector"
+                android:scaleType="fitCenter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/labelMore" />
+        </RelativeLayout>
 	</LinearLayout>
 	
 	<RelativeLayout

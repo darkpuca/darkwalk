@@ -20,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.TextInputDialog.TextInputDialogListener;
 import com.socialwalk.dataclass.AccountData;
+import com.socialwalk.dataclass.AccountHeart;
 import com.socialwalk.dataclass.AreaItem;
 import com.socialwalk.request.ServerRequestManager;
 import com.socialwalk.request.SocialWalkRequest;
@@ -44,7 +46,8 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 	private static final int REQUEST_SUBAREAITEM = 103;
 	private static final int REQUEST_SECESSION_PASSWORD = 104;
 	private static final int REQUEST_SECESSION = 105;
-	
+	private static final int REQUEST_ACCUMULATED_HEARTS = 106;
+
 	private static final int INPUT_NAME = 300;
 	private static final int INPUT_PASSWORD = 301;
 	
@@ -53,6 +56,7 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 	private Vector<AreaItem> areaItems, subAreaItems;
 	private RelativeLayout nameLayout, genderLayout, weightLayout, birthdayLayout, passwordLayout, groupLayout;
 	private RelativeLayout areaLayout, subAreaLayout, secessionLayout;
+	private LinearLayout heartsLayout;
 	private Button applyButton;
 	
 	private ProgressDialog progDlg;
@@ -119,6 +123,9 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 		progDlg.setCancelable(false);
 		progDlg.setMessage(getResources().getString(R.string.MSG_LOADING));
 
+		this.heartsLayout = (LinearLayout)findViewById(R.id.totalHeartsLayout);
+		this.heartsLayout.setVisibility(View.GONE);
+
 		requestUserProfile();
 	}
 
@@ -127,6 +134,14 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 		if (!progDlg.isShowing()) progDlg.show();
 		this.reqType = REQUEST_USER_PROFILE;
 		this.server.GetUserProfile(this, this);
+	}
+	
+	private void requestAccumulatedHearts()
+	{
+		if (!progDlg.isShowing()) progDlg.show();
+		
+		this.reqType = REQUEST_ACCUMULATED_HEARTS;
+		this.server.TotalAccumulatedHearts(this, this);
 	}
 
 	@Override
@@ -529,12 +544,14 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 				this.userProfile = parser.GetAccountData();
 				if (null != this.userProfile)
 					updateProfileInformation();
+				
+				requestAccumulatedHearts();
 			}
 			else
 			{
 				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
 				finish();
-			}
+			}	
 		}
 		else if (REQUEST_AREAITEM == this.reqType)
 		{
@@ -615,6 +632,25 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 			else 
 			{
 				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
+			}
+		}
+		else if (REQUEST_ACCUMULATED_HEARTS == this.reqType)
+		{
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				AccountHeart hearts = parser.GetAccumulatedHearts();
+				if (null == hearts) return;
+				
+				TextView tvRedHearts = (TextView)findViewById(R.id.totalRedHearts);
+				TextView tvGreenHearts = (TextView)findViewById(R.id.totalGreenHearts);
+				tvRedHearts.setText(Utils.GetDefaultTool().DecimalNumberString(hearts.getRedPointTotal()));
+				tvGreenHearts.setText(Utils.GetDefaultTool().DecimalNumberString(hearts.getGreenPoint()));
+				
+				heartsLayout.setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				heartsLayout.setVisibility(View.GONE);
 			}
 		}
 	}

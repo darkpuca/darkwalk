@@ -56,6 +56,12 @@ implements OnClickListener, Response.Listener<String>, Response.ErrorListener
 		memberButtonLayout.setOnClickListener(this);
 		globalButtonLayout.setOnClickListener(this);
 		
+		TextView localLabel = (TextView)findViewById(R.id.labelLocal);
+		if (ServerRequestManager.LoginAccount.IsGroupUser)
+			localLabel.setText(R.string.BY_GROUP);
+		else
+			localLabel.setText(R.string.BY_LOCAL);
+		
 		updateTypeButtons();
 		
 		requestRankings();
