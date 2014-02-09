@@ -794,7 +794,9 @@ containing a value of this type.
         public static final int MSG_POST_DELETE_CONFIRM=0x7f0500d0;
         public static final int MSG_RECEIVE_USER_DATA=0x7f0500e0;
         public static final int MSG_REPLY_DELETE_CONFIRM=0x7f0500d1;
+        public static final int MSG_SECESSED_ACCOUNT=0x7f0500e2;
         public static final int MSG_SECESSION_CONFIRM=0x7f0500d9;
+        public static final int MSG_SECESSION_FAIL_COMMUNITY_OWNER=0x7f0500e1;
         public static final int MSG_SEND_DATA=0x7f0500d5;
         public static final int MSG_SEND_WALK_DATA=0x7f0500d3;
         public static final int MSG_SERVICE_PREPARING=0x7f0500db;
@@ -898,7 +900,7 @@ containing a value of this type.
         public static final int WRITE=0x7f050075;
         public static final int WRITER=0x7f05006a;
         public static final int WRITE_REPLY=0x7f050076;
-        public static final int action_settings=0x7f0500e1;
+        public static final int action_settings=0x7f0500e3;
         public static final int hello_world=0x7f050000;
     }
     public static final class style {

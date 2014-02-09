@@ -170,6 +170,10 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 			{
 				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_PASSWORD_MISSMATCH);
 			}
+			else if (Globals.ERROR_SECEDED_ACCOUNT == result.Code)
+			{
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_SECESSED_ACCOUNT);
+			}
 			else
 			{
 				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);

@@ -629,6 +629,10 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 
 				finish();
 			}
+			else if (Globals.ERROR_NO_RESULT == result.Code)
+			{
+				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_SECESSION_FAIL_COMMUNITY_OWNER);
+			}
 			else 
 			{
 				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);

@@ -43,8 +43,8 @@
     <string name="LOGIN">로그인</string>
     <string name="LOGOUT">로그아웃</string>
     <string name="USER_ID">사용자 ID</string>
-    <string name="PASSWORD">새 비밀번호</string>
-    <string name="PASSWORD_CONFIRM">새 비밀번호 확인</string>
+    <string name="PASSWORD">비밀번호</string>
+    <string name="PASSWORD_CONFIRM">비밀번호 확인</string>
     <string name="SIGN_UP">회원가입</string>
     <string name="FIND_PASSWORD"><u>비밀번호 초기화</u></string>
     <string name="AUTO_LOGIN">자동 로그인</string>
@@ -226,6 +226,8 @@
     <string name="MSG_COMMUNITY_MEMBER_EXIST">커뮤니티 멤버가 있으면 폐쇄할 수 없습니다.</string>
     <string name="MSG_COMMUNITY_SECESSION_CONFIRM">가입된 커뮤니티에서 탈퇴하시겠습니까?</string>
     <string name="MSG_RECEIVE_USER_DATA">사용자 정보를 수신중입니다.</string>
+    <string name="MSG_SECESSION_FAIL_COMMUNITY_OWNER">커뮤니티의 관리자 권한을 위임한 후에 다시 시도해 주십시요.</string>
+    <string name="MSG_SECESSED_ACCOUNT">이미 탈퇴한 회원입니다.</string>
     
     <color name="WALK_INFO_PANEL_BG">#80000000</color>
     <color name="SLIDE_WALK_STATE">#80000000</color>
