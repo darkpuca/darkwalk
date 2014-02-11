@@ -463,6 +463,9 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 	@Override
 	public void onResponse(String response)
 	{
+		if (progDlg.isShowing())
+			progDlg.dismiss();
+		
 		if (0 == response.length()) return;
 		
 		MyXmlParser parser = new MyXmlParser(response);
