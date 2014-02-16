@@ -96,17 +96,14 @@ Response.Listener<String>, Response.ErrorListener
 		
         this.locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         this.locationListener = new NetworkLocationListener();
-
 		
         this.characterBgView = (ImageView)findViewById(R.id.mainBgImage);
 		Bitmap newBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.main_character_bg);
 		this.characterBgView.setImageBitmap(newBitmap );
-
 		
         this.aroundersLayout = (RelativeLayout)findViewById(R.id.layoutArounders);
         this.aroundersLayout.setVisibility(View.INVISIBLE);
         this.aroundersLayout.setOnClickListener(this);
-
 		
 		this.stopLayout = (RelativeLayout)findViewById(R.id.layoutStop);
 		this.stopLayout.setOnClickListener(this);
@@ -128,20 +125,7 @@ Response.Listener<String>, Response.ErrorListener
 		
 		walkMap = (NMapView)findViewById(R.id.walkMap);
 		
-		walkMap.setApiKey(NAVER_MAP_KEY);
-		walkMap.setClickable(true);
-		walkMap.setBuiltInZoomControls(true, null);
-		walkMap.setOnMapStateChangeListener(this);
-		walkMap.setOnMapViewTouchEventListener(this);
-		
-		mapController = walkMap.getMapController();
-		mapResProvider = new NaverMapResourceProvider(this);
-		mapOverlayManager = new NMapOverlayManager(this, walkMap, mapResProvider);
-//		pathDataOverlay = mapOverlayManager.createPathDataOverlay();
-		
-		mapLocationManager = new NMapLocationManager(this);
-		mapLocationManager.setOnLocationChangeListener(onMyLocationChangeListener);
-		mapMyLocationOverlay = mapOverlayManager.createMyLocationOverlay(mapLocationManager, null);
+		buildMapControls();
 
 		this.animodeLayout = (RelativeLayout)findViewById(R.id.animodeLayout);
 		this.mapmodeLayout = (RelativeLayout)findViewById(R.id.mapmodeLayout);
@@ -187,6 +171,7 @@ Response.Listener<String>, Response.ErrorListener
 			}
 		});
 		
+		// 걷기 정보 업데이트 타이머.
 		updateHandler = new Handler();
 		updateTask = new TimerTask()
 		{			
@@ -212,6 +197,24 @@ Response.Listener<String>, Response.ErrorListener
 //		UpdateUserInformation();
 	}
 
+	private void buildMapControls()
+	{
+		walkMap.setApiKey(NAVER_MAP_KEY);
+		walkMap.setClickable(true);
+		walkMap.setBuiltInZoomControls(true, null);
+		walkMap.setOnMapStateChangeListener(this);
+		walkMap.setOnMapViewTouchEventListener(this);
+		
+		mapController = walkMap.getMapController();
+		mapResProvider = new NaverMapResourceProvider(this);
+		mapOverlayManager = new NMapOverlayManager(this, walkMap, mapResProvider);
+//		pathDataOverlay = mapOverlayManager.createPathDataOverlay();
+		
+		mapLocationManager = new NMapLocationManager(this);
+		mapLocationManager.setOnLocationChangeListener(onMyLocationChangeListener);
+		mapMyLocationOverlay = mapOverlayManager.createMyLocationOverlay(mapLocationManager, null);
+	}
+
 	private void updateModeLayout()
 	{
 		if (IsMapMode)
@@ -226,6 +229,9 @@ Response.Listener<String>, Response.ErrorListener
 		}
 	}
 	
+	/*
+	 * 현재의 걷기 상세 정보를 표시.
+	 */
 	private void updateWalkInfos(WalkHistory currentWalk)
 	{
 		TextView walkDistance = (TextView)findViewById(R.id.walkDistance);
@@ -269,6 +275,7 @@ Response.Listener<String>, Response.ErrorListener
 	@Override
 	protected void onDestroy()
 	{
+		// 위치 정보 비활성화.
 		if (mapLocationManager.isMyLocationEnabled())
 			mapLocationManager.disableMyLocation();
 
@@ -309,7 +316,6 @@ Response.Listener<String>, Response.ErrorListener
     			updateArounders();
     		}
     	}
-
     	
 		super.onResume();
 	}
@@ -322,6 +328,9 @@ Response.Listener<String>, Response.ErrorListener
 //		super.onBackPressed();
 	}
 
+	/*
+	 * 사용자 정보 업데이트.
+	 */
 	private void updateUserInformation()
 	{
 		if (false == ServerRequestManager.IsLogin) return;
@@ -539,7 +548,9 @@ Response.Listener<String>, Response.ErrorListener
 
 	};
 
-
+	/*
+	 * 
+	 */
 	private void updateArounders()
 	{
 		RelativeLayout layoutArounders = (RelativeLayout)findViewById(R.id.layoutArounders);

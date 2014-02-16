@@ -1,5 +1,6 @@
 package com.socialwalk;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -177,5 +178,4 @@ public class MainApplication extends Application
 
 		editor.commit();
 	}
-	
 }

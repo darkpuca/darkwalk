@@ -110,7 +110,13 @@ public class Utils
 	{
 		if (null != fileName)
 		{
-			File dataDir = context.getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
+			File dataDir;
+			
+			if (false == fileName.equalsIgnoreCase(Globals.TEMPORARY_WALK_FILENAME))
+				dataDir = context.getDir(ServerRequestManager.LoginAccount.Sequence, Context.MODE_PRIVATE);
+			else
+				dataDir = context.getDir("temp", Context.MODE_PRIVATE);
+			
 			String filePath = dataDir.getPath() + "/" + fileName;
 			File file = new File(filePath);
 			MyXmlParser parser = new MyXmlParser(file);

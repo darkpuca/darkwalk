@@ -46,9 +46,9 @@ public class Globals
 	public static final String EXTRA_KEY_INTRO_AD_VISIT = "introAd";
 	public static final String EXTRA_KEY_IS_GLOBAL_PROJECT = "isGlobal"; 
 	public static final String EXTRA_KEY_IS_HISTORY_PROJECT = "isHistory"; 
-	public static final String EXTRA_KEY_SEQUENCE = "seq"; 
+	public static final String EXTRA_KEY_SEQUENCE = "seq";
+	public static final String EXTRA_KEY_TEMP_RESTORE = "restore";
 	
-
 	public static final String PREF_ENVIRNMENT = "ENV";
 	public static final String PREF_NAME_SLIDE = "SLIDE";
 	public static final String PREF_NAME_LOGIN = "LOGIN";
@@ -98,7 +98,9 @@ public class Globals
 	public static final int AD_AROUNDERS_GREEN = 5;
 	
 	public static final int DEFAULT_WEIGHT = 70;
-
+	
+	public static final long TEMPORARY_WALK_SAVE_INTERVAL = 20000;
+	public static final String TEMPORARY_WALK_FILENAME = "tmp_walk.xml";
 	
 	public static final int ERROR_NONE					= 0;
 	public static final int ERROR_NO_RESULT				= 1;

@@ -2,9 +2,9 @@ package com.socialwalk;
 
 
 
+import java.io.File;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,7 +20,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -72,6 +71,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
         // 자동 로그인 처리.
         this.isAutologinRun = m_server.AutoLogin(this, this);
         
+        // 어라운더스를 위한 위치 서비스 활성.
         m_locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         m_locationListener = new MyLocationListener();
         
@@ -81,6 +81,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 		progDlg.setCancelable(false);
 		progDlg.setMessage(getResources().getString(R.string.MSG_RECEIVE_USER_DATA));
 		
+		// 자동로그인 진행중이면 프로그래스 표시.
         if (this.isAutologinRun)
         {
         	if (!progDlg.isShowing())
@@ -228,8 +229,10 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
+				// 환경정보 저장.
 				((MainApplication)getApplication()).SaveMetas();
 				
+				// 앱 종료.
 				finish();
 				System.exit(0);
 			}
@@ -287,6 +290,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
         	// 네트워크 기반 위치정보 수신 모듈 재시작
         	if (null != m_locationManager && null != m_locationListener)
         		m_locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 10, m_locationListener);
+        	
         }
 		
 		super.onResume();
@@ -370,22 +374,21 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 	
 	private final void startupProc()
 	{
-        // login
+        // 로그인 안되어 있으면 로그인화면 이동.
         if (!ServerRequestManager.IsLogin)
         {
-        	Log.d("DEBUG", "manual login start");
             Intent i = new Intent(this, LoginActivity.class);
             startActivityForResult(i, Globals.INTENT_REQ_LOGIN);
         }
         else
         {
-        	Log.d("DEBUG", "update user information");
+        	// 로그인 되어있으면 사용자 정보 표시.
         	updateUserInformation();
         	
         	versionCheck();
+
+        	temporarySaveProc();
         }
-        
-        //m_server.AroundersItems(MainActivity.this, MainActivity.this, 37.48454f, 127.03394f);
 	}
 
 
@@ -614,5 +617,27 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 
 		startupProc();
 	}
-	
+
+	/*
+	 * 임시 저장 파일 처리 루틴. 앱 초기화면 필요 데이타 준비가 끝난 다음에 처리해야 함.
+	 */
+	public void temporarySaveProc()
+	{
+		File tempDir = this.getDir("temp", Context.MODE_PRIVATE);
+		File tempFile = new File(tempDir.getPath(), Globals.TEMPORARY_WALK_FILENAME);
+
+		if (true == tempFile.exists())
+		{
+        	// start walking service
+        	Intent svcIntent = new Intent(getBaseContext(), WalkService.class);
+        	svcIntent.putExtra(Globals.EXTRA_KEY_TEMP_RESTORE, true)
+;        	startService(svcIntent);		        	
+        	
+        	// load walking state activity
+			Intent viewIntent = new Intent(getBaseContext(), WalkingActivity.class);
+			startActivity(viewIntent);
+
+		}
+	}
+
 }

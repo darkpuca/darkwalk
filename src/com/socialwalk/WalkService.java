@@ -46,6 +46,9 @@ public class WalkService extends Service
 	private Handler locationHandler;
 	private TimerTask locationTask;
 	private static int LocationWaitCount = 0;
+
+	private Timer tempSaveTimer;
+	private Handler tempSaveHandler;
 	
 	public WalkService()
 	{
@@ -74,7 +77,11 @@ public class WalkService extends Service
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
 		if (!IsStarted)
-			StartWalking();			// 걷기 작업 시작
+		{
+			boolean is_restore = intent.getBooleanExtra(Globals.EXTRA_KEY_TEMP_RESTORE, false);
+			
+			startWalking(is_restore);			// 걷기 작업 시작
+		}
 		
 		return START_STICKY_COMPATIBILITY;
 	}
@@ -86,24 +93,26 @@ public class WalkService extends Service
 		return null;
 	}
 	
-	private void StartWalking()
+	private void startWalking(boolean restore)
 	{
 		IsStarted = true;
 		Log.d(TAG, "walking started.");
 		
-		this.WalkingData = WalkHistoryManager.StartNewLog();
+		if (restore)
+		{
+			// 임시 로그 데이타에서 복원.
+			WalkHistory restore_history = Utils.GetDefaultTool().WalkHistoryFromFile(this, Globals.TEMPORARY_WALK_FILENAME);
+			WalkHistoryManager.AddWalking(restore_history);
+			
+			this.WalkingData = restore_history;
+		}
+		else
+		{
+			// 정상적 걷기 시작.
+			this.WalkingData = WalkHistoryManager.StartNewLog();
+		}
 
-		// show notification item
-		Intent notiIntent = new Intent(getApplicationContext(), MainActivity.class);
-		notiIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, notiIntent, 0);
-		
-		Notification noti = new Notification(R.drawable.noti_icon, "SOCIALWALK", System.currentTimeMillis());
-		String appName = getResources().getString(R.string.APP_NAME);
-		String message = getResources().getString(R.string.MSG_NOTI_SOCIAL_WALKING);
-		noti.setLatestEventInfo(getApplicationContext(), appName, message, pi);
-
-		startForeground(1, noti);
+		showNotification();
 		
 		IntentFilter filter = new IntentFilter("com.darkpuca.socialwalk.location");
 		m_walkReceiver = new WalkUpdateReceiver();
@@ -117,6 +126,36 @@ public class WalkService extends Service
 		m_locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, m_locationIntent);
 		m_locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, m_locationIntent);
 		
+		createLocationUpdateTimer();
+		
+		createTemporarySaveTimer();
+	}
+
+	private void createTemporarySaveTimer()
+	{
+		tempSaveHandler = new Handler();
+		TimerTask tempSaveTask = new TimerTask()
+		{			
+			@Override
+			public void run()
+			{
+				tempSaveHandler.post(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						Log.d("temp", "temp timer run!");
+						saveTemporary();
+					}
+				});
+			}
+		};
+		tempSaveTimer = new Timer();
+		tempSaveTimer.scheduleAtFixedRate(tempSaveTask, Globals.TEMPORARY_WALK_SAVE_INTERVAL, Globals.TEMPORARY_WALK_SAVE_INTERVAL);
+	}
+
+	private void createLocationUpdateTimer()
+	{
 		// start locaton update timer
 		locationHandler = new Handler();
 		locationTask = new TimerTask()
@@ -153,7 +192,21 @@ public class WalkService extends Service
 		};
 		locationTimer = new Timer();
 		locationTimer.scheduleAtFixedRate(locationTask, 1000, 1000);
+	}
 
+	private void showNotification()
+	{
+		// show notification item
+		Intent notiIntent = new Intent(getApplicationContext(), MainActivity.class);
+		notiIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, notiIntent, 0);
+		
+		Notification noti = new Notification(R.drawable.noti_icon, "SOCIALWALK", System.currentTimeMillis());
+		String appName = getResources().getString(R.string.APP_NAME);
+		String message = getResources().getString(R.string.MSG_NOTI_SOCIAL_WALKING);
+		noti.setLatestEventInfo(getApplicationContext(), appName, message, pi);
+
+		startForeground(1, noti);
 	}
 	
 	private void StopWalking()
@@ -162,6 +215,10 @@ public class WalkService extends Service
 		Log.d(TAG, "walking stopped");
 		
 		WalkingData.Finish();
+		
+		// 임시 저장 타이머 중지. 임시 저장 파일 삭제. 정상 종료되면 임시파일은 필요없다.
+		tempSaveTimer.cancel();
+		clearTemporary();
 
 		// save log file
 		SimpleDateFormat formatter = new SimpleDateFormat(Globals.DATETIME_FORMAT_FOR_HISTORY, Locale.US);
@@ -197,6 +254,40 @@ public class WalkService extends Service
 		// stop gps update
 		this.unregisterReceiver(m_walkReceiver);
 		m_locationManager.removeUpdates(m_locationIntent);
+	}
+	
+	private void saveTemporary()
+	{
+		String strXml = WalkingData.GetXML();
+		
+		try
+		{
+			File tempDir = this.getDir("temp", Context.MODE_PRIVATE);
+			File tempFile = new File(tempDir, Globals.TEMPORARY_WALK_FILENAME);
+			
+			// 기존 임시 파일 삭제.
+			if (tempFile.exists())
+				tempFile.delete();
+
+			FileOutputStream fos = new FileOutputStream(tempFile);
+			OutputStreamWriter osw = new OutputStreamWriter(fos);
+			osw.write(strXml);
+			osw.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			Log.d(TAG, e.getLocalizedMessage());
+		}
+
+	}
+	
+	private void clearTemporary()
+	{
+		File tempDir = this.getDir("temp", Context.MODE_PRIVATE);
+		File tempFile = new File(tempDir.getPath(), Globals.TEMPORARY_WALK_FILENAME);
+		if (tempFile.exists())
+			tempFile.delete();
 	}
 	
 	private File getUserFolder()

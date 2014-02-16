@@ -7,7 +7,7 @@ import com.socialwalk.request.ServerRequestManager;
 
 public class WalkHistoryManager
 {
-	private static Vector<WalkHistory> Histories = new Vector<WalkHistory>();
+	private static Vector<WalkHistory> histories = new Vector<WalkHistory>();
 
 	public WalkHistoryManager()
 	{
@@ -20,15 +20,21 @@ public class WalkHistoryManager
 		
 		int weight = ServerRequestManager.LoginAccount.Weight;
 		WalkHistory history = new WalkHistory(weight);
-		Histories.add(history);
+		histories.add(history);
 		return history;
 	}
 	
 	public static WalkHistory LastWalking()
 	{
-		if (0 == Histories.size()) return null;
+		if (0 == histories.size()) return null;
 		
-		return Histories.get(Histories.size()-1);
+		return histories.get(histories.size()-1);
+	}
+	
+	public static void AddWalking(WalkHistory history)
+	{
+		if (null == history) return;
+		histories.add(history);
 	}
 
 }

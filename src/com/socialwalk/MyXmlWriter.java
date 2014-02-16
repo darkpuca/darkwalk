@@ -425,7 +425,7 @@ public class MyXmlWriter
 			serializer.endTag("", "startTime");
 			
 			serializer.startTag("", "endTime");
-			serializer.text(dateFormatter.format(log.EndTime));
+			serializer.text((null == log.EndTime) ? "" : dateFormatter.format(log.EndTime));
 			serializer.endTag("", "endTime");
 			
 			serializer.startTag("", "weight");
@@ -450,7 +450,7 @@ public class MyXmlWriter
 				serializer.startTag("", "location");
 				
 				serializer.startTag("", "date");
-				serializer.text(dateFormatter.format(item.LogTime));
+				serializer.text((null == item.LogTime) ? "" : dateFormatter.format(item.LogTime));
 				serializer.endTag("", "date");
 				
 				serializer.startTag("", "isValid");
@@ -480,7 +480,6 @@ public class MyXmlWriter
 				serializer.endTag("", "location");
 			}
 			serializer.endTag("", "locations");
-			
 
 			serializer.endTag("", "walking");
 			
