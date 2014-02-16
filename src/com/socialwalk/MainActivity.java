@@ -4,6 +4,7 @@ package com.socialwalk;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,7 +24,6 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,12 +31,6 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
-import com.fsn.cauly.CaulyAdInfo;
-import com.fsn.cauly.CaulyAdInfoBuilder;
-import com.fsn.cauly.CaulyInterstitialAd;
-import com.fsn.cauly.CaulyInterstitialAdListener;
-import com.fsn.cauly.Logger;
-import com.fsn.cauly.Logger.LogLevel;
 import com.socialwalk.MyXmlParser.SWResponse;
 import com.socialwalk.dataclass.AroundersItems;
 import com.socialwalk.dataclass.AroundersItems.AroundersItem;
@@ -46,24 +40,7 @@ import com.socialwalk.request.ServerRequestManager.ServerRequestListener;
 
 public class MainActivity extends Activity
 implements Response.Listener<String>, Response.ErrorListener, OnClickListener, ServerRequestListener
-, CaulyInterstitialAdListener
 {
-	// cauly 광고 유지시간 끝난후 앱 종료 핸들러.
-	private Handler caulyCloseHandler = null;
-	private Runnable caulyCloseRunnable = new Runnable()
-	{	
-		@Override
-		public void run()
-		{
-			if (null != currentCauly)
-				currentCauly.cancel();
-
-			finish();
-			System.exit(0);
-		}
-	};
-	
-	
 	private ServerRequestManager m_server = null;
 	private LocationManager m_locationManager;
 	private LocationListener m_locationListener;
@@ -84,10 +61,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 	
 	private ProgressDialog progDlg;
 	
-	// 광고 요청을 위한 App Code
-	private static final String CAULY_APP_CODE = "0yM85YHh";
-	private CaulyInterstitialAd currentCauly = null;
-	
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -101,9 +74,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
         
         m_locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         m_locationListener = new MyLocationListener();
-
-        // cauly 광고 미리 수신.
-        prepareCaulyAd();
         
 		// prepare progress dialog
 		progDlg = new ProgressDialog(this);
@@ -244,22 +214,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 			startActivityForResult(i, Globals.INTENT_REQ_INTRO);
         }
     }
-
-	private void prepareCaulyAd()
-	{
-		// cauly 광고 설정 시작.
-        Logger.setLogLevel(LogLevel.Debug);
-        
-        CaulyAdInfo caulyAdInfo = new CaulyAdInfoBuilder(CAULY_APP_CODE).build();
-     
-        // 전면 광고 생성
-        CaulyInterstitialAd interstial = new CaulyInterstitialAd(); 
-        interstial.setAdInfo(caulyAdInfo);
-        interstial.setInterstialAdListener(this);
-
-        // 광고 요청. 광고 노출은 CaulyInterstitialAdListener의 onReceiveInterstitialAd에서 처리한다.
-        interstial.requestInterstitialAd (this); 
-	}
     
 	@Override
 	public void onBackPressed()
@@ -276,7 +230,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 			{
 				((MainApplication)getApplication()).SaveMetas();
 				
-				showCaulyAd();
+				finish();
+				System.exit(0);
 			}
 		});
 		exitDlg.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
@@ -660,58 +615,4 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 		startupProc();
 	}
 	
-	
-	/****************************************************************
-	* cauly 광고 listener functions
-	****************************************************************/
-	@Override
-	public void onReceiveInterstitialAd(CaulyInterstitialAd ad, boolean isChargeableAd)
-	{
-		// 광고 수신 성공한 경우 호출됨.
-		// 수신된 광고가 무료 광고인 경우 isChargeableAd 값이 false 임.
-		if (isChargeableAd == false)
-			Log.d("CaulyExample", "free interstitial AD received.");
-		else
-			Log.d("CaulyExample", "normal interstitial AD received.");
-
-		currentCauly = ad;
-	}
-
-	private void showCaulyAd()
-	{
-		if (null != currentCauly)
-		{
-			currentCauly.show();
-			
-			caulyCloseHandler = new Handler();
-			caulyCloseHandler.postDelayed(caulyCloseRunnable, Globals.CAULY_WAITING);
-		}
-		else
-		{
-			finish();
-			System.exit(0);
-		}
-	}
-	
-	@Override
-	public void onFailedToReceiveInterstitialAd(CaulyInterstitialAd ad, int errorCode, String errorMsg)
-	{
-		// 전면 광고 수신 실패할 경우 호출됨.
-		Log.d("CaulyExample", "failed to receive interstitial AD.");		
-
-		currentCauly = null;
-	}
-
-	@Override
-	public void onClosedInterstitialAd(CaulyInterstitialAd ad)
-	{
-		// 전면 광고가 닫힌 경우 호출됨.
-		Log.d("CaulyExample", "interstitial AD closed.");
-
-		currentCauly = null;
-		
-		finish();
-		System.exit(0);
-	}
-
 }
