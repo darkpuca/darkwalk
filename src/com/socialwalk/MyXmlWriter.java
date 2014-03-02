@@ -2,7 +2,6 @@ package com.socialwalk;
 
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import org.xmlpull.v1.XmlSerializer;
@@ -51,7 +50,7 @@ public class MyXmlWriter
 		}
 	}
 	
-	public static String CreateGroup(String userSequence, String name, String desc)
+	public static String CommunityAdd(String userSequence, String name, String desc)
 	{
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
@@ -85,7 +84,39 @@ public class MyXmlWriter
 			return "";
 		}
 	}
-	
+
+	public static String CommunityModify(String name, String desc)
+	{
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		
+		try
+		{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", true);
+			
+			serializer.startTag("", "request");
+			serializer.startTag("", "community");
+			serializer.startTag("", "community_name");
+			serializer.text(name);
+			serializer.endTag("", "community_name");
+			serializer.startTag("", "community_desc");
+			serializer.text(desc);
+			serializer.endTag("", "community_desc");
+			serializer.endTag("", "community");
+			serializer.endTag("", "request");
+			
+			serializer.endDocument();
+			
+			return writer.toString();
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.getLocalizedMessage());
+			return "";
+		}
+	}
+
 	public static String CommunityPosting(String userSequence, int communityId, String contents)
 	{
 		XmlSerializer serializer = Xml.newSerializer();

@@ -23,7 +23,7 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 	private ServerRequestManager m_server = null;
 	
 	private static int REQUEST_NAME_CHECK = 200;
-	private static int RequestTypeCreate = 201;
+	private static int REQUEST_CREATE = 201;
 	private int RequestType = 0;
 	private boolean isValidName = false;
 	
@@ -75,7 +75,7 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 			
 			String name = groupName.getText().toString();
 			RequestType = REQUEST_NAME_CHECK;
-			m_server.IsExistGroupName(this, this, name);
+			m_server.IsExistCommunityName(this, this, name);
 		}
 		else if (btnCreate.equals(v))
 		{
@@ -90,7 +90,7 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 			
 			if (!progDlg.isShowing()) progDlg.show();
 
-			RequestType = RequestTypeCreate;
+			RequestType = REQUEST_CREATE;
 			m_server.CreateGroup(this, this, name, desc);
 		}
 		else if (btnCancel.equals(v))
@@ -133,7 +133,7 @@ implements Response.Listener<String>, Response.ErrorListener, View.OnClickListen
 			}
 			
 		}
-		else if (RequestTypeCreate == RequestType)
+		else if (REQUEST_CREATE == RequestType)
 		{
 			if (Globals.ERROR_NONE == result.Code)
 			{

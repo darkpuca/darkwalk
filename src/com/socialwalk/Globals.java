@@ -99,7 +99,7 @@ public class Globals
 	
 	public static final int DEFAULT_WEIGHT = 70;
 	
-	public static final long TEMPORARY_WALK_SAVE_INTERVAL = 20000;
+	public static final long TEMPORARY_WALK_SAVE_INTERVAL = 10 * 60 * 1000;	// 10 minutes
 	public static final String TEMPORARY_WALK_FILENAME = "tmp_walk.xml";
 	
 	public static final int ERROR_NONE					= 0;

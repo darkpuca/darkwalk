@@ -53,9 +53,9 @@
 	            android:layout_height="wrap_content"
 	            android:minHeight="36dp" >
 	            <TextView
+	                android:id="@+id/communityNameLabel"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:layout_alignParentLeft="true"
 	                android:layout_centerVertical="true"
 	                android:textSize="16sp"
 	                android:textColor="@color/GRAY"
@@ -64,19 +64,21 @@
 	                android:id="@+id/communityName"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
-	                android:layout_alignParentRight="true"
+	                android:layout_toRightOf="@+id/communityNameLabel"
 	                android:layout_centerVertical="true"
 	                android:layout_marginLeft="4dp"
 	                android:gravity="right"
 	                android:textSize="20sp"
 	                android:textStyle="bold"
 	                android:textColor="@color/DARK_GRAY" />
+	            
 	        </RelativeLayout>
 	        <RelativeLayout
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:minHeight="36dp" >
 	            <TextView
+	                android:id="@+id/communityMembersLabel"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_alignParentLeft="true"
@@ -88,7 +90,7 @@
 	                android:id="@+id/communityMembers"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
-	                android:layout_alignParentRight="true"
+	                android:layout_toRightOf="@+id/communityMembersLabel"
 	                android:layout_centerVertical="true"
 	                android:layout_marginLeft="4dp"
 	                android:gravity="right"

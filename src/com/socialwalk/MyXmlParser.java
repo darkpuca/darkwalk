@@ -351,6 +351,8 @@ public class MyXmlParser
 	{
 		if (null == xmlText || 0 == xmlText.length()) return null;
 		
+		if (xmlText.equalsIgnoreCase("0000-00-00 00:00:00")) return null;
+		
 		SimpleDateFormat  format = new SimpleDateFormat(strFormat, Locale.US);  
 		try
 		{

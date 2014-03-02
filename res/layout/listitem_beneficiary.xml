@@ -36,7 +36,8 @@
                 android:id="@+id/benefitDateLabel"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
+                android:layout_centerVertical="true"
+                android:textSize="10sp"
                 android:textColor="@color/GRAY"
                 android:text="@string/BENEFIT_DATE" />
             <TextView
@@ -44,6 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/benefitDateLabel"
+                android:layout_centerVertical="true"
                 android:gravity="right"
                 android:textStyle="bold"
                 android:textSize="14sp"
@@ -58,14 +60,16 @@
                 android:id="@+id/benefitMoneyLabel"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
+                android:layout_centerVertical="true"
+                android:textSize="10sp"
                 android:textColor="@color/GRAY"
-                android:text="@string/BENEFIT_MONEY" />
+                android:text="@string/TARGET_MONEY" />
             <TextView
                 android:id="@+id/benefitMoney"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/benefitMoneyLabel"
+                android:layout_centerVertical="true"
                 android:gravity="right"
                 android:textSize="15sp"
                 android:textStyle="bold"

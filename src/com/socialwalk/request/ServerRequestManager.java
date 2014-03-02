@@ -149,6 +149,21 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		reqQueue.add(req);		
 	}
 	
+	public void CommunityModify(Response.Listener<String> listener, Response.ErrorListener errorListener, int communityId, String name, String description)
+	{
+		RequestQueue reqQueue = RequestManager.getRequestQueue();
+		if (null == reqQueue) return;
+		if (null == LoginAccount) return;
+
+		String urlString = Globals.URL_SERVER_DOMAIN + "/api/community/" + communityId;
+		String xmlBody = MyXmlWriter.CommunityModify(name, description);
+		
+		SocialWalkRequest req = new SocialWalkRequest(Method.PUT, urlString, listener, errorListener);
+		req.SetXMLBody(xmlBody);
+		reqQueue.add(req);		
+
+	}
+	
 	public void CommunityDelete(Response.Listener<String> listener, Response.ErrorListener errorListener, int communityId)
 	{
 		RequestQueue reqQueue = RequestManager.getRequestQueue();
@@ -367,7 +382,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		reqQueue.add(req);		
 	}
 
-	public void IsExistGroupName(Response.Listener<String> listener, Response.ErrorListener errorListener, String groupName)
+	public void IsExistCommunityName(Response.Listener<String> listener, Response.ErrorListener errorListener, String name)
 	{
 		RequestQueue queue = RequestManager.getRequestQueue();
 		if (null == queue) return;
@@ -375,7 +390,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		String utfVal = null;
 		try
 		{
-			utfVal = URLEncoder.encode(new String(groupName.getBytes("UTF-8")));
+			utfVal = URLEncoder.encode(new String(name.getBytes("UTF-8")));
 		}
 		catch (Exception e)
 		{
@@ -383,7 +398,8 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 			return;
 		}
 
-		String url = Globals.URL_SERVER_DOMAIN + "/api/check/community/community_name/" + utfVal + "/0";
+//		String url = Globals.URL_SERVER_DOMAIN + "/api/check/community/community_name/" + utfVal + "/0";
+		String url = Globals.URL_SERVER_DOMAIN + "/api/check/community/community_name/" + utfVal;
 
 		SocialWalkRequest req = new SocialWalkRequest(Method.GET, url, listener, errorListener);
 		queue.add(req);
@@ -396,7 +412,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		if (null == LoginAccount) return;
 		
 		String url = Globals.URL_SERVER_DOMAIN + "/api/community";
-		String xmlBody = MyXmlWriter.CreateGroup(LoginAccount.Sequence, name, desc);
+		String xmlBody = MyXmlWriter.CommunityAdd(LoginAccount.Sequence, name, desc);
 		
 		SocialWalkRequest req = new SocialWalkRequest(Method.POST, url, listener, errorListener);
 		req.SetXMLBody(xmlBody);

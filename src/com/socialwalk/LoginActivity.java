@@ -50,6 +50,8 @@ implements View.OnClickListener, Response.Listener<String>, Response.ErrorListen
 		txtPwd = (EditText)findViewById(R.id.loginPwd);
 		chkAuto = (CheckBox)findViewById(R.id.chkAutoLogin);
 		btnLogin = (Button)findViewById(R.id.btnLogin);
+		
+		chkAuto.setChecked(true);
 
 		// sample value
 //		txtUid.setText("kms7610@gmail.com");

@@ -1,11 +1,12 @@
 package com.socialwalk;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -13,21 +14,31 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.socialwalk.CommunityNameDialog.CommunityNameDialogListener;
 import com.socialwalk.MyXmlParser.SWResponse;
+import com.socialwalk.TextInputDialog.TextInputDialogListener;
 import com.socialwalk.dataclass.CommunityDetail;
 import com.socialwalk.request.ServerRequestManager;
 
-public class CommunityDetailActivity extends Activity
-implements Response.Listener<String>, Response.ErrorListener, OnClickListener
+public class CommunityDetailActivity extends FragmentActivity
+implements Response.Listener<String>, Response.ErrorListener, OnClickListener,
+TextInputDialogListener, CommunityNameDialogListener
 {
 	private ServerRequestManager server;
 	private int reqType;
 	private static final int REQUEST_COMMUNITY_DETAIL = 400;
 	private static final int REQUEST_COMMUNITY_SECESSION = 401;
+	private static final int REQUEST_COMMUNITY_MODIFY = 402;
 	
-	private int communitySeq;
-	private Button manageButton, secessionButton;
+	private int communitySeq = 0;
+	private CommunityDetail detailData = null;
+	private Button manageButton, secessionButton, nameEditButton, descEditButton;
 	private ProgressDialog progDlg;
+	
+	private int dialogType = 0;
+	private static final int DIALOG_TYPE_NAME = 300;
+	private static final int DIALOG_TYPE_DESC = 301;
+	private String modifyName, modifyDesc;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -58,6 +69,12 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		this.secessionButton = (Button)findViewById(R.id.secessionButton);
 		this.secessionButton.setOnClickListener(this);
 		
+		this.nameEditButton = (Button)findViewById(R.id.nameEditButton);
+		this.nameEditButton.setOnClickListener(this);
+		
+		this.descEditButton = (Button)findViewById(R.id.descEditButton);
+		this.descEditButton.setOnClickListener(this);
+		
 		this.communitySeq = getIntent().getIntExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, 0);
 		if (0 < this.communitySeq)
 		{
@@ -78,11 +95,15 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		if (detail.Mastersequence.equalsIgnoreCase(ServerRequestManager.LoginAccount.Sequence))
 		{
 			manageButton.setVisibility(View.VISIBLE);
+			nameEditButton.setVisibility(View.VISIBLE);
+			descEditButton.setVisibility(View.VISIBLE);
 			secessionButton.setVisibility(View.INVISIBLE);
 		}
 		else
 		{
 			manageButton.setVisibility(View.INVISIBLE);
+			nameEditButton.setVisibility(View.INVISIBLE);
+			descEditButton.setVisibility(View.INVISIBLE);
 			secessionButton.setVisibility(View.VISIBLE);
 		}
 	}
@@ -124,9 +145,9 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		{
 			if (Globals.ERROR_NONE == result.Code)
 			{
-				CommunityDetail detail = parser.GetCommunityDetail();
-				if (null == detail) return;
-				updateCommunityDetail(detail);
+				this.detailData = parser.GetCommunityDetail();
+				if (null == detailData) return;
+				updateCommunityDetail(detailData);
 			}
 		}
 		else if (REQUEST_COMMUNITY_SECESSION == this.reqType)
@@ -139,6 +160,15 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			else
 			{
 				Utils.GetDefaultTool().ShowMessageDialog(this, R.string.MSG_API_FAIL);
+			}
+		}
+		else if (REQUEST_COMMUNITY_MODIFY == this.reqType)
+		{
+			if (Globals.ERROR_NONE == result.Code)
+			{
+				detailData.Name = modifyName;
+				detailData.Description = modifyDesc;
+				updateCommunityDetail(detailData);
 			}
 		}
 	}
@@ -173,6 +203,69 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 			});
 			dlg.show();
 		}
+		else if (nameEditButton.equals(v))
+		{
+			showNameEditDialog();
+		}
+		else if (descEditButton.equals(v))
+		{
+			showDescriptionEditDialog();
+		}
 	}
 
+	private void showNameEditDialog()
+	{
+		dialogType = DIALOG_TYPE_NAME;
+		
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		CommunityNameDialog dialog = new CommunityNameDialog();
+		dialog.setCancelable(true);
+		dialog.show(fragmentManager, "NAME");
+	}
+	
+	private void showDescriptionEditDialog()
+	{
+		if (null == this.detailData) return;
+		
+		dialogType = DIALOG_TYPE_DESC;
+		
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		TextInputDialog dialog = new TextInputDialog();
+		dialog.setCancelable(true);
+		dialog.setTitle(getResources().getString(R.string.GROUP_DESCRIPTION));
+		dialog.setHint(getResources().getString(R.string.GROUP_DESCRIPTION));
+		dialog.show(fragmentManager, "DESC");
+	}
+	
+	private void communityModify(String name, String description)
+	{
+		if (false == progDlg.isShowing()) progDlg.show();
+		
+		reqType = REQUEST_COMMUNITY_MODIFY;
+		server.CommunityModify(this, this, communitySeq, name, description);
+	}
+	
+	@Override
+	public void onFinishInputDialog(String input)
+	{
+		if (DIALOG_TYPE_DESC == this.dialogType)
+		{
+			modifyName = this.detailData.Name;
+			modifyDesc = input;
+			communityModify(modifyName, modifyDesc);
+		}
+	}
+
+	@Override
+	public void onFinishNameDialog(String input)
+	{
+		if (DIALOG_TYPE_NAME == this.dialogType)
+		{
+			modifyName = input;
+			modifyDesc = this.detailData.Description;
+			communityModify(modifyName, modifyDesc);
+		}
+	}
+	
+	
 }

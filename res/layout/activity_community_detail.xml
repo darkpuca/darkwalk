@@ -52,10 +52,24 @@
                 android:layout_height="wrap_content"
                 android:minHeight="60dp"
                 android:padding="@dimen/activity_horizontal_margin" >
+		        <Button
+		            android:id="@+id/nameEditButton"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_alignParentRight="true"
+					android:background="@drawable/gray_bg_selector"
+					android:visibility="invisible"
+		            android:textSize="12sp"
+		            android:textStyle="bold"
+		            android:textColor="@color/WHITE"
+		            android:text="@string/EDIT" />
                 <TextView
                     android:id="@+id/nameLabel"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/nameEditButton"
+                    android:layout_alignBottom="@+id/nameEditButton"
+                    android:gravity="center_vertical"
                     android:textSize="16sp"
                     android:textColor="@color/GRAY"
                     android:text="@string/GROUP_NAME" />
@@ -73,10 +87,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/activity_horizontal_margin" >
+		        <Button
+		            android:id="@+id/descEditButton"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_alignParentRight="true"
+					android:background="@drawable/gray_bg_selector"
+					android:visibility="invisible"
+		            android:textSize="12sp"
+		            android:textStyle="bold"
+		            android:textColor="@color/WHITE"
+		            android:text="@string/EDIT" />
                 <TextView
                     android:id="@+id/descriptionLabel"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/descEditButton"
+                    android:layout_alignBottom="@+id/descEditButton"
+                    android:gravity="center_vertical"
                     android:textSize="16sp"
                     android:textColor="@color/GRAY"
                     android:text="@string/GROUP_DESCRIPTION" />
