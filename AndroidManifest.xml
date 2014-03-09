@@ -120,6 +120,12 @@
             android:theme="@style/AppTheme" >
         </activity>
         <activity
+            android:name="com.socialwalk.RankingsActivity"
+            android:label="@string/TITLE_RANKING"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
             android:name="com.socialwalk.SettingsActivity"
             android:label="@string/TITLE_SETTINGS"
             android:screenOrientation="portrait"

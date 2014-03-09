@@ -174,6 +174,9 @@
     <string name="PARTICIPANTS">참여인원</string>
     <string name="FREE">free</string>
     <string name="MEMBER_COUNT">회원수</string>
+    <string name="PERSONAL_RANKING">개인랭킹</string>
+    <string name="GROUP_RANKING">그룹랭킹(총액)</string>
+    <string name="AVERAGE_RANKING">그룹랭킹(1인평균)</string>
     <string name="FORMAT_DISTANCE">%.2f km</string>
     <string name="FORMAT_SPEED">%.1f km/h</string>
     <string name="FORMAT_TIME">HH:mm:ss</string>

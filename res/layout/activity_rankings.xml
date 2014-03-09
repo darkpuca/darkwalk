@@ -1,0 +1,110 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RankingsActivity" >
+    
+    <RelativeLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="8dp"
+        android:background="@color/MAIN_BG" >
+        <TextView
+            android:id="@+id/titleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="22sp"
+            android:textColor="@color/WHITE"
+            android:textStyle="bold"
+            android:text="@string/TITLE_RANKING" />
+        
+	    <LinearLayout
+	        android:id="@+id/buttonLayout"
+	        android:layout_width="180dp"
+	        android:layout_height="38dp"
+	        android:layout_alignParentRight="true"
+	        android:layout_centerVertical="true" >
+	        
+	        <RelativeLayout
+	            android:id="@+id/memberButtonLayout"
+	            android:layout_width="0dp"
+	            android:layout_weight="1"
+	            android:layout_height="match_parent"
+	            android:background="@drawable/rank_left_selector" >
+	            <RelativeLayout
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_centerInParent="true" >
+	                <ImageView
+	                    android:id="@+id/rankMemberIcon"
+	                    android:layout_width="22dp"
+	                    android:layout_height="22dp"
+	                    android:layout_alignParentLeft="true"
+	                    android:layout_centerVertical="true"
+	                    android:src="@drawable/rank_member_icon" />
+	                <TextView
+	                    android:id="@+id/labelLocal"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_toRightOf="@+id/rankMemberIcon"
+	                    android:layout_centerVertical="true"
+			            android:textSize="16sp"
+			            android:textStyle="bold"
+			            android:textColor="@color/GRAY"
+			            android:text="@string/BY_GROUP" />
+	            </RelativeLayout>
+	        </RelativeLayout>
+
+	        <RelativeLayout
+	            android:id="@+id/globalButtonLayout"
+	            android:layout_width="0dp"
+	            android:layout_weight="1"
+	            android:layout_height="match_parent"
+	            android:background="@drawable/rank_right_selector" >
+	            <RelativeLayout
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_centerInParent="true" >
+	                <ImageView
+	                    android:id="@+id/rankGlobalIcon"
+	                    android:layout_width="22dp"
+	                    android:layout_height="22dp"
+	                    android:layout_alignParentLeft="true"
+	                    android:layout_centerVertical="true"
+	                    android:src="@drawable/rank_global_icon" />
+	                <TextView
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_toRightOf="@+id/rankGlobalIcon"
+	                    android:layout_centerVertical="true"
+			            android:textSize="16sp"
+			            android:textStyle="bold"
+			            android:textColor="@color/GRAY"
+			            android:text="@string/TOTAL" />
+	            </RelativeLayout>
+	        </RelativeLayout>
+	        
+    	</LinearLayout>
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+		android:layout_below="@+id/titleLayout"
+        android:padding="@dimen/activity_horizontal_margin"
+	    android:background="@color/MAIN_BG" >
+	    
+		<ExpandableListView
+		    android:id="@id/android:list"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:padding="@dimen/activity_horizontal_margin"
+			android:background="@drawable/innerframe_shape" />
+        
+    </RelativeLayout>
+
+</RelativeLayout>

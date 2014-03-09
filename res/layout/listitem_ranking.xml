@@ -16,20 +16,8 @@
         android:textStyle="bold"
         android:text="X" />
     <TextView
-        android:id="@+id/name"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/ranking"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="4dp"
-        android:textSize="13sp"
-        android:textColor="@color/DARK_GRAY"
-        android:textStyle="bold"
-        android:ellipsize="end"
-        android:text="NAME" />
-    <TextView
         android:id="@+id/hearts"
-        android:layout_width="80dp"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
@@ -39,10 +27,10 @@
         android:textStyle="bold"
         android:text="X,XXX,XXX" />
     <LinearLayout
+        android:id="@+id/namesLayout"
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/name"
         android:layout_toLeftOf="@+id/hearts"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
@@ -72,7 +60,21 @@
 	        android:textSize="12sp"
 	        android:textColor="@color/GRAY"
 	        android:text="MEMBERS" />
-	    	    
     </LinearLayout>
+    
+	<TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ranking"
+        android:layout_toLeftOf="@+id/namesLayout"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="4dp"
+        android:textSize="13sp"
+        android:textColor="@color/DARK_GRAY"
+        android:textStyle="bold"
+        android:ellipsize="end"
+        android:text="NAME" />
+    
 
 </RelativeLayout>

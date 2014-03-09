@@ -104,7 +104,8 @@ implements Response.Listener<String>, Response.ErrorListener
 			@Override
 			public void onClick(View v)
 			{
-				Intent i = new Intent(getBaseContext(), RankingActivity.class);
+//				Intent i = new Intent(getBaseContext(), RankingActivity.class);
+				Intent i = new Intent(getBaseContext(), RankingsActivity.class);
 				startActivity(i);
 			}
 		});
