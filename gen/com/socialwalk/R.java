@@ -800,6 +800,7 @@ containing a value of this type.
         public static final int MSG_MEMBER_DENY_CONFIRM=0x7f0500e2;
         public static final int MSG_MY_LOCATION_FAIL=0x7f0500d0;
         public static final int MSG_NETWORK_NOT_CONNECTED=0x7f0500c5;
+        public static final int MSG_NEW_VERSION_CONFIRM=0x7f0500e8;
         public static final int MSG_NOTI_SOCIAL_WALKING=0x7f0500d9;
         public static final int MSG_NO_COMMUNITY_POST=0x7f0500ce;
         public static final int MSG_NO_LOGIN_EXIT=0x7f0500c2;
@@ -916,7 +917,7 @@ containing a value of this type.
         public static final int WRITE=0x7f050077;
         public static final int WRITER=0x7f05006c;
         public static final int WRITE_REPLY=0x7f050078;
-        public static final int action_settings=0x7f0500e8;
+        public static final int action_settings=0x7f0500e9;
         public static final int hello_world=0x7f050000;
     }
     public static final class style {

@@ -11,6 +11,7 @@ public class AccountData
 	public Date Birthday, RegDate, ModifyDate;
 	public boolean Verified, IsGroupUser;
 	public AccountHeart Hearts;
+	public String LastestVersion;
 	
 	public AccountData()
 	{

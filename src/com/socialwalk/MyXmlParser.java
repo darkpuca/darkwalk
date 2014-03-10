@@ -435,6 +435,8 @@ public class MyXmlParser
 						acc.AreaSubName = parser.nextText();
 					else if (tagName.equalsIgnoreCase("community_name"))
 						acc.CommunityName = parser.nextText();
+					else if (tagName.equalsIgnoreCase("app_version"))
+						acc.LastestVersion = parser.nextText();					
 					break;
 				case XmlPullParser.END_TAG:
 					break;

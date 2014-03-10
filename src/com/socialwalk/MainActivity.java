@@ -19,8 +19,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -57,6 +57,7 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 	private static final int REQUEST_AROUNDERS = 200;
 	private static final int REQUEST_MAIN_ACCUMULATE = 201;
 	private static final int REQUEST_INTRO_ACCUMULATE = 202;
+	private static final int REQUEST_LOGOUT = 203;
 	
 	private ProgressDialog progDlg;
 	
@@ -68,9 +69,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
         
         m_server = new ServerRequestManager();
         
-        // 자동 로그인 처리.
-        this.isAutologinRun = m_server.AutoLogin(this, this);
-        
         // 어라운더스를 위한 위치 서비스 활성.
         m_locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         m_locationListener = new MyLocationListener();
@@ -81,13 +79,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 		progDlg.setCancelable(false);
 		progDlg.setMessage(getResources().getString(R.string.MSG_RECEIVE_USER_DATA));
 		
-		// 자동로그인 진행중이면 프로그래스 표시.
-        if (this.isAutologinRun)
-        {
-        	if (!progDlg.isShowing())
-        		progDlg.show();
-        }
-
         // 캐릭터 배경이미지 동적 연결.
         this.characterBgView = (ImageView)findViewById(R.id.mainBgImage);
 		Bitmap newBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.main_character_bg);
@@ -232,9 +223,9 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 				// 환경정보 저장.
 				((MainApplication)getApplication()).SaveMetas();
 				
-				// 앱 종료.
-				finish();
-				System.exit(0);
+				// logout api 호출.
+				reqType = REQUEST_LOGOUT;
+				m_server.Logout(MainActivity.this, MainActivity.this);
 			}
 		});
 		exitDlg.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
@@ -351,11 +342,23 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 	        
 			if (RESULT_OK == resultCode)
 			{
+				// 인트로 광고 선택시 포인트 적립.
 				if (null != data)
 					this.isIntroAdVisit = data.getBooleanExtra(Globals.EXTRA_KEY_INTRO_AD_VISIT, false);
 				
+				// 자동 로그인 동작.
+		        this.isAutologinRun = m_server.AutoLogin(this, this);
+
 				if (false == this.isAutologinRun)
+				{
 					startupProc();
+				}
+				else
+				{
+					// 자동로그인 진행중이면 프로그래스 표시.
+		        	if (!progDlg.isShowing())
+		        		progDlg.show();
+				}
 			}
 		}
 		else if (Globals.INTENT_REQ_SETTING == requestCode)
@@ -385,19 +388,58 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
         	// 로그인 되어있으면 사용자 정보 표시.
         	updateUserInformation();
         	
-        	versionCheck();
-
+        	// 걷기 도중 비정상 종료되었을 경우 복
         	temporarySaveProc();
+        	
+        	// 최신버전 확인
+        	versionCheck();
         }
 	}
 
 
 	private void versionCheck()
 	{
+		if (false == ServerRequestManager.IsLogin) return;
+		if (null == ServerRequestManager.LoginAccount) return;
+		if (null == ServerRequestManager.LoginAccount.LastestVersion) return;
+		
+		String lastestVersionName = ServerRequestManager.LoginAccount.LastestVersion;
+		
 		try
 		{
 			PackageInfo pkgInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-			int verCode = pkgInfo.versionCode;		
+			String versionName = pkgInfo.versionName;
+			
+			if (false == lastestVersionName.equalsIgnoreCase(versionName))
+			{
+				// 버전이 틀리면 마켓 이동 확인 메세지 표시.
+				AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+				dlg.setCancelable(true);
+				dlg.setTitle(R.string.TITLE_INFORMATION);
+				dlg.setMessage(R.string.MSG_NEW_VERSION_CONFIRM);
+				dlg.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+				{			
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						final String appPackageName = getPackageName();
+						try {
+						    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+						} catch (android.content.ActivityNotFoundException anfe) {
+						    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+						}
+					}
+				});
+				dlg.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
+				{			
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						dialog.dismiss();
+					}
+				});
+				dlg.show();
+			}
 
 		}
 		catch (Exception e)
@@ -415,6 +457,14 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 			progDlg.dismiss();
 		
 		error.printStackTrace();
+		
+		// 앱 종료하면서 로그아웃할 경우 결과와 상관 없이 앱 종료.
+		if (REQUEST_LOGOUT == reqType)
+		{
+			// 앱 종료.
+			finish();
+			System.exit(0);
+		}
 	}
 
 
@@ -423,6 +473,14 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 	{
 		if (progDlg.isShowing())
 			progDlg.dismiss();
+		
+		// 앱 종료하면서 로그아웃할 경우 결과와 상관 없이 앱 종료.
+		if (REQUEST_LOGOUT == reqType)
+		{
+			// 앱 종료.
+			finish();
+			System.exit(0);
+		}
 		
 		if (0 == response.length()) return;
 		
@@ -466,7 +524,6 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 				ServerRequestManager.LoginAccount.Hearts.addGreenPoint(Globals.AD_POINT_INTRO);
 				updateUserInformation();
 			}
-			
 		}
 	}
 

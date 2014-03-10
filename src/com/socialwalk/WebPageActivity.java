@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Browser;
 import android.util.Log;
@@ -33,6 +34,9 @@ public class WebPageActivity extends Activity
 		webSettings.setBuiltInZoomControls(true);
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+		
+		if (18 > Build.VERSION.SDK_INT)
+			webSettings.setSavePassword(false);
 		
 		webView.setWebChromeClient(new WebChromeClient()
 		{
