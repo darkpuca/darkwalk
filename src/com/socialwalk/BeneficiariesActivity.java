@@ -57,6 +57,12 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener
 		this.benefitList = (ListView)findViewById(R.id.itemList);
 		this.benefitList.setAdapter(adapter);
 		
+		TextView localLabel = (TextView)findViewById(R.id.localLabel);
+		if (ServerRequestManager.LoginAccount.IsGroupUser)
+			localLabel.setText(R.string.BY_GROUP);
+		else
+			localLabel.setText(R.string.BY_LOCAL);
+		
 		localButtonLayout = (RelativeLayout)findViewById(R.id.localButtonLayout);
 		totalButtonLayout = (RelativeLayout)findViewById(R.id.totalButtonLayout);
 		localButtonLayout.setSelected(true);

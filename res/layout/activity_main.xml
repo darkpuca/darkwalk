@@ -121,7 +121,8 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
 		android:layout_below="@+id/tabsLayout"
-		android:paddingLeft="16dp" >
+		android:paddingLeft="16dp"
+		android:paddingRight="56dp" >
 		
 	    <RelativeLayout
 	        android:id="@+id/layoutUserName"
@@ -187,6 +188,7 @@
 		            android:textSize="14sp"
 		            android:textColor="@color/WHITE"
 		            android:textStyle="bold"
+					android:ellipsize="end"
 		            android:text="@string/GROUP_UPPER" />
 				<TextView
 					android:id="@+id/groupName"
@@ -194,6 +196,7 @@
 					android:layout_height="wrap_content"
 					android:textSize="16sp"
 					android:textStyle="normal"
+					android:ellipsize="end"
 					android:textColor="@color/DARK_GRAY" />
 	        </LinearLayout>
 	    </RelativeLayout>

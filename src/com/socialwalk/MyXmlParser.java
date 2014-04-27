@@ -402,7 +402,10 @@ public class MyXmlParser
 					else if (tagName.equalsIgnoreCase("realname"))
 						acc.Name = parser.nextText();
 					else if (tagName.equalsIgnoreCase("user_type"))
+					{
 						acc.UserType = Integer.parseInt(parser.nextText());
+						if (1 == acc.UserType) acc.IsGroupUser = true;
+					}
 					else if (tagName.equalsIgnoreCase("first_code"))
 						acc.AreaCode = Integer.parseInt(parser.nextText());
 					else if (tagName.equalsIgnoreCase("second_code"))
