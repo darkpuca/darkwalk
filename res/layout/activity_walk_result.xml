@@ -307,7 +307,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginRight="4dp"
             android:layout_marginBottom="4dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:background="@drawable/facebook_icon" />        
         
     </RelativeLayout>

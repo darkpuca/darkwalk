@@ -177,6 +177,9 @@
     <string name="PERSONAL_RANKING">개인랭킹</string>
     <string name="GROUP_RANKING">그룹랭킹(총액)</string>
     <string name="AVERAGE_RANKING">그룹랭킹(1인평균)</string>
+    <string name="SUCCESS">성공</string>
+    <string name="FAIL">실패</string>
+    <string name="OK">확인</string>
     <string name="FORMAT_DISTANCE">%.2f km</string>
     <string name="FORMAT_SPEED">%.1f km/h</string>
     <string name="FORMAT_TIME">HH:mm:ss</string>
@@ -234,6 +237,8 @@
     <string name="MSG_SECESSION_FAIL_COMMUNITY_OWNER">커뮤니티의 관리자 권한을 위임한 후에 다시 시도해 주십시요.</string>
     <string name="MSG_SECESSED_ACCOUNT">이미 탈퇴한 회원입니다.</string>
     <string name="MSG_NEW_VERSION_CONFIRM">마켓에 새로운 버전이 등록되었습니다. 마켓으로 이동하시겠습니까?</string>
+    <string name="MSG_FACEBOOK_POST_PHOTO">facebook 사진등록</string>
+    <string name="MSG_FACEBOOK_PUBLISHED">facebook에 등록이 완료되었습니다.</string>
     
     <color name="WALK_INFO_PANEL_BG">#80000000</color>
     <color name="SLIDE_WALK_STATE">#80000000</color>
@@ -254,5 +259,6 @@
     <color name="LIGHT_RED">#e86843</color>
 
     <string name="action_settings">Settings</string>
+    <string name="app_id">168005573399826</string>
 
 </resources>

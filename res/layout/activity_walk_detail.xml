@@ -261,7 +261,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/routeButtonLayout"
             android:layout_marginTop="4dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:background="@drawable/facebook_icon" />        
         
     </RelativeLayout>
