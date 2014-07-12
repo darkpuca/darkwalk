@@ -99,14 +99,16 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 		
 		TextView tvAreaLabel = (TextView)findViewById(R.id.areaLabel);
 		TextView tvSubAreaLabel = (TextView)findViewById(R.id.subAreaLabel);
-		
 		ImageView areaLockedIcon = (ImageView)findViewById(R.id.areaLockedIcon);
+		RelativeLayout groupLayout = (RelativeLayout)findViewById(R.id.groupLayout);
+		
 		if (ServerRequestManager.LoginAccount.IsGroupUser)
 		{
 			tvAreaLabel.setText(R.string.ORGANIZAION);
 			tvSubAreaLabel.setText(R.string.MEMBER);
 			this.areaLayout.setEnabled(false);
 			areaLockedIcon.setVisibility(View.VISIBLE);
+			groupLayout.setVisibility(View.GONE);
 		}
 		else
 		{
@@ -114,6 +116,7 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 			tvSubAreaLabel.setText(R.string.LOCAL2);
 			this.areaLayout.setEnabled(true);
 			areaLockedIcon.setVisibility(View.INVISIBLE);
+			groupLayout.setVisibility(View.VISIBLE);
 		}
 		
 		
@@ -573,7 +576,6 @@ implements TextInputDialogListener, OnClickListener, Response.Listener<String>, 
 				this.subAreaItems.clear();
 				this.subAreaItems.addAll(items);
 				showSubAreaSelection();
-				
 			}
 		}
 		else if (REQUEST_UPDATE_PROFILE == this.reqType)

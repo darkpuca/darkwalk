@@ -114,38 +114,45 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 			{
 				if (null == ServerRequestManager.LoginAccount) return;
 				
-				int commSeq = ServerRequestManager.LoginAccount.CommunitySeq;
-				if (0 == commSeq)	// 가입한 커뮤니티가 없으면 커뮤니티 검색 화면 이동 확인.
+				if (ServerRequestManager.LoginAccount.IsGroupUser)
 				{
-					AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
-					dlg.setCancelable(true);
-					dlg.setTitle(R.string.TITLE_INFORMATION);
-					dlg.setMessage(R.string.MSG_COMMUNITY_SIGNUP_CONFIRM);
-					dlg.setNegativeButton(R.string.CANCEL, new DialogInterface.OnClickListener()
-					{						
-						@Override
-						public void onClick(DialogInterface dialog, int which)
-						{
-							dialog.dismiss();
-						}
-					});
-					dlg.setPositiveButton(R.string.CONTINUE, new DialogInterface.OnClickListener()
-					{	
-						@Override
-						public void onClick(DialogInterface dialog, int which)
-						{
-							Intent i = new Intent(getBaseContext(), CommunitySelectionActivity.class);
-							startActivityForResult(i, Globals.INTENT_REQ_GROUP_SELECT);
-						}
-					});
-					dlg.show();
+					Utils.GetDefaultTool().ShowMessageDialog(MainActivity.this, R.string.MSG_COMMUNITY_DISABLED);
 				}
 				else
 				{
-					Intent i = new Intent(getBaseContext(), CommunityActivity.class);
-					i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, commSeq);
-					i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, ServerRequestManager.LoginAccount.CommunityName);
-					startActivity(i);
+					int commSeq = ServerRequestManager.LoginAccount.CommunitySeq;
+					if (0 == commSeq)	// 가입한 커뮤니티가 없으면 커뮤니티 검색 화면 이동 확인.
+					{
+						AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
+						dlg.setCancelable(true);
+						dlg.setTitle(R.string.TITLE_INFORMATION);
+						dlg.setMessage(R.string.MSG_COMMUNITY_SIGNUP_CONFIRM);
+						dlg.setNegativeButton(R.string.CANCEL, new DialogInterface.OnClickListener()
+						{						
+							@Override
+							public void onClick(DialogInterface dialog, int which)
+							{
+								dialog.dismiss();
+							}
+						});
+						dlg.setPositiveButton(R.string.CONTINUE, new DialogInterface.OnClickListener()
+						{	
+							@Override
+							public void onClick(DialogInterface dialog, int which)
+							{
+								Intent i = new Intent(getBaseContext(), CommunitySelectionActivity.class);
+								startActivityForResult(i, Globals.INTENT_REQ_GROUP_SELECT);
+							}
+						});
+						dlg.show();
+					}
+					else
+					{
+						Intent i = new Intent(getBaseContext(), CommunityActivity.class);
+						i.putExtra(Globals.EXTRA_KEY_COMMUNITY_SEQUENCE, commSeq);
+						i.putExtra(Globals.EXTRA_KEY_COMMUNITY_NAME, ServerRequestManager.LoginAccount.CommunityName);
+						startActivity(i);
+					}
 				}
 			}
 		});
@@ -639,12 +646,24 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 			TextView areaName = (TextView)findViewById(R.id.areaName);
 			
 			userName.setText(ServerRequestManager.LoginAccount.Name);
-			if (null == ServerRequestManager.LoginAccount.CommunityName)
-				groupName.setText(R.string.NO_GROUP);
+
+			if (ServerRequestManager.LoginAccount.IsGroupUser)
+			{
+				areaName.setText(R.string.VOLUNTEERS);
+//				String areaNameVal = ServerRequestManager.LoginAccount.AreaName + " " + ServerRequestManager.LoginAccount.AreaSubName;
+				String areaNameVal = ServerRequestManager.LoginAccount.AreaSubName;
+				groupName.setText(areaNameVal);
+			}
 			else
-				groupName.setText(ServerRequestManager.LoginAccount.CommunityName);
-			String areaNameVal = ServerRequestManager.LoginAccount.AreaName + " " + ServerRequestManager.LoginAccount.AreaSubName;
-			areaName.setText(areaNameVal);			
+			{
+				if (null == ServerRequestManager.LoginAccount.CommunityName)
+					groupName.setText(R.string.NO_GROUP);
+				else
+					groupName.setText(ServerRequestManager.LoginAccount.CommunityName);
+				String areaNameVal = ServerRequestManager.LoginAccount.AreaName + " " + ServerRequestManager.LoginAccount.AreaSubName;
+				areaName.setText(areaNameVal);			
+			}
+			
 
 			if (null != ServerRequestManager.LoginAccount.Hearts)
 			{
