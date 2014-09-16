@@ -399,7 +399,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		}
 
 //		String url = Globals.URL_SERVER_DOMAIN + "/api/check/community/community_name/" + utfVal + "/0";
-		String url = Globals.URL_SERVER_DOMAIN + "/api/check/community/community_name/" + utfVal;
+		String url = Globals.URL_SERVER_DOMAIN + "/api/search/community_name/" + utfVal + "/page/1/1";
 
 		SocialWalkRequest req = new SocialWalkRequest(Method.GET, url, listener, errorListener);
 		queue.add(req);
@@ -428,7 +428,7 @@ public class ServerRequestManager implements Response.Listener<String>, Response
 		if (null == queue) return;
 		
 //		String url = Globals.URL_NEO_AD;
-		String url = Globals.URL_ROBINHOOT_AD;
+		String url = Globals.URL_ROBINHOOT_AD2;
 
 		StringRequest req = new StringRequest(Method.GET, url, listener, errorListener);
 		queue.add(req);

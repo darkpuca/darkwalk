@@ -9,10 +9,9 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
+import android.app.KeyguardManager;
+import android.app.KeyguardManager.KeyguardLock;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -85,7 +84,6 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 	@Override
 	public void onAttachedToWindow()
 	{
-//		getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG | WindowManager.LayoutParams.TYPE_KEYGUARD);
 		getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG | WindowManager.LayoutParams.TYPE_KEYGUARD);
 		super.onAttachedToWindow();
 	}
@@ -134,7 +132,7 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 		
 		MoveSliderToStartPosition();
 		
-//		EnableKeyGuard(false);
+		EnableKeyGuard(false);
 
 		this.slideClock = (TextView)findViewById(R.id.slideClock);
 		this.clockMeridiem = (TextView)findViewById(R.id.clockMeridiem);
@@ -415,6 +413,8 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 	{
 		if (!MainApplication.IsSlideActive) finish();
 		
+		EnableKeyGuard(false);
+
 //		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | 
 //				WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
 //				WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
@@ -423,7 +423,6 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 		
 		getWindow().addFlags(flags);
 
-//		EnableKeyGuard(false);
 		
 		UpdateWalkingState();
 		
@@ -571,17 +570,17 @@ implements Response.Listener<String>, Response.ErrorListener, ServerRequestListe
 //		}
 //		finish();
 //	}
-//	
-//	private void EnableKeyGuard(boolean enable)
-//	{
-//		KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
-//		KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
-//		
-//		if (true == enable)
-//			lock.reenableKeyguard();
-//		else
-//			lock.disableKeyguard();
-//	}
+	
+	private void EnableKeyGuard(boolean enable)
+	{
+		KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
+		KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
+		
+		if (true == enable)
+			lock.reenableKeyguard();
+		else
+			lock.disableKeyguard();
+	}
 
 	
 	public void UpdateSlideAd()
