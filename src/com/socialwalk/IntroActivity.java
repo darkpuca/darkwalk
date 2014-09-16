@@ -39,7 +39,8 @@ public class IntroActivity extends Activity
 		setContentView(R.layout.activity_intro);
 
 		imgAd = (ImageView)findViewById(R.id.imgAd);
-		Bitmap newBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.intro_bg);
+//		Bitmap newBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.intro_bg);
+		Bitmap newBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.intro_silicon_power);
 		imgAd.setImageBitmap(newBitmap );
 		
 		autoCloseHandler = new Handler();

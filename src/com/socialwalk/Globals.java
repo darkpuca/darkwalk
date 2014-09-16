@@ -26,6 +26,7 @@ public class Globals
 	public static final String URL_NEO_AD_DOMAIN = "http://web.howapi.co.kr";
 	public static final String URL_NEO_AD = URL_NEO_AD_DOMAIN + "/zzzCashSlide.asp?tp=1";
 	public static final String URL_ROBINHOOT_AD = "http://ad.robinhoot.co.kr/app/robinad_xml.utf8.asp?part=socialwalk1&area=55&adcnt=5";
+	public static final String URL_ROBINHOOT_AD2 = "http://ads.robinhoot.co.kr/?c=adg&part=socialwalk1&area=55&adcnt=5&out=xml";
 
 	public static final String URL_AROUNDERS_REQ_TEST = "http://test.arounders.co.kr/adRequest.skp";
 	public static final String URL_AROUNDERS_REQ = "http://ad.arounders.co.kr/adRequest.skp";
