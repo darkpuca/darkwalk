@@ -36,6 +36,11 @@ public class LockReceiver extends BroadcastReceiver
 			wasScreenOn = true;
 			
 			if (!MainApplication.IsSlideActive) return;
+
+			Intent i = new Intent(context, SlideActivity.class);
+			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			context.startActivity(i);
+
 			
 //			if (null != SlideLastAccess)
 //			{
