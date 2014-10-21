@@ -649,10 +649,8 @@ implements Response.Listener<String>, Response.ErrorListener, OnClickListener, S
 
 			if (ServerRequestManager.LoginAccount.IsGroupUser)
 			{
-				areaName.setText(R.string.VOLUNTEERS);
-//				String areaNameVal = ServerRequestManager.LoginAccount.AreaName + " " + ServerRequestManager.LoginAccount.AreaSubName;
-				String areaNameVal = ServerRequestManager.LoginAccount.AreaSubName;
-				groupName.setText(areaNameVal);
+				areaName.setText(ServerRequestManager.LoginAccount.AreaName);
+				groupName.setText(ServerRequestManager.LoginAccount.AreaSubName);
 			}
 			else
 			{
